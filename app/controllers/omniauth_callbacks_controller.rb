@@ -1,31 +1,33 @@
-class OmniauthCallbacksController < Devise:OmniauthCallbacksController
+class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   require 'uuidtools'
 
   def facebook
-    oathorize "Facebook"
+    oauthorize "Facebook"
   end
 
   private
 
   def oauthorize(kind)
-    @user = find_for_oauth(kind, env["omniauth.auth"], current_user)
+    @user = find_for_ouath(kind, env["omniauth.auth"], current_user)
     if @user
       flash[:notice] = I18n.t "devise.omniauth_callbacks.success", :kind => kind
       session["devise.#{kind.downcase}_data"] = env["omniauth.auth"]
       sign_in_and_redirect @user, :event => :authentication
     end
+  end
 
-    def find_for_ouath(provider, access_token, resource=nil)
+  def find_for_ouath(provider, access_token, resource=nil)
     user, email, name, uid, auth_attr = nil, nil, nil, {}
     case provider
     when "Facebook"
       uid = access_token['uid']
       email = access_token[:info][:email]
+      debugger
       auth_attr = { :uid => uid,
                     :token => access_token['credentials']['token'],
                     :secret => nil,
-                    :name => access_token[:info][:name],
-                    :link => access_token[:info][:urls]["Facebook"]
+                    :name => access_token[:info][:name]
+                    # :link => access_token[:info][:urls]["Facebook"]
                   }
     else
       raise 'Provider #{provider} not handled'
