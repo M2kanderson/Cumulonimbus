@@ -58,6 +58,7 @@ const LoginForm = React.createClass({
       password: this.state.password
     };
     SessionActions.login(userData);
+    hashHistory.push('/');
   },
 
   openModal: function() {
