@@ -5,7 +5,10 @@ var App = React.createClass({
   render: function() {
     console.log("test");
     return (
-      <div>Hello World!</div>
+      <div>
+      Hello World!
+      {this.props.children}
+      </div>
     );
   }
 
