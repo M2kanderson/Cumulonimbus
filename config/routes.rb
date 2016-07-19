@@ -1,6 +1,11 @@
 Rails.application.routes.draw do
   devise_for :users, :controllers => { :omniauth_callbacks => "omniauth_callbacks" }
   root to: "home#index"
+
+  # Devise with React
+  scope :auth do
+    get 'is_signed_in', to: 'auth#is_signed_in?'
+  end
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

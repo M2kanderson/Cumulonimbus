@@ -7,7 +7,7 @@ const SessionActions = require('../actions/session_actions');
 
 const LoginForm = React.createClass({
   getInitialState(){
-    return{username: "", password: "", modalIsOpen: false};
+    return{email: "", password: "", modalIsOpen: false};
   },
 
   componentWillMount() {
@@ -33,7 +33,7 @@ const LoginForm = React.createClass({
           <div>
             <button type="button" className="demo-button" onClick={this.demoLogin} value="Demo Login">Demo Login</button>
           </div>
-            <input className="session-textbox text-input" placeholder="username" onChange={this.changeUsername} type="text" value={this.state.username}></input>
+            <input className="session-textbox text-input" placeholder="email" onChange={this.changeUsername} type="text" value={this.state.email}></input>
             <input className="session-textbox text-input" placeholder="password" onChange={this.changePassword} type="password" value={this.state.password}></input>
             <input id="login" className="session-button" type="submit" value="Sign In"></input>
           <br/>
@@ -43,7 +43,7 @@ const LoginForm = React.createClass({
   );},
 
   changeUsername(e){
-    this.setState({username: e.target.value});
+    this.setState({email: e.target.value});
   },
 
   changePassword(e){
@@ -51,12 +51,13 @@ const LoginForm = React.createClass({
   },
 
   handleSubmit(e) {
+    console.log("handling submit");
     e.preventDefault();
     const userData = {
-      username: this.state.username,
+      email: this.state.email,
       password: this.state.password
     };
-    SessionActions.logIn(userData);
+    SessionActions.login(userData);
   },
 
   openModal: function() {
@@ -71,7 +72,7 @@ const LoginForm = React.createClass({
   demoLogin(e) {
     e.preventDefault();
     // SessionActions.logIn({
-    //   username: SessionConstants.DEMO_USERNAME,
+    //   email: SessionConstants.DEMO_USERNAME,
     //   password: SessionConstants.DEMO_PASSWORD
     // });
   }
