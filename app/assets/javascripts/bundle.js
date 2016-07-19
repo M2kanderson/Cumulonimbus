@@ -27405,13 +27405,16 @@
 	    Modal.setAppElement('body');
 	  },
 	  componentDidMount: function componentDidMount() {
-	    this.setState({ modalIsOpen: true });
+	    // this.setState({modalIsOpen: true});
+	  },
+	  componentWillUpdate: function componentWillUpdate() {
+	    // this.setState({modalIsOpen: this.props.modalOpen});
 	  },
 	  render: function render() {
 	    return React.createElement(
 	      Modal,
 	      {
-	        isOpen: this.state.modalIsOpen,
+	        isOpen: this.props.modalOpen,
 	        onAfterOpen: this.afterOpenModal,
 	        onRequestClose: this.closeModal,
 	        style: customStyles

@@ -15,13 +15,16 @@ const LoginForm = React.createClass({
    },
 
   componentDidMount(){
-    this.setState({modalIsOpen: true});
+    // this.setState({modalIsOpen: true});
+  },
+  componentWillUpdate(){
+    // this.setState({modalIsOpen: this.props.modalOpen});
   },
 
   render(){
     return (
       <Modal
-        isOpen={this.state.modalIsOpen}
+        isOpen={this.props.modalOpen}
         onAfterOpen={this.afterOpenModal}
         onRequestClose={this.closeModal}
         style={customStyles}
