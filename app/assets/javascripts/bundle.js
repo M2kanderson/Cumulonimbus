@@ -26783,9 +26783,14 @@
 	  getInitialState: function getInitialState() {
 	    return {
 	      email: "",
+	      // uid: "",
 	      password: "",
 	      password_confirmation: ""
+	      // name: ""
 	    };
+	  },
+	  _updateName: function _updateName(e) {
+	    // this.setState({name: e.target.value});
 	  },
 	  _updateEmail: function _updateEmail(e) {
 	    this.setState({ email: e.target.value });
@@ -26813,6 +26818,17 @@
 	      React.createElement(
 	        'form',
 	        { onSubmit: this._createUser },
+	        React.createElement(
+	          'div',
+	          { className: 'field' },
+	          React.createElement(
+	            'label',
+	            { 'for': 'name' },
+	            'Name: '
+	          ),
+	          React.createElement('br', null),
+	          React.createElement('input', { type: 'text', onChange: this._updateName })
+	        ),
 	        React.createElement(
 	          'div',
 	          { className: 'field' },
@@ -27320,7 +27336,7 @@
 	  },
 	  createUser: function createUser(user, _success3, _error3) {
 	    $.ajax({
-	      url: '/users',
+	      url: '/users.json',
 	      type: 'POST',
 	      data_type: 'json',
 	      data: { user: user },

@@ -27,7 +27,7 @@ const UserApiUtil = {
   },
   createUser(user, success, error){
     $.ajax({
-      url: '/users',
+      url: '/users.json',
       type: 'POST',
       data_type: 'json',
       data: {user: user},

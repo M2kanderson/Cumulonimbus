@@ -5,9 +5,14 @@ const SignupForm = React.createClass({
   getInitialState: function() {
     return {
       email: "",
+      // uid: "",
       password: "",
       password_confirmation: ""
+      // name: ""
     };
+  },
+  _updateName(e){
+    // this.setState({name: e.target.value});
   },
   _updateEmail(e){
     this.setState({email:e.target.value});
@@ -27,6 +32,10 @@ const SignupForm = React.createClass({
       <div>
         <h2>Sign up</h2>
         <form onSubmit={this._createUser}>
+          <div className="field">
+            <label for="name">Name: </label><br />
+            <input type="text" onChange={this._updateName}></input>
+          </div>
           <div className="field">
             <label for="email">Email: </label><br />
             <input type="email" onChange={this._updateEmail}></input>
