@@ -28,10 +28,29 @@ module.exports = {
         success: (response) => {
           cb(response);
         },
-        
+
         error() {
           console.log("error in SessionApiUtil#login");
         }
       });
-    }
+    },
+
+    logout(userdata, cb) {
+      $.ajax({
+          method: "DELETE",
+          url: "/users/sign_out.json",
+          data: {
+            authenticity_token: this.getMetaContent("csrf-token")
+          },
+
+          success: (response) => {
+            cb(response);
+          },
+
+          error() {
+            console.log("error in SessionApiUtil#logout");
+          }
+        });
+      }
+
   };

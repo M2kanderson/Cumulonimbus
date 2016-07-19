@@ -29534,6 +29534,23 @@
 	        console.log("error in SessionApiUtil#login");
 	      }
 	    });
+	  },
+	  logout: function logout(userdata, cb) {
+	    $.ajax({
+	      method: "DELETE",
+	      url: "/users/sign_out.json",
+	      data: {
+	        authenticity_token: this.getMetaContent("csrf-token")
+	      },
+	
+	      success: function success(response) {
+	        cb(response);
+	      },
+	
+	      error: function error() {
+	        console.log("error in SessionApiUtil#logout");
+	      }
+	    });
 	  }
 	};
 
