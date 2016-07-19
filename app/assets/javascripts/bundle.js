@@ -66,7 +66,6 @@
 	  React.createElement(
 	    Route,
 	    { path: '/', component: App },
-	    React.createElement(IndexRoute, { component: App }),
 	    React.createElement(Route, { path: '/users/signup', component: SignupForm }),
 	    React.createElement(Route, { path: '/users/login', component: LoginForm })
 	  )
@@ -26730,12 +26729,15 @@
 /* 235 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 	
 	var React = __webpack_require__(1);
+	var Header = __webpack_require__(271);
+	var Footer = __webpack_require__(272);
+	var Body = __webpack_require__(273);
 	
 	var App = React.createClass({
-	  displayName: "App",
+	  displayName: 'App',
 	
 	  // Devise with React
 	  getInitialState: function getInitialState() {
@@ -26756,9 +26758,11 @@
 	
 	  render: function render() {
 	    return React.createElement(
-	      "div",
-	      null,
-	      "Hello World!",
+	      'div',
+	      { className: 'app' },
+	      React.createElement(Header, null),
+	      React.createElement(Body, null),
+	      React.createElement(Footer, null),
 	      this.props.children
 	    );
 	  }
@@ -27401,13 +27405,16 @@
 	    Modal.setAppElement('body');
 	  },
 	  componentDidMount: function componentDidMount() {
-	    this.setState({ modalIsOpen: true });
+	    // this.setState({modalIsOpen: true});
+	  },
+	  componentWillUpdate: function componentWillUpdate() {
+	    // this.setState({modalIsOpen: this.props.modalOpen});
 	  },
 	  render: function render() {
 	    return React.createElement(
 	      Modal,
 	      {
-	        isOpen: this.state.modalIsOpen,
+	        isOpen: this.props.modalOpen,
 	        onAfterOpen: this.afterOpenModal,
 	        onRequestClose: this.closeModal,
 	        style: customStyles
@@ -29564,6 +29571,128 @@
 	  LOGIN: 'LOGIN',
 	  LOGOUT: 'LOGOUT'
 	};
+
+/***/ },
+/* 271 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1);
+	var LoginForm = __webpack_require__(247);
+	
+	var Header = React.createClass({
+	  displayName: 'Header',
+	
+	  getInitialState: function getInitialState() {
+	    return {
+	      login: false,
+	      signup: false
+	    };
+	  },
+	  login: function login(e) {
+	    e.preventDefault();
+	    this.setState({ login: true });
+	  },
+	  signOut: function signOut(e) {
+	    e.preventDefault();
+	  },
+	  signUp: function signUp(e) {
+	    e.preventDefault();
+	    this.setState({ signup: true });
+	  },
+	
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      { className: 'header' },
+	      React.createElement('img', { src: 'http://res.cloudinary.com/pulsr/image/upload/c_crop,y_0/v1468955200/Cumulonimbus/Cumulonimbus-logo.png' }),
+	      React.createElement(
+	        'section',
+	        { className: 'header-buttons' },
+	        React.createElement(
+	          'button',
+	          { className: 'button', onClick: this.login },
+	          ' Sign In'
+	        ),
+	        React.createElement(
+	          'button',
+	          { className: 'button' },
+	          ' Sign Up'
+	        ),
+	        React.createElement(
+	          'button',
+	          { className: 'button' },
+	          ' Log Out'
+	        )
+	      ),
+	      React.createElement(LoginForm, { modalOpen: this.state.login })
+	    );
+	  }
+	
+	});
+	
+	module.exports = Header;
+
+/***/ },
+/* 272 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var React = __webpack_require__(1);
+	
+	var Footer = React.createClass({
+	  displayName: "Footer",
+	
+	
+	  render: function render() {
+	    return React.createElement(
+	      "div",
+	      { className: "footer" },
+	      React.createElement(
+	        "footer",
+	        null,
+	        React.createElement(
+	          "p",
+	          null,
+	          "This is the footer"
+	        )
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = Footer;
+
+/***/ },
+/* 273 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var React = __webpack_require__(1);
+	
+	var Body = React.createClass({
+	  displayName: "Body",
+	
+	
+	  render: function render() {
+	    return React.createElement(
+	      "div",
+	      { className: "body" },
+	      React.createElement(
+	        "p",
+	        null,
+	        " This is the body"
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = Body;
 
 /***/ }
 /******/ ]);
