@@ -1,4 +1,7 @@
 var React = require('react');
+const Header = require('./header');
+const Footer = require('./footer');
+const Body = require('./body');
 
 var App = React.createClass({
   // Devise with React
@@ -19,7 +22,10 @@ var App = React.createClass({
 
   render: function() {
     return (
-      <div>Hello World!
+      <div className="app">
+        <Header />
+        <Body />
+        <Footer />
         {this.props.children}
       </div>
     );
