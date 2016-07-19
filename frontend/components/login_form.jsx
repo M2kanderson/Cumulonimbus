@@ -3,6 +3,7 @@ const Modal = require('react-modal');
 const Link = require('react-router').Link;
 const hashHistory = require('react-router').hashHistory;
 const SessionActions = require('../actions/session_actions');
+const SessionStore = require('../stores/session_store');
 // const SessionConstants = require('./constants/session_constants');
 
 const LoginForm = React.createClass({
@@ -15,6 +16,7 @@ const LoginForm = React.createClass({
    },
 
   componentDidMount(){
+    this.loginListener = SessionStore.addListener(this._onChange);
     // this.setState({modalIsOpen: true});
   },
   componentWillUpdate(){
@@ -61,7 +63,9 @@ const LoginForm = React.createClass({
       password: this.state.password
     };
     SessionActions.login(userData);
-    hashHistory.push('/');
+  },
+
+  _onChange() {
     this.closeModal();
   },
 
@@ -81,7 +85,11 @@ const LoginForm = React.createClass({
     //   email: SessionConstants.DEMO_USERNAME,
     //   password: SessionConstants.DEMO_PASSWORD
     // });
-  }
+  },
+
+  componentWillUnmount(){
+    this.loginListener.remove();
+  },
 
   });
 

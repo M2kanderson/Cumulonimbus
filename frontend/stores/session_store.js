@@ -16,8 +16,6 @@ const _login = function(currentUser){
 };
 
 SessionStore.__onDispatch = function(payload){
-  console.log("dispatching");
-  debugger
   switch (payload.actionType) {
     case SessionConstants.LOGIN:
       _login(payload.userdata);

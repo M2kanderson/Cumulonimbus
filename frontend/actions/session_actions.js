@@ -10,11 +10,19 @@ const SessionActions = {
   },
 
   receiveUser(userData) {
-    debugger
-    console.log("receiving response");
     Dispatcher.dispatch({
       actionType: SessionConstants.LOGIN,
       userdata: userData
+    });
+  },
+
+  logout() {
+    SessionApiUtils.logout(this.removeCurrentUser);
+  },
+
+  removeCurrentUser() {
+    Dispatcher.dispatch({
+      actionType: SessionConstants.LOGOUT
     });
   }
 };

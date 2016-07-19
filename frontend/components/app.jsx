@@ -2,6 +2,7 @@ var React = require('react');
 const Header = require('./header');
 const Footer = require('./footer');
 const Body = require('./body');
+const SessionActions = require('../actions/session_actions');
 
 var App = React.createClass({
   // Devise with React
@@ -32,5 +33,7 @@ var App = React.createClass({
   }
 
 });
+
+window.SessionActions = SessionActions;
 
 module.exports = App;
