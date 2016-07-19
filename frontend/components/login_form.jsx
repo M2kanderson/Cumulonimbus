@@ -61,6 +61,7 @@ const LoginForm = React.createClass({
       password: this.state.password
     };
     SessionActions.login(userData);
+    this.closeModal();
   },
 
   openModal: function() {
@@ -68,6 +69,7 @@ const LoginForm = React.createClass({
   },
 
   closeModal: function() {
+    this.props.toggleForm();
     this.setState({modalIsOpen: false});
     hashHistory.push('/');
   },

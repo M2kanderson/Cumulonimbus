@@ -27485,6 +27485,7 @@
 	      password: this.state.password
 	    };
 	    SessionActions.login(userData);
+	    this.closeModal();
 	  },
 	
 	
@@ -27493,6 +27494,7 @@
 	  },
 	
 	  closeModal: function closeModal() {
+	    this.props.toggleForm();
 	    this.setState({ modalIsOpen: false });
 	    hashHistory.push('/');
 	  },
@@ -29590,15 +29592,20 @@
 	      signup: false
 	    };
 	  },
-	  login: function login(e) {
-	    e.preventDefault();
-	    this.setState({ login: true });
+	  toggleLogin: function toggleLogin(e) {
+	    if (e) {
+	      e.preventDefault();
+	    }
+	    this.setState({ login: !this.state.login });
 	  },
 	  signOut: function signOut(e) {
 	    e.preventDefault();
 	  },
 	  signUp: function signUp(e) {
-	    e.preventDefault();
+	    if (e) {
+	      e.preventDefault();
+	    }
+	
 	    this.setState({ signup: true });
 	  },
 	
@@ -29612,7 +29619,7 @@
 	        { className: 'header-buttons' },
 	        React.createElement(
 	          'button',
-	          { className: 'button', onClick: this.login },
+	          { className: 'button', onClick: this.toggleLogin },
 	          ' Sign In'
 	        ),
 	        React.createElement(
@@ -29626,7 +29633,7 @@
 	          ' Log Out'
 	        )
 	      ),
-	      React.createElement(LoginForm, { modalOpen: this.state.login })
+	      React.createElement(LoginForm, { modalOpen: this.state.login, toggleForm: this.toggleLogin })
 	    );
 	  }
 	
