@@ -35,7 +35,7 @@ module.exports = {
       });
     },
 
-    logout(userdata, cb) {
+    logout(cb) {
       $.ajax({
           method: "DELETE",
           url: "/users/sign_out.json",

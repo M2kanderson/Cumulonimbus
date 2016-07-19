@@ -29535,7 +29535,7 @@
 	      }
 	    });
 	  },
-	  logout: function logout(userdata, cb) {
+	  logout: function logout(cb) {
 	    $.ajax({
 	      method: "DELETE",
 	      url: "/users/sign_out.json",
