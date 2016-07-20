@@ -4,11 +4,35 @@
   <title>Cumulonimbus</title>
   <%= stylesheet_link_tag    'application', media: 'all' %>
   <%= javascript_include_tag 'application' %>
+  <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
   <%= csrf_meta_tags %>
 </head>
 <body>
   <p class="notice"><%= notice %></p>
   <p class="alert"><%= alert %></p>
+
+  <script>
+  jQuery(function() {
+  return $.ajax({
+    url: 'https://apis.google.com/js/client:plus.js?onload=gpAsyncInit',
+    dataType: 'script',
+    cache: true
+  });
+});
+  window.gpAsyncInit = function() {
+
+    gapi.auth.authorize({
+      immediate: true,
+      response_type: 'code',
+      cookie_policy: 'single_host_origin',
+      client_id: '103867363030-iq1ait30ssbtobrqhcmugffnjgvsok9d.apps.googleusercontent.com',
+      scope: 'email profile'
+    }, function(response) {
+      console.log(response)
+      return;
+    });
+  }
+  </script>
 
   <script>
   window.fbAsyncInit = function() {

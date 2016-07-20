@@ -12,6 +12,9 @@ const SessionActions = {
   facebookLogin(){
     SessionApiUtils.facebookLogin(this.receiveUser);
   },
+  googleLogin(){
+    SessionApiUtils.googleLogin(this.receiveUser);
+  },
 
   receiveUser(userData) {
     Dispatcher.dispatch({

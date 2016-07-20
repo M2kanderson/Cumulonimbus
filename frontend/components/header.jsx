@@ -1,5 +1,6 @@
 var React = require('react');
 const LoginForm = require('./login_form');
+const SessionActions = require('../actions/session_actions');
 
 var Header = React.createClass({
   getInitialState: function() {
@@ -15,11 +16,13 @@ var Header = React.createClass({
     this.setState({login: !this.state.login});
   },
   signOut(e){
+    console.log("hi");
     window.FB.getLoginStatus((resp) => {
       if(resp.status === "connected"){
         window.FB.logout();
       }
     });
+    SessionActions.logout();
     e.preventDefault();
   },
   signUp(e){

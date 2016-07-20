@@ -30,6 +30,10 @@ const LoginForm = React.createClass({
   facebookLogin(){
     SessionActions.facebookLogin();
   },
+  googleLogin(e){
+    e.preventDefault();
+    SessionActions.googleLogin();
+  },
   responseFacebook(response){
     window.FB.getLoginStatus((resp) =>{
       console.log(resp);
@@ -69,6 +73,8 @@ const LoginForm = React.createClass({
             <input className="session-textbox text-input" placeholder="email" onChange={this.changeUsername} type="text" value={this.state.email}></input>
             <input className="session-textbox text-input" placeholder="password" onChange={this.changePassword} type="password" value={this.state.password}></input>
             <input id="login" className="session-button" type="submit" value="Sign In"></input>
+            <button onClick={this.facebookLogin}>Log in facebook</button>
+            <button onClick={this.googleLogin}>Log in Google</button>
               <FacebookLogin appId="1790155654560761"
                              autoLoad={true} fields="name,email,picture"
                              callback={this.responseFacebook}

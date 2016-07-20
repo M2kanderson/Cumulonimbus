@@ -59,6 +59,7 @@
 	var App = __webpack_require__(235);
 	var SignupForm = __webpack_require__(267);
 	var LoginForm = __webpack_require__(237);
+	var Index = __webpack_require__(293);
 	
 	var appRouter = React.createElement(
 	  Router,
@@ -66,6 +67,7 @@
 	  React.createElement(
 	    Route,
 	    { path: '/', component: App },
+	    React.createElement(IndexRoute, { component: Index }),
 	    React.createElement(Route, { path: '/users/signup', component: SignupForm }),
 	    React.createElement(Route, { path: '/users/login', component: LoginForm })
 	  )
@@ -26763,9 +26765,12 @@
 	      'div',
 	      { className: 'app' },
 	      React.createElement(Header, null),
-	      React.createElement(Body, null),
-	      React.createElement(Footer, null),
-	      this.props.children
+	      React.createElement(
+	        'div',
+	        { className: 'body' },
+	        this.props.children
+	      ),
+	      React.createElement(Footer, null)
 	    );
 	  }
 	
@@ -26784,6 +26789,7 @@
 	
 	var React = __webpack_require__(1);
 	var LoginForm = __webpack_require__(237);
+	var SessionActions = __webpack_require__(258);
 	
 	var Header = React.createClass({
 	  displayName: 'Header',
@@ -26801,11 +26807,13 @@
 	    this.setState({ login: !this.state.login });
 	  },
 	  signOut: function signOut(e) {
+	    console.log("hi");
 	    window.FB.getLoginStatus(function (resp) {
 	      if (resp.status === "connected") {
 	        window.FB.logout();
 	      }
 	    });
+	    SessionActions.logout();
 	    e.preventDefault();
 	  },
 	  signUp: function signUp(e) {
@@ -26890,6 +26898,10 @@
 	  facebookLogin: function facebookLogin() {
 	    SessionActions.facebookLogin();
 	  },
+	  googleLogin: function googleLogin(e) {
+	    e.preventDefault();
+	    SessionActions.googleLogin();
+	  },
 	  responseFacebook: function responseFacebook(response) {
 	    window.FB.getLoginStatus(function (resp) {
 	      console.log(resp);
@@ -26961,6 +26973,16 @@
 	        React.createElement('input', { className: 'session-textbox text-input', placeholder: 'email', onChange: this.changeUsername, type: 'text', value: this.state.email }),
 	        React.createElement('input', { className: 'session-textbox text-input', placeholder: 'password', onChange: this.changePassword, type: 'password', value: this.state.password }),
 	        React.createElement('input', { id: 'login', className: 'session-button', type: 'submit', value: 'Sign In' }),
+	        React.createElement(
+	          'button',
+	          { onClick: this.facebookLogin },
+	          'Log in facebook'
+	        ),
+	        React.createElement(
+	          'button',
+	          { onClick: this.googleLogin },
+	          'Log in Google'
+	        ),
 	        React.createElement(_reactFacebookLogin2.default, { appId: '1790155654560761',
 	          autoLoad: true, fields: 'name,email,picture',
 	          callback: this.responseFacebook,
@@ -29023,6 +29045,9 @@
 	  facebookLogin: function facebookLogin() {
 	    SessionApiUtils.facebookLogin(this.receiveUser);
 	  },
+	  googleLogin: function googleLogin() {
+	    SessionApiUtils.googleLogin(this.receiveUser);
+	  },
 	  receiveUser: function receiveUser(userData) {
 	    Dispatcher.dispatch({
 	      actionType: SessionConstants.LOGIN,
@@ -29406,27 +29431,58 @@
 	      }
 	    });
 	  },
-	  facebookLogin: function facebookLogin(cb) {
-	    window.FB.getLoginStatus(function (response) {
-	      console.log(response.authResponse.signedRequest);
-	      $.ajax({
-	        method: "GET",
-	        url: "/users/auth/facebook/",
-	        dataType: "json",
-	        data: {
-	          app_id: "1790155654560761",
-	          signed_request: response.authResponse.signedRequest
-	        },
-	
-	        success: function success(res) {
-	          console.log(res);
-	          cb(res);
-	        },
-	
-	        error: function error() {
-	          console.log("error in SessionApiUtil#facebookLogin");
+	  googleLogin: function googleLogin(cb, failure) {
+	    window.gapi.auth.authorize({
+	      immediate: false,
+	      response_type: 'code',
+	      cookie_policy: 'single_host_origin',
+	      client_id: '103867363030-iq1ait30ssbtobrqhcmugffnjgvsok9d.apps.googleusercontent.com',
+	      scope: 'email profile'
+	    }, function (response) {
+	      if (response) {
+	        if (response && !response.error) {
+	          $.ajax({
+	            type: 'POST',
+	            url: "users/auth/google_oauth2/callback",
+	            data: response,
+	            success: function success(data) {
+	              console.log(data);
+	            }
+	          });
+	        } else {
+	          console.log("something else happened");
 	        }
-	      });
+	      }
+	    });
+	  },
+	  facebookLogin: function facebookLogin(cb) {
+	    var _this = this;
+	
+	    window.FB.getLoginStatus(function (response) {
+	      // console.log(response);
+	      if (!response.authResponse) {
+	        window.FB.login(function (resp) {
+	          $.ajax({
+	            method: "POST",
+	            url: "/users/auth/facebook/callback",
+	            dataType: "json",
+	            data: {
+	              app_id: "1790155654560761",
+	              signed_request: resp.authResponse.signedRequest,
+	              authenticity_token: _this.getMetaContent("csrf-token")
+	            },
+	
+	            success: function success(res) {
+	              console.log(res);
+	              cb(res);
+	            },
+	
+	            error: function error() {
+	              console.log("error in SessionApiUtil#facebookLogin");
+	            }
+	          });
+	        }, { scope: 'email' });
+	      }
 	    });
 	  },
 	  logout: function logout(cb, failure) {
@@ -36365,6 +36421,43 @@
 	};
 	
 	module.exports = ErrorStore;
+
+/***/ },
+/* 293 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var React = __webpack_require__(1);
+	
+	var Index = React.createClass({
+	  displayName: "Index",
+	
+	
+	  render: function render() {
+	    return React.createElement(
+	      "div",
+	      { className: "index" },
+	      React.createElement(
+	        "div",
+	        { className: "index-photo" },
+	        React.createElement(
+	          "h1",
+	          { className: "index-header" },
+	          "Cumulonimbus"
+	        ),
+	        React.createElement(
+	          "p",
+	          { className: "index-desc" },
+	          "Great music anywhere and any time."
+	        )
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = Index;
 
 /***/ }
 /******/ ]);
