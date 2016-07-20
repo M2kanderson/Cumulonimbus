@@ -9,6 +9,9 @@ const SessionActions = {
 
     SessionApiUtils.login(userData, this.receiveUser, ErrorActions.setErrors);
   },
+  facebookLogin(){
+    SessionApiUtils.facebookLogin(this.receiveUser);
+  },
 
   receiveUser(userData) {
     Dispatcher.dispatch({

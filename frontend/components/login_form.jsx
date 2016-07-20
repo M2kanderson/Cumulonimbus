@@ -7,6 +7,7 @@ const SessionStore = require('../stores/session_store');
 const ErrorsStore = require('../stores/errors_store');
 const ErrorActions = require('../actions/error_actions');
 // const SessionConstants = require('./constants/session_constants');
+import FacebookLogin from 'react-facebook-login';
 
 const LoginForm = React.createClass({
   getInitialState(){
@@ -24,6 +25,29 @@ const LoginForm = React.createClass({
   },
   componentWillUpdate(){
     // this.setState({modalIsOpen: this.props.modalOpen});
+  },
+
+  facebookLogin(){
+    SessionActions.facebookLogin();
+  },
+  responseFacebook(response){
+    window.FB.getLoginStatus((resp) =>{
+      console.log(resp);
+      if (resp.status === 'connected') {
+        console.log("connected");
+        console.log(response);
+    // Logged into your app and Facebook.
+      } else if (resp.status === 'not_authorized') {
+        console.log("not authorized");
+        console.log(response);
+        // The person is logged into Facebook, but not your app.
+      } else {
+        console.log("other");
+        // The person is not logged into Facebook, so we're not sure if
+        // they are logged into this app or not.
+      }
+    });
+
   },
 
   render(){
@@ -45,6 +69,12 @@ const LoginForm = React.createClass({
             <input className="session-textbox text-input" placeholder="email" onChange={this.changeUsername} type="text" value={this.state.email}></input>
             <input className="session-textbox text-input" placeholder="password" onChange={this.changePassword} type="password" value={this.state.password}></input>
             <input id="login" className="session-button" type="submit" value="Sign In"></input>
+              <FacebookLogin appId="1790155654560761"
+                             autoLoad={true} fields="name,email,picture"
+                             callback={this.responseFacebook}
+                             cssClass="facebook-button"
+                             icon="fa-facebook"></FacebookLogin>
+
           <br/>
           <Link className="form-bottom-text" to='/'>Home</Link>
         </form>

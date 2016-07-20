@@ -1,14 +1,24 @@
-class OmniauthCallbacksController < Devise::OmniauthCallbacksController
+class OmniauthCallbacksController < ApplicationController
+  # Devise::OmniauthCallbacksController
   require 'uuidtools'
 
   def facebook
+    debugger
     oauthorize "Facebook"
   end
+
+  def passthru
+    debugger
+  render :file => "#{Rails.root}/public/404",
+         :status => 404,
+         :layout => false,
+         :formats => [:html]
+end
 
   private
 
   def oauthorize(kind)
-    @user = find_for_ouath(kind, env["omniauth.auth"], current_user)
+    @user = find_for_oauth(kind, env["omniauth.auth"], current_user)
     if @user
       flash[:notice] = I18n.t "devise.omniauth_callbacks.success", :kind => kind
       session["devise.#{kind.downcase}_data"] = env["omniauth.auth"]
@@ -16,13 +26,12 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
     end
   end
 
-  def find_for_ouath(provider, access_token, resource=nil)
+  def find_for_oauth(provider, access_token, resource=nil)
     user, email, name, uid, auth_attr = nil, nil, nil, {}
     case provider
     when "Facebook"
       uid = access_token['uid']
       email = access_token[:info][:email]
-      debugger
       auth_attr = { :uid => uid,
                     :token => access_token['credentials']['token'],
                     :secret => nil,

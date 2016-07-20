@@ -15,6 +15,11 @@ var Header = React.createClass({
     this.setState({login: !this.state.login});
   },
   signOut(e){
+    window.FB.getLoginStatus((resp) => {
+      if(resp.status === "connected"){
+        window.FB.logout();
+      }
+    });
     e.preventDefault();
   },
   signUp(e){
@@ -31,7 +36,7 @@ var Header = React.createClass({
         <section className="header-buttons">
           <button className="button" onClick={this.toggleLogin}> Sign In</button>
           <button className="button"> Sign Up</button>
-          <button className="button"> Log Out</button>
+          <button className="button" onClick={this.signOut}> Log Out</button>
         </section>
         <LoginForm modalOpen={this.state.login} toggleForm={this.toggleLogin}/>
       </div>
