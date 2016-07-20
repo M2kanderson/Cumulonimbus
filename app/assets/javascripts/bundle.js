@@ -29456,21 +29456,19 @@
 	    });
 	  },
 	  facebookLogin: function facebookLogin(cb) {
-	    var _this = this;
-	
 	    window.FB.getLoginStatus(function (response) {
 	      // console.log(response);
 	      if (!response.authResponse) {
 	        window.FB.login(function (resp) {
 	          $.ajax({
-	            method: "POST",
+	            method: "GET",
 	            url: "/users/auth/facebook/callback",
 	            dataType: "json",
-	            data: {
-	              app_id: "1790155654560761",
-	              signed_request: resp.authResponse.signedRequest,
-	              authenticity_token: _this.getMetaContent("csrf-token")
-	            },
+	            // data: {
+	            //   app_id: "1790155654560761",
+	            //   signed_request: resp.authResponse.signedRequest,
+	            //   authenticity_token: this.getMetaContent("csrf-token")
+	            // },
 	
 	            success: function success(res) {
 	              console.log(res);
