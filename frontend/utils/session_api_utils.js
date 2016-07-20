@@ -35,6 +35,31 @@ module.exports = {
       });
     },
 
+    facebookLogin(cb) {
+      window.FB.getLoginStatus((response) =>{
+        console.log(response.authResponse.signedRequest);
+        $.ajax({
+            method: "GET",
+            url: "/users/auth/facebook/",
+            dataType: "json",
+            data: {
+              app_id: "1790155654560761",
+              signed_request: response.authResponse.signedRequest
+            },
+
+            success: (res) => {
+              console.log(res);
+              cb(res);
+            },
+
+            error() {
+              console.log("error in SessionApiUtil#facebookLogin");
+            }
+          });
+      });
+
+      },
+
     logout(cb) {
       $.ajax({
           method: "DELETE",
