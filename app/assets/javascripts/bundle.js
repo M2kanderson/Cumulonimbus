@@ -26736,6 +26736,7 @@
 	var Footer = __webpack_require__(265);
 	var Body = __webpack_require__(266);
 	var SessionActions = __webpack_require__(258);
+	var SessionStore = __webpack_require__(273);
 	
 	var App = React.createClass({
 	  displayName: 'App',
@@ -26771,6 +26772,7 @@
 	});
 	
 	window.SessionActions = SessionActions;
+	window.SessionStore = SessionStore;
 	
 	module.exports = App;
 
@@ -26864,6 +26866,8 @@
 	var hashHistory = __webpack_require__(172).hashHistory;
 	var SessionActions = __webpack_require__(258);
 	var SessionStore = __webpack_require__(273);
+	var ErrorsStore = __webpack_require__(292);
+	var ErrorActions = __webpack_require__(270);
 	// const SessionConstants = require('./constants/session_constants');
 	
 	
@@ -26877,6 +26881,7 @@
 	  },
 	  componentDidMount: function componentDidMount() {
 	    this.loginListener = SessionStore.addListener(this._onChange);
+	    this.errorListener = ErrorsStore.addListener(this.forceUpdate.bind(this));
 	    // this.setState({modalIsOpen: true});
 	  },
 	  componentWillUpdate: function componentWillUpdate() {
@@ -26925,6 +26930,7 @@
 	          { className: 'form-text' },
 	          'Sign in to Cumulonimbus'
 	        ),
+	        this.fieldErrors(),
 	        React.createElement(
 	          'label',
 	          { className: 'form-text' },
@@ -27008,6 +27014,25 @@
 	  },
 	  componentWillUnmount: function componentWillUnmount() {
 	    this.loginListener.remove();
+	    this.errorListener.remove();
+	    ErrorActions.clearErrors();
+	    this.setState({ email: "", password: "" });
+	  },
+	  fieldErrors: function fieldErrors() {
+	    var errors = ErrorsStore.formErrors("login");
+	    if (!errors["login"]) {
+	      return;
+	    }
+	    return React.createElement(
+	      'ul',
+	      null,
+	      React.createElement(
+	        'li',
+	        { className: 'session-error-message' },
+	        errors["login"]
+	      )
+	    );
+	    // return <ul>{ messages }</ul>;
 	  }
 	});
 	
@@ -28987,12 +29012,13 @@
 	var Dispatcher = __webpack_require__(259);
 	var SessionApiUtils = __webpack_require__(263);
 	var SessionConstants = __webpack_require__(264);
+	var ErrorActions = __webpack_require__(270);
 	
 	var SessionActions = {
 	  login: function login(userData) {
 	    console.log("logging in");
 	
-	    SessionApiUtils.login(userData, this.receiveUser);
+	    SessionApiUtils.login(userData, this.receiveUser, ErrorActions.setErrors);
 	  },
 	  facebookLogin: function facebookLogin() {
 	    SessionApiUtils.facebookLogin(this.receiveUser);
@@ -29004,11 +29030,17 @@
 	    });
 	  },
 	  logout: function logout() {
-	    SessionApiUtils.logout(this.removeCurrentUser);
+	    SessionApiUtils.logout(this.removeCurrentUser, ErrorActions.setErrors);
 	  },
 	  removeCurrentUser: function removeCurrentUser() {
 	    Dispatcher.dispatch({
 	      actionType: SessionConstants.LOGOUT
+	    });
+	  },
+	  receiveErrors: function receiveErrors(errors) {
+	    Dispatcher.dispatch({
+	      actionType: SessionConstants.DISPLAY_ERRORS,
+	      errors: errors
 	    });
 	  }
 	};
@@ -29353,7 +29385,7 @@
 	
 	    return "";
 	  },
-	  login: function login(userdata, cb) {
+	  login: function login(userdata, cb, failure) {
 	    $.ajax({
 	      method: "POST",
 	      url: "/users/sign_in.json",
@@ -29369,8 +29401,8 @@
 	        cb(response);
 	      },
 	
-	      error: function error() {
-	        console.log("error in SessionApiUtil#login");
+	      error: function error(response) {
+	        failure("login", JSON.parse(response.responseText).error);
 	      }
 	    });
 	  },
@@ -29397,7 +29429,7 @@
 	      });
 	    });
 	  },
-	  logout: function logout(cb) {
+	  logout: function logout(cb, failure) {
 	    $.ajax({
 	      method: "DELETE",
 	      url: "/users/sign_out.json",
@@ -29409,8 +29441,8 @@
 	        cb(response);
 	      },
 	
-	      error: function error() {
-	        console.log("error in SessionApiUtil#logout");
+	      error: function error(response) {
+	        failure(JSON.parse(response.responseText).error);
 	      }
 	    });
 	  }
@@ -29738,15 +29770,13 @@
 	  setErrors: function setErrors(form, errors) {
 	    AppDispatcher.dispatch({
 	      actionType: ErrorConstants.SET_ERRORS,
-	      errors: errors,
+	      errors: [errors],
 	      form: form
 	    });
 	  },
-	  clearErrors: function clearErrors(form, errors) {
+	  clearErrors: function clearErrors() {
 	    AppDispatcher.dispatch({
-	      actionType: ErrorConstants.CLEAR_ERRORS,
-	      errors: errors,
-	      form: form
+	      actionType: ErrorConstants.CLEAR_ERRORS
 	    });
 	  }
 	};
@@ -36280,6 +36310,61 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	!function(e,t){ true?module.exports=t(__webpack_require__(1)):"function"==typeof define&&define.amd?define(["react"],t):"object"==typeof exports?exports.FacebookLogin=t(require("react")):e.FacebookLogin=t(e.react)}(this,function(e){return function(e){function t(n){if(o[n])return o[n].exports;var r=o[n]={exports:{},id:n,loaded:!1};return e[n].call(r.exports,r,r.exports,t),r.loaded=!0,r.exports}var o={};return t.m=e,t.c=o,t.p="",t(0)}([function(e,t,o){e.exports=o(2)},function(e,t,o){"use strict";function n(e){return e&&e.__esModule?e:{"default":e}}function r(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}function i(e,t){if(!e)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return!t||"object"!=typeof t&&"function"!=typeof t?e:t}function a(e,t){if("function"!=typeof t&&null!==t)throw new TypeError("Super expression must either be null or a function, not "+typeof t);e.prototype=Object.create(t&&t.prototype,{constructor:{value:e,enumerable:!1,writable:!0,configurable:!0}}),t&&(Object.setPrototypeOf?Object.setPrototypeOf(e,t):e.__proto__=t)}Object.defineProperty(t,"__esModule",{value:!0});var s=function(){function e(e,t){for(var o=0;o<t.length;o++){var n=t[o];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(e,n.key,n)}}return function(t,o,n){return o&&e(t.prototype,o),n&&e(t,n),t}}(),c=o(5),l=n(c),p=o(3),u=n(p),f=function(e){function t(e){r(this,t);var o=i(this,Object.getPrototypeOf(t).call(this,e));return o.responseApi=function(e){window.FB.api("/me",{fields:o.props.fields},function(t){Object.assign(t,e),o.props.callback(t)})},o.checkLoginState=function(e){e.authResponse?o.responseApi(e.authResponse):o.props.callback&&o.props.callback({status:e.status})},o.click=function(){var e=o.props,t=e.scope,n=e.appId;navigator.userAgent.match("CriOS")?window.location.href="https://www.facebook.com/dialog/oauth?client_id="+n+"&redirect_uri="+window.location.href+"&state=facebookdirect&"+t:window.FB.login(o.checkLoginState,{scope:t})},o}return a(t,e),s(t,[{key:"componentDidMount",value:function(){var e=this,t=this.props,o=t.appId,n=t.xfbml,r=t.cookie,i=t.version,a=t.autoLoad,s=t.language,c=document.createElement("div");c.id="fb-root",document.body.appendChild(c),window.fbAsyncInit=function(){window.FB.init({version:"v"+i,appId:o,xfbml:n,cookie:r}),(a||window.location.search.includes("facebookdirect"))&&window.FB.getLoginStatus(e.checkLoginState)},function(e,t,o){var n=e.getElementsByTagName(t)[0],r=n,i=n;e.getElementById(o)||(i=e.createElement(t),i.id=o,i.src="//connect.facebook.net/"+s+"/all.js",r.parentNode.insertBefore(i,r))}(document,"script","facebook-jssdk")}},{key:"renderWithFontAwesome",value:function(){var e=this.props,t=e.cssClass,o=e.size,n=e.icon,r=e.textButton;return l["default"].createElement("span",null,l["default"].createElement("link",{rel:"stylesheet",href:"//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"}),l["default"].createElement("button",{type:this.props.typeButton,className:t+" "+o,onClick:this.click},l["default"].createElement("i",{className:"fa "+n})," ",r),l["default"].createElement("style",{dangerouslySetInnerHTML:{__html:u["default"]}}))}},{key:"render",value:function(){var e=this.props,t=e.cssClass,o=e.size,n=e.icon,r=e.textButton;return n?this.renderWithFontAwesome():l["default"].createElement("span",null,l["default"].createElement("button",{className:t+" "+o,onClick:this.click},r),l["default"].createElement("style",{dangerouslySetInnerHTML:{__html:u["default"]}}))}}]),t}(l["default"].Component);f.propTypes={callback:c.PropTypes.func.isRequired,appId:c.PropTypes.string.isRequired,xfbml:c.PropTypes.bool,cookie:c.PropTypes.bool,scope:c.PropTypes.string,textButton:c.PropTypes.string,typeButton:c.PropTypes.string,autoLoad:c.PropTypes.bool,size:c.PropTypes.string,fields:c.PropTypes.string,cssClass:c.PropTypes.string,version:c.PropTypes.string,icon:c.PropTypes.string,language:c.PropTypes.string},f.defaultProps={textButton:"Login with Facebook",typeButton:"button",scope:"public_profile,email",xfbml:!1,cookie:!1,size:"metro",fields:"name",cssClass:"kep-login-facebook",version:"2.3",language:"en_US"},t["default"]=f},function(e,t,o){"use strict";function n(e){return e&&e.__esModule?e:{"default":e}}Object.defineProperty(t,"__esModule",{value:!0});var r=o(1),i=n(r);t["default"]=i["default"]},function(e,t,o){t=e.exports=o(4)(),t.push([e.id,".kep-login-facebook{font-family:Helvetica,sans-serif;font-weight:700;-webkit-font-smoothing:antialiased;color:#fff;cursor:pointer;display:inline-block;font-size:calc(.27548vw + 12.71074px);text-decoration:none;text-transform:uppercase;transition:background-color .3s,border-color .3s;background-color:#4c69ba;border:calc(.06887vw + .67769px) solid #4c69ba;padding:calc(.34435vw + 13.38843px) calc(.34435vw + 18.38843px)}.kep-login-facebook.small{padding:calc(.34435vw + 3.38843px) calc(.34435vw + 8.38843px)}.kep-login-facebook.medium{padding:calc(.34435vw + 8.38843px) calc(.34435vw + 13.38843px)}.kep-login-facebook.metro{border-radius:0}.kep-login-facebook .fa{margin-right:calc(.34435vw + 3.38843px)}",""]),t.locals={"kep-login-facebook":"kep-login-facebook",small:"small",medium:"medium",metro:"metro",fa:"fa"}},function(e,t){e.exports=function(){var e=[];return e.toString=function(){for(var e=[],t=0;t<this.length;t++){var o=this[t];o[2]?e.push("@media "+o[2]+"{"+o[1]+"}"):e.push(o[1])}return e.join("")},e.i=function(t,o){"string"==typeof t&&(t=[[null,t,""]]);for(var n={},r=0;r<this.length;r++){var i=this[r][0];"number"==typeof i&&(n[i]=!0)}for(r=0;r<t.length;r++){var a=t[r];"number"==typeof a[0]&&n[a[0]]||(o&&!a[2]?a[2]=o:o&&(a[2]="("+a[2]+") and ("+o+")"),e.push(a))}},e}},function(t,o){t.exports=e}])});
+
+/***/ },
+/* 292 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var Dispatcher = __webpack_require__(259);
+	var Store = __webpack_require__(274).Store;
+	var ErrorConstants = __webpack_require__(271);
+	
+	var ErrorStore = new Store(Dispatcher);
+	
+	var _errors = {};
+	var _form = "";
+	
+	ErrorStore.formErrors = function (form) {
+	  if (form === _form) {
+	    return _errors;
+	  } else {
+	    return {};
+	  }
+	};
+	
+	var form = function form() {
+	  return _form;
+	};
+	
+	ErrorStore.setErrors = function (formName, errors) {
+	  _form = formName;
+	  errors.forEach(function (error) {
+	    _errors[_form] = error;
+	  });
+	};
+	
+	ErrorStore.clearErrors = function () {
+	  _form = "";
+	  _errors = {};
+	};
+	
+	ErrorStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case ErrorConstants.SET_ERRORS:
+	      this.setErrors(payload.form, payload.errors);
+	      this.__emitChange();
+	      break;
+	    case ErrorConstants.CLEAR_ERRORS:
+	      this.clearErrors();
+	      this.__emitChange();
+	      break;
+	
+	  }
+	};
+	
+	module.exports = ErrorStore;
 
 /***/ }
 /******/ ]);

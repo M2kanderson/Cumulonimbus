@@ -4,6 +4,8 @@ const Link = require('react-router').Link;
 const hashHistory = require('react-router').hashHistory;
 const SessionActions = require('../actions/session_actions');
 const SessionStore = require('../stores/session_store');
+const ErrorsStore = require('../stores/errors_store');
+const ErrorActions = require('../actions/error_actions');
 // const SessionConstants = require('./constants/session_constants');
 import FacebookLogin from 'react-facebook-login';
 
@@ -18,6 +20,7 @@ const LoginForm = React.createClass({
 
   componentDidMount(){
     this.loginListener = SessionStore.addListener(this._onChange);
+    this.errorListener = ErrorsStore.addListener(this.forceUpdate.bind(this));
     // this.setState({modalIsOpen: true});
   },
   componentWillUpdate(){
@@ -58,6 +61,7 @@ const LoginForm = React.createClass({
         <form className="session-form" onSubmit={this.handleSubmit}>
           <Link className="form-top-text" to='signup'>Need an account?</Link>
           <h1 className="form-text">Sign in to Cumulonimbus</h1>
+          {this.fieldErrors()}
           <label className="form-text">Enter your <span className="bolded">email</span> and <span className="bolded">password</span>.</label><br/>
           <div>
             <button type="button" className="demo-button" onClick={this.demoLogin} value="Demo Login">Demo Login</button>
@@ -119,6 +123,16 @@ const LoginForm = React.createClass({
 
   componentWillUnmount(){
     this.loginListener.remove();
+    this.errorListener.remove();
+    ErrorActions.clearErrors();
+    this.setState({email: "", password: ""});
+  },
+
+  fieldErrors() {
+    const errors = ErrorsStore.formErrors("login");
+    if (!errors["login"]) { return; }
+    return <ul><li className="session-error-message">{ errors["login"] }</li></ul>;
+    // return <ul>{ messages }</ul>;
   },
 
   });
