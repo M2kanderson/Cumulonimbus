@@ -57,7 +57,7 @@
 	
 	//components
 	var App = __webpack_require__(235);
-	var SignupForm = __webpack_require__(267);
+	var SignupForm = __webpack_require__(288);
 	var LoginForm = __webpack_require__(237);
 	
 	var appRouter = React.createElement(
@@ -26733,10 +26733,10 @@
 	
 	var React = __webpack_require__(1);
 	var Header = __webpack_require__(236);
-	var Footer = __webpack_require__(265);
-	var Body = __webpack_require__(266);
+	var Footer = __webpack_require__(286);
+	var Body = __webpack_require__(287);
 	var SessionActions = __webpack_require__(258);
-	var SessionStore = __webpack_require__(273);
+	var SessionStore = __webpack_require__(267);
 	
 	var App = React.createClass({
 	  displayName: 'App',
@@ -26854,9 +26854,9 @@
 	var Link = __webpack_require__(172).Link;
 	var hashHistory = __webpack_require__(172).hashHistory;
 	var SessionActions = __webpack_require__(258);
-	var SessionStore = __webpack_require__(273);
-	var ErrorsStore = __webpack_require__(291);
-	var ErrorActions = __webpack_require__(270);
+	var SessionStore = __webpack_require__(267);
+	var ErrorsStore = __webpack_require__(285);
+	var ErrorActions = __webpack_require__(265);
 	// const SessionConstants = require('./constants/session_constants');
 	
 	var LoginForm = React.createClass({
@@ -28974,7 +28974,7 @@
 	var Dispatcher = __webpack_require__(259);
 	var SessionApiUtils = __webpack_require__(263);
 	var SessionConstants = __webpack_require__(264);
-	var ErrorActions = __webpack_require__(270);
+	var ErrorActions = __webpack_require__(265);
 	
 	var SessionActions = {
 	  login: function login(userData) {
@@ -29399,308 +29399,11 @@
 /* 265 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
-	
-	var React = __webpack_require__(1);
-	
-	var Footer = React.createClass({
-	  displayName: "Footer",
-	
-	
-	  render: function render() {
-	    return React.createElement(
-	      "div",
-	      { className: "footer" },
-	      React.createElement(
-	        "footer",
-	        null,
-	        React.createElement(
-	          "p",
-	          null,
-	          "This is the footer"
-	        )
-	      )
-	    );
-	  }
-	
-	});
-	
-	module.exports = Footer;
-
-/***/ },
-/* 266 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var React = __webpack_require__(1);
-	
-	var Body = React.createClass({
-	  displayName: "Body",
-	
-	
-	  render: function render() {
-	    return React.createElement(
-	      "div",
-	      { className: "body" },
-	      React.createElement(
-	        "p",
-	        null,
-	        " This is the body"
-	      )
-	    );
-	  }
-	
-	});
-	
-	module.exports = Body;
-
-/***/ },
-/* 267 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var React = __webpack_require__(1);
-	var UserActions = __webpack_require__(268);
-	
-	var SignupForm = React.createClass({
-	  displayName: 'SignupForm',
-	
-	  getInitialState: function getInitialState() {
-	    return {
-	      email: "",
-	      // uid: "",
-	      password: "",
-	      password_confirmation: ""
-	      // name: ""
-	    };
-	  },
-	  _updateName: function _updateName(e) {
-	    // this.setState({name: e.target.value});
-	  },
-	  _updateEmail: function _updateEmail(e) {
-	    this.setState({ email: e.target.value });
-	  },
-	  _updatePassword: function _updatePassword(e) {
-	    this.setState({ password: e.target.value });
-	  },
-	  _updatePassConfirm: function _updatePassConfirm(e) {
-	    this.setState({ password_confirmation: e.target.value });
-	  },
-	  _createUser: function _createUser(e) {
-	    e.preventDefault();
-	    UserActions.createUser(this.state);
-	  },
-	
-	  render: function render() {
-	    return React.createElement(
-	      'div',
-	      null,
-	      React.createElement(
-	        'h2',
-	        null,
-	        'Sign up'
-	      ),
-	      React.createElement(
-	        'form',
-	        { onSubmit: this._createUser },
-	        React.createElement(
-	          'div',
-	          { className: 'field' },
-	          React.createElement(
-	            'label',
-	            { 'for': 'name' },
-	            'Name: '
-	          ),
-	          React.createElement('br', null),
-	          React.createElement('input', { type: 'text', onChange: this._updateName })
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'field' },
-	          React.createElement(
-	            'label',
-	            { 'for': 'email' },
-	            'Email: '
-	          ),
-	          React.createElement('br', null),
-	          React.createElement('input', { type: 'email', onChange: this._updateEmail })
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'field' },
-	          React.createElement(
-	            'label',
-	            { 'for': 'password' },
-	            'Password: '
-	          ),
-	          React.createElement('br', null),
-	          React.createElement('input', { type: 'password', autoComplete: 'off',
-	            onChange: this._updatePassword })
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'field' },
-	          React.createElement(
-	            'label',
-	            { 'for': 'password_confirmation' },
-	            'Confirm Password: '
-	          ),
-	          React.createElement('br', null),
-	          React.createElement('input', { type: 'password', autoComplete: 'off',
-	            onChange: this._updatePassConfirm })
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'actions' },
-	          React.createElement('input', { type: 'submit' })
-	        )
-	      )
-	    );
-	  }
-	
-	});
-	
-	module.exports = SignupForm;
-
-/***/ },
-/* 268 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var UserApiUtil = __webpack_require__(269);
-	var AppDispatcher = __webpack_require__(259);
-	var ErrorActions = __webpack_require__(270);
-	
-	var UserConstants = __webpack_require__(272);
-	
-	var UserActions = {
-	  fetchAllUsers: function fetchAllUsers() {
-	    UserApiUtil.fetchAllUsers(this.receiveAllUsers, ErrorActions.setErrors);
-	  },
-	  fetchUser: function fetchUser(id) {
-	    UserApiUtil.fetchUser(id, this.receiveUser, ErrorActions.setErrors);
-	  },
-	  createUser: function createUser(user) {
-	    UserApiUtil.createUser(user, this.receiveUser, ErrorActions.setErrors);
-	  },
-	  updateUser: function updateUser(user) {
-	    UserApiUtil.updateUser(user, this.receiveUser, ErrorActions.setErrors);
-	  },
-	  deleteUser: function deleteUser(id) {
-	    UserApiUtil.deleteUser(id, this.removeUser, ErrorActions.setErrors);
-	  },
-	  receiveAllUsers: function receiveAllUsers(users) {
-	    AppDispatcher.dispatch({
-	      actionType: UserConstants.USERS_RECEIVED,
-	      users: users
-	    });
-	  },
-	  receiveUser: function receiveUser(user) {
-	    AppDispatcher.dispatch({
-	      actionType: UserConstants.USER_RECEIVED,
-	      user: user
-	    });
-	  },
-	  removeUser: function removeUser(user) {
-	    AppDispatcher.dispatch({
-	      actionType: UserConstants.USER_REMOVED,
-	      user: user
-	    });
-	  }
-	};
-	
-	module.exports = UserActions;
-
-/***/ },
-/* 269 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	var UserApiUtil = {
-	  fetchAllUsers: function fetchAllUsers(_success, _error) {
-	    $.ajax({
-	      url: 'api/users',
-	      type: 'GET',
-	      data_type: 'json',
-	      success: function success(resp) {
-	        _success(resp);
-	      },
-	      error: function error(resp) {
-	        _error("fetchAllUsers", resp);
-	      }
-	    });
-	  },
-	  fetchUser: function fetchUser(id, _success2, _error2) {
-	    $.ajax({
-	      url: 'api/users/' + id,
-	      type: 'GET',
-	      data_type: 'json',
-	      success: function success(resp) {
-	        _success2(resp);
-	      },
-	      error: function error(resp) {
-	        _error2("fetchUser", resp);
-	      }
-	    });
-	  },
-	  createUser: function createUser(user, _success3, _error3) {
-	    $.ajax({
-	      url: '/users.json',
-	      type: 'POST',
-	      data_type: 'json',
-	      data: { user: user },
-	      success: function success(resp) {
-	        _success3(resp);
-	      },
-	      error: function error(resp) {
-	        _error3("createUser", resp);
-	      }
-	    });
-	  },
-	  updateUser: function updateUser(user, _success4, _error4) {
-	    $.ajax({
-	      url: 'api/users/' + user.id,
-	      type: 'PATCH',
-	      data_type: 'json',
-	      data: { user: user },
-	      success: function success(resp) {
-	        _success4(resp);
-	      },
-	      error: function error(resp) {
-	        _error4("updateUser", resp);
-	      }
-	    });
-	  },
-	  deleteUser: function deleteUser(id, _success5, _error5) {
-	    $.ajax({
-	      url: 'api/users/' + id,
-	      type: 'DELETE',
-	      data_type: 'json',
-	      success: function success(resp) {
-	        _success5(resp);
-	      },
-	      error: function error(resp) {
-	        _error5("deleteUser", resp);
-	      }
-	    });
-	  }
-	};
-	
-	module.exports = UserApiUtil;
-
-/***/ },
-/* 270 */
-/***/ function(module, exports, __webpack_require__) {
-
 	'use strict';
 	
 	var AppDispatcher = __webpack_require__(259);
 	
-	var ErrorConstants = __webpack_require__(271);
+	var ErrorConstants = __webpack_require__(266);
 	
 	var ErrorActions = {
 	  setErrors: function setErrors(form, errors) {
@@ -29720,7 +29423,7 @@
 	module.exports = ErrorActions;
 
 /***/ },
-/* 271 */
+/* 266 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -29733,27 +29436,13 @@
 	module.exports = ErrorConstants;
 
 /***/ },
-/* 272 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	var UserConstants = {
-	  USERS_RECEIVED: "USERS_RECEIVED",
-	  USER_RECEIVED: "USER_RECEIVED",
-	  USER_REMOVED: "USER_REMOVED"
-	};
-	
-	module.exports = UserConstants;
-
-/***/ },
-/* 273 */
+/* 267 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var Dispatcher = __webpack_require__(259);
-	var Store = __webpack_require__(274).Store;
+	var Store = __webpack_require__(268).Store;
 	var SessionConstants = __webpack_require__(264);
 	
 	var SessionStore = new Store(Dispatcher);
@@ -29799,7 +29488,7 @@
 	module.exports = SessionStore;
 
 /***/ },
-/* 274 */
+/* 268 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -29811,15 +29500,15 @@
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 	
-	module.exports.Container = __webpack_require__(275);
-	module.exports.MapStore = __webpack_require__(278);
-	module.exports.Mixin = __webpack_require__(290);
-	module.exports.ReduceStore = __webpack_require__(279);
-	module.exports.Store = __webpack_require__(280);
+	module.exports.Container = __webpack_require__(269);
+	module.exports.MapStore = __webpack_require__(272);
+	module.exports.Mixin = __webpack_require__(284);
+	module.exports.ReduceStore = __webpack_require__(273);
+	module.exports.Store = __webpack_require__(274);
 
 
 /***/ },
-/* 275 */
+/* 269 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -29841,10 +29530,10 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxStoreGroup = __webpack_require__(276);
+	var FluxStoreGroup = __webpack_require__(270);
 	
 	var invariant = __webpack_require__(262);
-	var shallowEqual = __webpack_require__(277);
+	var shallowEqual = __webpack_require__(271);
 	
 	var DEFAULT_OPTIONS = {
 	  pure: true,
@@ -30002,7 +29691,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 276 */
+/* 270 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -30083,7 +29772,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 277 */
+/* 271 */
 /***/ function(module, exports) {
 
 	/**
@@ -30138,7 +29827,7 @@
 	module.exports = shallowEqual;
 
 /***/ },
-/* 278 */
+/* 272 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -30159,8 +29848,8 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxReduceStore = __webpack_require__(279);
-	var Immutable = __webpack_require__(289);
+	var FluxReduceStore = __webpack_require__(273);
+	var Immutable = __webpack_require__(283);
 	
 	var invariant = __webpack_require__(262);
 	
@@ -30288,7 +29977,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 279 */
+/* 273 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -30309,9 +29998,9 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxStore = __webpack_require__(280);
+	var FluxStore = __webpack_require__(274);
 	
-	var abstractMethod = __webpack_require__(288);
+	var abstractMethod = __webpack_require__(282);
 	var invariant = __webpack_require__(262);
 	
 	var FluxReduceStore = (function (_FluxStore) {
@@ -30395,7 +30084,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 280 */
+/* 274 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -30414,7 +30103,7 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var _require = __webpack_require__(281);
+	var _require = __webpack_require__(275);
 	
 	var EventEmitter = _require.EventEmitter;
 	
@@ -30578,7 +30267,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 281 */
+/* 275 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -30591,14 +30280,14 @@
 	 */
 	
 	var fbemitter = {
-	  EventEmitter: __webpack_require__(282)
+	  EventEmitter: __webpack_require__(276)
 	};
 	
 	module.exports = fbemitter;
 
 
 /***/ },
-/* 282 */
+/* 276 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -30617,11 +30306,11 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var EmitterSubscription = __webpack_require__(283);
-	var EventSubscriptionVendor = __webpack_require__(285);
+	var EmitterSubscription = __webpack_require__(277);
+	var EventSubscriptionVendor = __webpack_require__(279);
 	
-	var emptyFunction = __webpack_require__(287);
-	var invariant = __webpack_require__(286);
+	var emptyFunction = __webpack_require__(281);
+	var invariant = __webpack_require__(280);
 	
 	/**
 	 * @class BaseEventEmitter
@@ -30795,7 +30484,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 283 */
+/* 277 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -30816,7 +30505,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var EventSubscription = __webpack_require__(284);
+	var EventSubscription = __webpack_require__(278);
 	
 	/**
 	 * EmitterSubscription represents a subscription with listener and context data.
@@ -30848,7 +30537,7 @@
 	module.exports = EmitterSubscription;
 
 /***/ },
-/* 284 */
+/* 278 */
 /***/ function(module, exports) {
 
 	/**
@@ -30902,7 +30591,7 @@
 	module.exports = EventSubscription;
 
 /***/ },
-/* 285 */
+/* 279 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -30921,7 +30610,7 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var invariant = __webpack_require__(286);
+	var invariant = __webpack_require__(280);
 	
 	/**
 	 * EventSubscriptionVendor stores a set of EventSubscriptions that are
@@ -31011,7 +30700,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 286 */
+/* 280 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -31066,7 +30755,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 287 */
+/* 281 */
 /***/ function(module, exports) {
 
 	/**
@@ -31108,7 +30797,7 @@
 	module.exports = emptyFunction;
 
 /***/ },
-/* 288 */
+/* 282 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -31135,7 +30824,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 289 */
+/* 283 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -36119,7 +35808,7 @@
 	}));
 
 /***/ },
-/* 290 */
+/* 284 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -36136,7 +35825,7 @@
 	
 	'use strict';
 	
-	var FluxStoreGroup = __webpack_require__(276);
+	var FluxStoreGroup = __webpack_require__(270);
 	
 	var invariant = __webpack_require__(262);
 	
@@ -36242,14 +35931,14 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 291 */
+/* 285 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var Dispatcher = __webpack_require__(259);
-	var Store = __webpack_require__(274).Store;
-	var ErrorConstants = __webpack_require__(271);
+	var Store = __webpack_require__(268).Store;
+	var ErrorConstants = __webpack_require__(266);
 	
 	var ErrorStore = new Store(Dispatcher);
 	
@@ -36295,6 +35984,317 @@
 	};
 	
 	module.exports = ErrorStore;
+
+/***/ },
+/* 286 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var React = __webpack_require__(1);
+	
+	var Footer = React.createClass({
+	  displayName: "Footer",
+	
+	
+	  render: function render() {
+	    return React.createElement(
+	      "div",
+	      { className: "footer" },
+	      React.createElement(
+	        "footer",
+	        null,
+	        React.createElement(
+	          "p",
+	          null,
+	          "This is the footer"
+	        )
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = Footer;
+
+/***/ },
+/* 287 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var React = __webpack_require__(1);
+	
+	var Body = React.createClass({
+	  displayName: "Body",
+	
+	
+	  render: function render() {
+	    return React.createElement(
+	      "div",
+	      { className: "body" },
+	      React.createElement(
+	        "p",
+	        null,
+	        " This is the body"
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = Body;
+
+/***/ },
+/* 288 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1);
+	var UserActions = __webpack_require__(289);
+	
+	var SignupForm = React.createClass({
+	  displayName: 'SignupForm',
+	
+	  getInitialState: function getInitialState() {
+	    return {
+	      email: "",
+	      // uid: "",
+	      password: "",
+	      password_confirmation: ""
+	      // name: ""
+	    };
+	  },
+	  _updateName: function _updateName(e) {
+	    // this.setState({name: e.target.value});
+	  },
+	  _updateEmail: function _updateEmail(e) {
+	    this.setState({ email: e.target.value });
+	  },
+	  _updatePassword: function _updatePassword(e) {
+	    this.setState({ password: e.target.value });
+	  },
+	  _updatePassConfirm: function _updatePassConfirm(e) {
+	    this.setState({ password_confirmation: e.target.value });
+	  },
+	  _createUser: function _createUser(e) {
+	    e.preventDefault();
+	    UserActions.createUser(this.state);
+	  },
+	
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'h2',
+	        null,
+	        'Sign up'
+	      ),
+	      React.createElement(
+	        'form',
+	        { onSubmit: this._createUser },
+	        React.createElement(
+	          'div',
+	          { className: 'field' },
+	          React.createElement(
+	            'label',
+	            { 'for': 'name' },
+	            'Name: '
+	          ),
+	          React.createElement('br', null),
+	          React.createElement('input', { type: 'text', onChange: this._updateName })
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'field' },
+	          React.createElement(
+	            'label',
+	            { 'for': 'email' },
+	            'Email: '
+	          ),
+	          React.createElement('br', null),
+	          React.createElement('input', { type: 'email', onChange: this._updateEmail })
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'field' },
+	          React.createElement(
+	            'label',
+	            { 'for': 'password' },
+	            'Password: '
+	          ),
+	          React.createElement('br', null),
+	          React.createElement('input', { type: 'password', autoComplete: 'off',
+	            onChange: this._updatePassword })
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'field' },
+	          React.createElement(
+	            'label',
+	            { 'for': 'password_confirmation' },
+	            'Confirm Password: '
+	          ),
+	          React.createElement('br', null),
+	          React.createElement('input', { type: 'password', autoComplete: 'off',
+	            onChange: this._updatePassConfirm })
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'actions' },
+	          React.createElement('input', { type: 'submit' })
+	        )
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = SignupForm;
+
+/***/ },
+/* 289 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var UserApiUtil = __webpack_require__(290);
+	var AppDispatcher = __webpack_require__(259);
+	var ErrorActions = __webpack_require__(265);
+	
+	var UserConstants = __webpack_require__(291);
+	
+	var UserActions = {
+	  fetchAllUsers: function fetchAllUsers() {
+	    UserApiUtil.fetchAllUsers(this.receiveAllUsers, ErrorActions.setErrors);
+	  },
+	  fetchUser: function fetchUser(id) {
+	    UserApiUtil.fetchUser(id, this.receiveUser, ErrorActions.setErrors);
+	  },
+	  createUser: function createUser(user) {
+	    UserApiUtil.createUser(user, this.receiveUser, ErrorActions.setErrors);
+	  },
+	  updateUser: function updateUser(user) {
+	    UserApiUtil.updateUser(user, this.receiveUser, ErrorActions.setErrors);
+	  },
+	  deleteUser: function deleteUser(id) {
+	    UserApiUtil.deleteUser(id, this.removeUser, ErrorActions.setErrors);
+	  },
+	  receiveAllUsers: function receiveAllUsers(users) {
+	    AppDispatcher.dispatch({
+	      actionType: UserConstants.USERS_RECEIVED,
+	      users: users
+	    });
+	  },
+	  receiveUser: function receiveUser(user) {
+	    AppDispatcher.dispatch({
+	      actionType: UserConstants.USER_RECEIVED,
+	      user: user
+	    });
+	  },
+	  removeUser: function removeUser(user) {
+	    AppDispatcher.dispatch({
+	      actionType: UserConstants.USER_REMOVED,
+	      user: user
+	    });
+	  }
+	};
+	
+	module.exports = UserActions;
+
+/***/ },
+/* 290 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	var UserApiUtil = {
+	  fetchAllUsers: function fetchAllUsers(_success, _error) {
+	    $.ajax({
+	      url: 'api/users',
+	      type: 'GET',
+	      data_type: 'json',
+	      success: function success(resp) {
+	        _success(resp);
+	      },
+	      error: function error(resp) {
+	        _error("fetchAllUsers", resp);
+	      }
+	    });
+	  },
+	  fetchUser: function fetchUser(id, _success2, _error2) {
+	    $.ajax({
+	      url: 'api/users/' + id,
+	      type: 'GET',
+	      data_type: 'json',
+	      success: function success(resp) {
+	        _success2(resp);
+	      },
+	      error: function error(resp) {
+	        _error2("fetchUser", resp);
+	      }
+	    });
+	  },
+	  createUser: function createUser(user, _success3, _error3) {
+	    $.ajax({
+	      url: '/users.json',
+	      type: 'POST',
+	      data_type: 'json',
+	      data: { user: user },
+	      success: function success(resp) {
+	        _success3(resp);
+	      },
+	      error: function error(resp) {
+	        _error3("createUser", resp);
+	      }
+	    });
+	  },
+	  updateUser: function updateUser(user, _success4, _error4) {
+	    $.ajax({
+	      url: 'api/users/' + user.id,
+	      type: 'PATCH',
+	      data_type: 'json',
+	      data: { user: user },
+	      success: function success(resp) {
+	        _success4(resp);
+	      },
+	      error: function error(resp) {
+	        _error4("updateUser", resp);
+	      }
+	    });
+	  },
+	  deleteUser: function deleteUser(id, _success5, _error5) {
+	    $.ajax({
+	      url: 'api/users/' + id,
+	      type: 'DELETE',
+	      data_type: 'json',
+	      success: function success(resp) {
+	        _success5(resp);
+	      },
+	      error: function error(resp) {
+	        _error5("deleteUser", resp);
+	      }
+	    });
+	  }
+	};
+	
+	module.exports = UserApiUtil;
+
+/***/ },
+/* 291 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	var UserConstants = {
+	  USERS_RECEIVED: "USERS_RECEIVED",
+	  USER_RECEIVED: "USER_RECEIVED",
+	  USER_REMOVED: "USER_REMOVED"
+	};
+	
+	module.exports = UserConstants;
 
 /***/ }
 /******/ ]);
