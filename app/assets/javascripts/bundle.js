@@ -26736,6 +26736,7 @@
 	var Footer = __webpack_require__(265);
 	var Body = __webpack_require__(266);
 	var SessionActions = __webpack_require__(258);
+	var SessionStore = __webpack_require__(273);
 	
 	var App = React.createClass({
 	  displayName: 'App',
@@ -26771,6 +26772,7 @@
 	});
 	
 	window.SessionActions = SessionActions;
+	window.SessionStore = SessionStore;
 	
 	module.exports = App;
 
@@ -26853,6 +26855,8 @@
 	var hashHistory = __webpack_require__(172).hashHistory;
 	var SessionActions = __webpack_require__(258);
 	var SessionStore = __webpack_require__(273);
+	var ErrorsStore = __webpack_require__(291);
+	var ErrorActions = __webpack_require__(270);
 	// const SessionConstants = require('./constants/session_constants');
 	
 	var LoginForm = React.createClass({
@@ -26865,6 +26869,7 @@
 	  },
 	  componentDidMount: function componentDidMount() {
 	    this.loginListener = SessionStore.addListener(this._onChange);
+	    this.errorListener = ErrorsStore.addListener(this.forceUpdate.bind(this));
 	    // this.setState({modalIsOpen: true});
 	  },
 	  componentWillUpdate: function componentWillUpdate() {
@@ -26892,6 +26897,7 @@
 	          { className: 'form-text' },
 	          'Sign in to Cumulonimbus'
 	        ),
+	        this.fieldErrors(),
 	        React.createElement(
 	          'label',
 	          { className: 'form-text' },
@@ -26970,6 +26976,25 @@
 	  },
 	  componentWillUnmount: function componentWillUnmount() {
 	    this.loginListener.remove();
+	    this.errorListener.remove();
+	    ErrorActions.clearErrors();
+	    this.setState({ email: "", password: "" });
+	  },
+	  fieldErrors: function fieldErrors() {
+	    var errors = ErrorsStore.formErrors("login");
+	    if (!errors["login"]) {
+	      return;
+	    }
+	    return React.createElement(
+	      'ul',
+	      null,
+	      React.createElement(
+	        'li',
+	        { className: 'session-error-message' },
+	        errors["login"]
+	      )
+	    );
+	    // return <ul>{ messages }</ul>;
 	  }
 	});
 	
@@ -28949,12 +28974,13 @@
 	var Dispatcher = __webpack_require__(259);
 	var SessionApiUtils = __webpack_require__(263);
 	var SessionConstants = __webpack_require__(264);
+	var ErrorActions = __webpack_require__(270);
 	
 	var SessionActions = {
 	  login: function login(userData) {
 	    console.log("logging in");
 	
-	    SessionApiUtils.login(userData, this.receiveUser);
+	    SessionApiUtils.login(userData, this.receiveUser, ErrorActions.setErrors);
 	  },
 	  receiveUser: function receiveUser(userData) {
 	    Dispatcher.dispatch({
@@ -28963,11 +28989,17 @@
 	    });
 	  },
 	  logout: function logout() {
-	    SessionApiUtils.logout(this.removeCurrentUser);
+	    SessionApiUtils.logout(this.removeCurrentUser, ErrorActions.setErrors);
 	  },
 	  removeCurrentUser: function removeCurrentUser() {
 	    Dispatcher.dispatch({
 	      actionType: SessionConstants.LOGOUT
+	    });
+	  },
+	  receiveErrors: function receiveErrors(errors) {
+	    Dispatcher.dispatch({
+	      actionType: SessionConstants.DISPLAY_ERRORS,
+	      errors: errors
 	    });
 	  }
 	};
@@ -29312,7 +29344,7 @@
 	
 	    return "";
 	  },
-	  login: function login(userdata, cb) {
+	  login: function login(userdata, cb, failure) {
 	    $.ajax({
 	      method: "POST",
 	      url: "/users/sign_in.json",
@@ -29328,12 +29360,12 @@
 	        cb(response);
 	      },
 	
-	      error: function error() {
-	        console.log("error in SessionApiUtil#login");
+	      error: function error(response) {
+	        failure("login", JSON.parse(response.responseText).error);
 	      }
 	    });
 	  },
-	  logout: function logout(cb) {
+	  logout: function logout(cb, failure) {
 	    $.ajax({
 	      method: "DELETE",
 	      url: "/users/sign_out.json",
@@ -29345,8 +29377,8 @@
 	        cb(response);
 	      },
 	
-	      error: function error() {
-	        console.log("error in SessionApiUtil#logout");
+	      error: function error(response) {
+	        failure(JSON.parse(response.responseText).error);
 	      }
 	    });
 	  }
@@ -29674,15 +29706,13 @@
 	  setErrors: function setErrors(form, errors) {
 	    AppDispatcher.dispatch({
 	      actionType: ErrorConstants.SET_ERRORS,
-	      errors: errors,
+	      errors: [errors],
 	      form: form
 	    });
 	  },
-	  clearErrors: function clearErrors(form, errors) {
+	  clearErrors: function clearErrors() {
 	    AppDispatcher.dispatch({
-	      actionType: ErrorConstants.CLEAR_ERRORS,
-	      errors: errors,
-	      form: form
+	      actionType: ErrorConstants.CLEAR_ERRORS
 	    });
 	  }
 	};
@@ -36210,6 +36240,61 @@
 	
 	module.exports = FluxMixinLegacy;
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
+
+/***/ },
+/* 291 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var Dispatcher = __webpack_require__(259);
+	var Store = __webpack_require__(274).Store;
+	var ErrorConstants = __webpack_require__(271);
+	
+	var ErrorStore = new Store(Dispatcher);
+	
+	var _errors = {};
+	var _form = "";
+	
+	ErrorStore.formErrors = function (form) {
+	  if (form === _form) {
+	    return _errors;
+	  } else {
+	    return {};
+	  }
+	};
+	
+	var form = function form() {
+	  return _form;
+	};
+	
+	ErrorStore.setErrors = function (formName, errors) {
+	  _form = formName;
+	  errors.forEach(function (error) {
+	    _errors[_form] = error;
+	  });
+	};
+	
+	ErrorStore.clearErrors = function () {
+	  _form = "";
+	  _errors = {};
+	};
+	
+	ErrorStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case ErrorConstants.SET_ERRORS:
+	      this.setErrors(payload.form, payload.errors);
+	      this.__emitChange();
+	      break;
+	    case ErrorConstants.CLEAR_ERRORS:
+	      this.clearErrors();
+	      this.__emitChange();
+	      break;
+	
+	  }
+	};
+	
+	module.exports = ErrorStore;
 
 /***/ }
 /******/ ]);

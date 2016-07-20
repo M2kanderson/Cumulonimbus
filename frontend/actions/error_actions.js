@@ -6,15 +6,13 @@ const ErrorActions = {
   setErrors(form, errors){
     AppDispatcher.dispatch({
       actionType: ErrorConstants.SET_ERRORS,
-      errors: errors,
+      errors: [errors],
       form: form
     });
   },
-  clearErrors(form, errors){
+  clearErrors(){
     AppDispatcher.dispatch({
-      actionType: ErrorConstants.CLEAR_ERRORS,
-      errors: errors,
-      form: form
+      actionType: ErrorConstants.CLEAR_ERRORS
     });
   }
 };

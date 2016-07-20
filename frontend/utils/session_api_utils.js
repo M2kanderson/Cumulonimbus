@@ -13,7 +13,7 @@ module.exports = {
     return "";
   },
 
-  login(userdata, cb) {
+  login(userdata, cb, failure) {
     $.ajax({
         method: "POST",
         url: "/users/sign_in.json",
@@ -29,13 +29,13 @@ module.exports = {
           cb(response);
         },
 
-        error() {
-          console.log("error in SessionApiUtil#login");
+        error(response) {
+          failure("login", JSON.parse(response.responseText).error);
         }
       });
     },
 
-    logout(cb) {
+    logout(cb, failure) {
       $.ajax({
           method: "DELETE",
           url: "/users/sign_out.json",
@@ -47,8 +47,8 @@ module.exports = {
             cb(response);
           },
 
-          error() {
-            console.log("error in SessionApiUtil#logout");
+          error(response) {
+            failure(JSON.parse(response.responseText).error);
           }
         });
       }

@@ -1,12 +1,13 @@
 const Dispatcher = require('../dispatcher/dispatcher');
 const SessionApiUtils = require('../utils/session_api_utils');
 const SessionConstants = require('../constants/session_constants.js');
+const ErrorActions = require('./error_actions');
 
 const SessionActions = {
   login(userData) {
     console.log("logging in");
 
-    SessionApiUtils.login(userData, this.receiveUser);
+    SessionApiUtils.login(userData, this.receiveUser, ErrorActions.setErrors);
   },
 
   receiveUser(userData) {
@@ -17,12 +18,19 @@ const SessionActions = {
   },
 
   logout() {
-    SessionApiUtils.logout(this.removeCurrentUser);
+    SessionApiUtils.logout(this.removeCurrentUser, ErrorActions.setErrors);
   },
 
   removeCurrentUser() {
     Dispatcher.dispatch({
       actionType: SessionConstants.LOGOUT
+    });
+  },
+
+  receiveErrors(errors) {
+    Dispatcher.dispatch({
+      actionType: SessionConstants.DISPLAY_ERRORS,
+      errors: errors
     });
   }
 };
