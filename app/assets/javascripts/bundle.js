@@ -26790,6 +26790,7 @@
 	var React = __webpack_require__(1);
 	var LoginForm = __webpack_require__(237);
 	var SessionActions = __webpack_require__(258);
+	var Searchbar = __webpack_require__(294);
 	
 	var Header = React.createClass({
 	  displayName: 'Header',
@@ -26828,24 +26829,33 @@
 	    return React.createElement(
 	      'div',
 	      { className: 'header' },
-	      React.createElement('img', { src: 'http://res.cloudinary.com/pulsr/image/upload/c_crop,y_0/v1468955200/Cumulonimbus/Cumulonimbus-logo.png' }),
 	      React.createElement(
-	        'section',
-	        { className: 'header-buttons' },
+	        'div',
+	        { className: 'header-left' },
+	        React.createElement('img', { src: 'http://res.cloudinary.com/pulsr/image/upload/c_crop,y_0/v1468955200/Cumulonimbus/Cumulonimbus-logo.png' })
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'header-right' },
 	        React.createElement(
-	          'button',
-	          { className: 'button', onClick: this.toggleLogin },
-	          ' Sign In'
-	        ),
-	        React.createElement(
-	          'button',
-	          { className: 'button' },
-	          ' Sign Up'
-	        ),
-	        React.createElement(
-	          'button',
-	          { className: 'button', onClick: this.signOut },
-	          ' Log Out'
+	          'section',
+	          { className: 'header-buttons' },
+	          React.createElement(Searchbar, null),
+	          React.createElement(
+	            'button',
+	            { className: 'button', onClick: this.toggleLogin },
+	            ' Sign In'
+	          ),
+	          React.createElement(
+	            'button',
+	            { className: 'button' },
+	            ' Sign Up'
+	          ),
+	          React.createElement(
+	            'button',
+	            { className: 'button', onClick: this.signOut },
+	            ' Log Out'
+	          )
 	        )
 	      ),
 	      React.createElement(LoginForm, { modalOpen: this.state.login, toggleForm: this.toggleLogin })
@@ -36447,7 +36457,7 @@
 	        React.createElement(
 	          "p",
 	          { className: "index-desc" },
-	          "Great music anywhere and any time."
+	          "Great music. Anywhere. Any time."
 	        )
 	      )
 	    );
@@ -36456,6 +36466,70 @@
 	});
 	
 	module.exports = Index;
+
+/***/ },
+/* 294 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1);
+	var ReactRouter = __webpack_require__(172);
+	var hashHistory = ReactRouter.hashHistory;
+	
+	var Searchbar = React.createClass({
+	  displayName: 'Searchbar',
+	
+	  getInitialState: function getInitialState() {
+	    return {
+	      query: ""
+	    };
+	  },
+	  updateQuery: function updateQuery(e) {
+	    this.setState({ query: e.target.value });
+	  },
+	  search: function search(e) {
+	    e.preventDefault();
+	    var tagNames = this.state.query.split(",").map(function (tag) {
+	      return tag.trim();
+	    });
+	    hashHistory.push({
+	      pathname: "search",
+	      query: { tagNames: tagNames }
+	    });
+	    this.setState({ query: "" });
+	  },
+	  trySearch: function trySearch(e) {
+	    if (e.keyCode === 13) {
+	      this.search(e);
+	    }
+	  },
+	
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      { className: 'searchbar' },
+	      React.createElement(
+	        'div',
+	        { className: 'search-icon' },
+	        React.createElement('input', { type: 'button', onClick: this.search,
+	          className: 'search-icon-img' })
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'search-field' },
+	        React.createElement('input', { type: 'text',
+	          onChange: this.updateQuery,
+	          onKeyUp: this.trySearch,
+	          value: this.state.query,
+	          placeholder: 'Song name, artist, etc.\'' })
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = Searchbar;
 
 /***/ }
 /******/ ]);

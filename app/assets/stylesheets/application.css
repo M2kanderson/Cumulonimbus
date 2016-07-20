@@ -109,7 +109,7 @@ footer{
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  width: 400px;
+  /*width: 400px;*/
 }
 
 .facebook-button{
@@ -146,6 +146,75 @@ footer{
   color: white;
 }
 .index-desc{
+  font-family: 'Neuton', serif;
   color: white;
   font-size: 24px;
+}
+
+/*searchbar*/
+.search-field input{
+  -webkit-transition: width 0.3s ease;
+  -moz-transition: width 0.3s ease;
+  -o-transition: width 0.3s ease;
+  -ms-transition: width 0.3s ease;
+  transition: width 0.3s ease;
+  box-shadow: none;
+  border-radius: 0;
+  font-size: 14px;
+  font-family: 'Lato', sans-serif;
+  outline: 0;
+  resize: none;
+  border: 0;
+  height: 33px;
+  width: 200px;
+ }
+
+ .search-field input:focus{
+   width: 300px;
+ }
+.searchbar{
+  margin-right: 170px;
+  margin-top: 8px;
+  display: flex;
+  flex-direction: row;
+  padding: 1px;
+}
+.search-icon{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  text-align: left;
+  outline: 0;
+  width: 32px;
+  height: 35px;
+  background-color: white;
+}
+.search-icon-img{
+  box-shadow: none;
+  outline: 0;
+  position: inherit;
+  background-image: url(http://res.cloudinary.com/pulsr/image/upload/v1467749571/zoom-or-search-tool_318-34054_sp57he.jpg);
+  background-size: cover;
+  border: 0;
+  width: 18px;
+  height: 18px;
+}
+
+@media (max-width: 964px){
+  .header{
+    flex-wrap: wrap;
+  }
+  .header-left{
+    order: 2;
+    background-color: #272626;
+    width: 100%;
+  }
+  .header-right{
+    width: 100%;
+    margin-left: 100px;
+  }
+  .searchbar{
+    margin-right: 0 !important;
+  }
 }

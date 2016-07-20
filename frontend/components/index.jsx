@@ -7,7 +7,7 @@ var Index = React.createClass({
       <div className="index">
         <div className="index-photo">
           <h1 className="index-header">Cumulonimbus</h1>
-          <p className="index-desc">Great music anywhere and any time.</p>
+          <p className="index-desc">Great music. Anywhere. Any time.</p>
         </div>
       </div>
     );
