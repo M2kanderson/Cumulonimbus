@@ -6,6 +6,13 @@ Rails.application.routes.draw do
   scope :auth do
     get 'is_signed_in', to: 'auth#is_signed_in?'
   end
+
+
+  namespace :api, defaults: {format: :json } do
+    resources :tracks, only: [:create, :index]
+  end
+
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

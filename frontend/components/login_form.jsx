@@ -8,6 +8,7 @@ const ErrorsStore = require('../stores/errors_store');
 const ErrorActions = require('../actions/error_actions');
 // const SessionConstants = require('./constants/session_constants');
 import FacebookLogin from 'react-facebook-login';
+// const FacebookLogin = require('react-facebook-login');
 
 const LoginForm = React.createClass({
   getInitialState(){
@@ -61,7 +62,7 @@ const LoginForm = React.createClass({
         <form className="session-form" onSubmit={this.handleSubmit}>
           <Link className="form-top-text" to='signup'>Need an account?</Link>
           <h1 className="form-text">Sign in to Cumulonimbus</h1>
-          {this.fieldErrors()}
+            {this.fieldErrors()}
           <label className="form-text">Enter your <span className="bolded">email</span> and <span className="bolded">password</span>.</label><br/>
           <div>
             <button type="button" className="demo-button" onClick={this.demoLogin} value="Demo Login">Demo Login</button>

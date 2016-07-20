@@ -40,6 +40,4 @@ SessionStore.isUserLoggedIn = function(){
   }
 };
 
-window.SessionStore = SessionStore;
-
 module.exports = SessionStore;
