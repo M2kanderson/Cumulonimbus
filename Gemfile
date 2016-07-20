@@ -33,7 +33,8 @@ gem 'devise'
 gem 'omniauth'
 gem 'omniauth-facebook'
 gem 'omniauth-twitter'
-gem 'omniauth-google'
+# gem 'omniauth-google'
+gem "omniauth-google-oauth2"
 gem 'uuidtools'
 # Use Unicorn as the app server
 # gem 'unicorn'

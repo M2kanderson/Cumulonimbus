@@ -57,9 +57,10 @@
 	
 	//components
 	var App = __webpack_require__(235);
-	var SignupForm = __webpack_require__(290);
+	var SignupForm = __webpack_require__(293);
 	var LoginForm = __webpack_require__(237);
-	var TracksIndex = __webpack_require__(296);
+	var TracksIndex = __webpack_require__(297);
+	var Index = __webpack_require__(300);
 	
 	var appRouter = React.createElement(
 	  Router,
@@ -67,6 +68,7 @@
 	  React.createElement(
 	    Route,
 	    { path: '/', component: App },
+	    React.createElement(IndexRoute, { component: Index }),
 	    React.createElement(Route, { path: '/users/signup', component: SignupForm }),
 	    React.createElement(Route, { path: '/users/login', component: LoginForm }),
 	    React.createElement(Route, { path: 'tracks/all', component: TracksIndex })
@@ -26735,11 +26737,11 @@
 	
 	var React = __webpack_require__(1);
 	var Header = __webpack_require__(236);
-	var Footer = __webpack_require__(286);
-	var Body = __webpack_require__(287);
-	var SessionActions = __webpack_require__(258);
-	var SessionStore = __webpack_require__(267);
-	var TrackActions = __webpack_require__(288);
+	var Footer = __webpack_require__(288);
+	var Body = __webpack_require__(289);
+	var SessionActions = __webpack_require__(259);
+	var SessionStore = __webpack_require__(268);
+	var TrackActions = __webpack_require__(290);
 	
 	var App = React.createClass({
 	  displayName: 'App',
@@ -26766,9 +26768,12 @@
 	      'div',
 	      { className: 'app' },
 	      React.createElement(Header, null),
-	      React.createElement(Body, null),
-	      React.createElement(Footer, null),
-	      this.props.children
+	      React.createElement(
+	        'div',
+	        { className: 'body' },
+	        this.props.children
+	      ),
+	      React.createElement(Footer, null)
 	    );
 	  }
 	
@@ -26788,6 +26793,8 @@
 	
 	var React = __webpack_require__(1);
 	var LoginForm = __webpack_require__(237);
+	var SessionActions = __webpack_require__(259);
+	var Searchbar = __webpack_require__(287);
 	
 	var Header = React.createClass({
 	  displayName: 'Header',
@@ -26805,11 +26812,13 @@
 	    this.setState({ login: !this.state.login });
 	  },
 	  signOut: function signOut(e) {
+	    console.log("hi");
 	    window.FB.getLoginStatus(function (resp) {
 	      if (resp.status === "connected") {
 	        window.FB.logout();
 	      }
 	    });
+	    SessionActions.logout();
 	    e.preventDefault();
 	  },
 	  signUp: function signUp(e) {
@@ -26824,24 +26833,33 @@
 	    return React.createElement(
 	      'div',
 	      { className: 'header' },
-	      React.createElement('img', { src: 'http://res.cloudinary.com/pulsr/image/upload/c_crop,y_0/v1468955200/Cumulonimbus/Cumulonimbus-logo.png' }),
 	      React.createElement(
-	        'section',
-	        { className: 'header-buttons' },
+	        'div',
+	        { className: 'header-left' },
+	        React.createElement('img', { src: 'http://res.cloudinary.com/pulsr/image/upload/c_crop,y_0/v1468955200/Cumulonimbus/Cumulonimbus-logo.png' })
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'header-right' },
 	        React.createElement(
-	          'button',
-	          { className: 'button', onClick: this.toggleLogin },
-	          ' Sign In'
-	        ),
-	        React.createElement(
-	          'button',
-	          { className: 'button' },
-	          ' Sign Up'
-	        ),
-	        React.createElement(
-	          'button',
-	          { className: 'button', onClick: this.signOut },
-	          ' Log Out'
+	          'section',
+	          { className: 'header-buttons' },
+	          React.createElement(Searchbar, null),
+	          React.createElement(
+	            'button',
+	            { className: 'button', onClick: this.toggleLogin },
+	            ' Sign In'
+	          ),
+	          React.createElement(
+	            'button',
+	            { className: 'button' },
+	            ' Sign Up'
+	          ),
+	          React.createElement(
+	            'button',
+	            { className: 'button', onClick: this.signOut },
+	            ' Log Out'
+	          )
 	        )
 	      ),
 	      React.createElement(LoginForm, { modalOpen: this.state.login, toggleForm: this.toggleLogin })
@@ -26858,20 +26876,20 @@
 
 	'use strict';
 	
-	var _reactFacebookLogin = __webpack_require__(295);
+	var _reactFacebookLogin = __webpack_require__(238);
 	
 	var _reactFacebookLogin2 = _interopRequireDefault(_reactFacebookLogin);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var React = __webpack_require__(1);
-	var Modal = __webpack_require__(238);
+	var Modal = __webpack_require__(239);
 	var Link = __webpack_require__(172).Link;
 	var hashHistory = __webpack_require__(172).hashHistory;
-	var SessionActions = __webpack_require__(258);
-	var SessionStore = __webpack_require__(267);
-	var ErrorsStore = __webpack_require__(285);
-	var ErrorActions = __webpack_require__(265);
+	var SessionActions = __webpack_require__(259);
+	var SessionStore = __webpack_require__(268);
+	var ErrorsStore = __webpack_require__(286);
+	var ErrorActions = __webpack_require__(266);
 	// const SessionConstants = require('./constants/session_constants');
 	
 	// const FacebookLogin = require('react-facebook-login');
@@ -26894,6 +26912,10 @@
 	  },
 	  facebookLogin: function facebookLogin() {
 	    SessionActions.facebookLogin();
+	  },
+	  googleLogin: function googleLogin(e) {
+	    e.preventDefault();
+	    SessionActions.googleLogin();
 	  },
 	  responseFacebook: function responseFacebook(response) {
 	    window.FB.getLoginStatus(function (resp) {
@@ -26966,6 +26988,16 @@
 	        React.createElement('input', { className: 'session-textbox text-input', placeholder: 'email', onChange: this.changeUsername, type: 'text', value: this.state.email }),
 	        React.createElement('input', { className: 'session-textbox text-input', placeholder: 'password', onChange: this.changePassword, type: 'password', value: this.state.password }),
 	        React.createElement('input', { id: 'login', className: 'session-button', type: 'submit', value: 'Sign In' }),
+	        React.createElement(
+	          'button',
+	          { onClick: this.facebookLogin },
+	          'Log in facebook'
+	        ),
+	        React.createElement(
+	          'button',
+	          { onClick: this.googleLogin },
+	          'Log in Google'
+	        ),
 	        React.createElement(_reactFacebookLogin2.default, { appId: '1790155654560761',
 	          autoLoad: true, fields: 'name,email,picture',
 	          callback: this.responseFacebook,
@@ -27058,22 +27090,28 @@
 /* 238 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(239);
-	
-
+	!function(e,t){ true?module.exports=t(__webpack_require__(1)):"function"==typeof define&&define.amd?define(["react"],t):"object"==typeof exports?exports.FacebookLogin=t(require("react")):e.FacebookLogin=t(e.react)}(this,function(e){return function(e){function t(n){if(o[n])return o[n].exports;var r=o[n]={exports:{},id:n,loaded:!1};return e[n].call(r.exports,r,r.exports,t),r.loaded=!0,r.exports}var o={};return t.m=e,t.c=o,t.p="",t(0)}([function(e,t,o){e.exports=o(2)},function(e,t,o){"use strict";function n(e){return e&&e.__esModule?e:{"default":e}}function r(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}function i(e,t){if(!e)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return!t||"object"!=typeof t&&"function"!=typeof t?e:t}function a(e,t){if("function"!=typeof t&&null!==t)throw new TypeError("Super expression must either be null or a function, not "+typeof t);e.prototype=Object.create(t&&t.prototype,{constructor:{value:e,enumerable:!1,writable:!0,configurable:!0}}),t&&(Object.setPrototypeOf?Object.setPrototypeOf(e,t):e.__proto__=t)}Object.defineProperty(t,"__esModule",{value:!0});var s=function(){function e(e,t){for(var o=0;o<t.length;o++){var n=t[o];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(e,n.key,n)}}return function(t,o,n){return o&&e(t.prototype,o),n&&e(t,n),t}}(),c=o(5),l=n(c),p=o(3),u=n(p),f=function(e){function t(e){r(this,t);var o=i(this,Object.getPrototypeOf(t).call(this,e));return o.responseApi=function(e){window.FB.api("/me",{fields:o.props.fields},function(t){Object.assign(t,e),o.props.callback(t)})},o.checkLoginState=function(e){e.authResponse?o.responseApi(e.authResponse):o.props.callback&&o.props.callback({status:e.status})},o.click=function(){var e=o.props,t=e.scope,n=e.appId;navigator.userAgent.match("CriOS")?window.location.href="https://www.facebook.com/dialog/oauth?client_id="+n+"&redirect_uri="+window.location.href+"&state=facebookdirect&"+t:window.FB.login(o.checkLoginState,{scope:t})},o}return a(t,e),s(t,[{key:"componentDidMount",value:function(){var e=this,t=this.props,o=t.appId,n=t.xfbml,r=t.cookie,i=t.version,a=t.autoLoad,s=t.language,c=document.createElement("div");c.id="fb-root",document.body.appendChild(c),window.fbAsyncInit=function(){window.FB.init({version:"v"+i,appId:o,xfbml:n,cookie:r}),(a||window.location.search.includes("facebookdirect"))&&window.FB.getLoginStatus(e.checkLoginState)},function(e,t,o){var n=e.getElementsByTagName(t)[0],r=n,i=n;e.getElementById(o)||(i=e.createElement(t),i.id=o,i.src="//connect.facebook.net/"+s+"/all.js",r.parentNode.insertBefore(i,r))}(document,"script","facebook-jssdk")}},{key:"renderWithFontAwesome",value:function(){var e=this.props,t=e.cssClass,o=e.size,n=e.icon,r=e.textButton;return l["default"].createElement("span",null,l["default"].createElement("link",{rel:"stylesheet",href:"//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"}),l["default"].createElement("button",{type:this.props.typeButton,className:t+" "+o,onClick:this.click},l["default"].createElement("i",{className:"fa "+n})," ",r),l["default"].createElement("style",{dangerouslySetInnerHTML:{__html:u["default"]}}))}},{key:"render",value:function(){var e=this.props,t=e.cssClass,o=e.size,n=e.icon,r=e.textButton;return n?this.renderWithFontAwesome():l["default"].createElement("span",null,l["default"].createElement("button",{className:t+" "+o,onClick:this.click},r),l["default"].createElement("style",{dangerouslySetInnerHTML:{__html:u["default"]}}))}}]),t}(l["default"].Component);f.propTypes={callback:c.PropTypes.func.isRequired,appId:c.PropTypes.string.isRequired,xfbml:c.PropTypes.bool,cookie:c.PropTypes.bool,scope:c.PropTypes.string,textButton:c.PropTypes.string,typeButton:c.PropTypes.string,autoLoad:c.PropTypes.bool,size:c.PropTypes.string,fields:c.PropTypes.string,cssClass:c.PropTypes.string,version:c.PropTypes.string,icon:c.PropTypes.string,language:c.PropTypes.string},f.defaultProps={textButton:"Login with Facebook",typeButton:"button",scope:"public_profile,email",xfbml:!1,cookie:!1,size:"metro",fields:"name",cssClass:"kep-login-facebook",version:"2.3",language:"en_US"},t["default"]=f},function(e,t,o){"use strict";function n(e){return e&&e.__esModule?e:{"default":e}}Object.defineProperty(t,"__esModule",{value:!0});var r=o(1),i=n(r);t["default"]=i["default"]},function(e,t,o){t=e.exports=o(4)(),t.push([e.id,".kep-login-facebook{font-family:Helvetica,sans-serif;font-weight:700;-webkit-font-smoothing:antialiased;color:#fff;cursor:pointer;display:inline-block;font-size:calc(.27548vw + 12.71074px);text-decoration:none;text-transform:uppercase;transition:background-color .3s,border-color .3s;background-color:#4c69ba;border:calc(.06887vw + .67769px) solid #4c69ba;padding:calc(.34435vw + 13.38843px) calc(.34435vw + 18.38843px)}.kep-login-facebook.small{padding:calc(.34435vw + 3.38843px) calc(.34435vw + 8.38843px)}.kep-login-facebook.medium{padding:calc(.34435vw + 8.38843px) calc(.34435vw + 13.38843px)}.kep-login-facebook.metro{border-radius:0}.kep-login-facebook .fa{margin-right:calc(.34435vw + 3.38843px)}",""]),t.locals={"kep-login-facebook":"kep-login-facebook",small:"small",medium:"medium",metro:"metro",fa:"fa"}},function(e,t){e.exports=function(){var e=[];return e.toString=function(){for(var e=[],t=0;t<this.length;t++){var o=this[t];o[2]?e.push("@media "+o[2]+"{"+o[1]+"}"):e.push(o[1])}return e.join("")},e.i=function(t,o){"string"==typeof t&&(t=[[null,t,""]]);for(var n={},r=0;r<this.length;r++){var i=this[r][0];"number"==typeof i&&(n[i]=!0)}for(r=0;r<t.length;r++){var a=t[r];"number"==typeof a[0]&&n[a[0]]||(o&&!a[2]?a[2]=o:o&&(a[2]="("+a[2]+") and ("+o+")"),e.push(a))}},e}},function(t,o){t.exports=e}])});
 
 /***/ },
 /* 239 */
 /***/ function(module, exports, __webpack_require__) {
 
+	module.exports = __webpack_require__(240);
+	
+
+
+/***/ },
+/* 240 */
+/***/ function(module, exports, __webpack_require__) {
+
 	/* WEBPACK VAR INJECTION */(function(process) {var React = __webpack_require__(1);
 	var ReactDOM = __webpack_require__(33);
-	var ExecutionEnvironment = __webpack_require__(240);
-	var ModalPortal = React.createFactory(__webpack_require__(241));
-	var ariaAppHider = __webpack_require__(256);
-	var elementClass = __webpack_require__(257);
+	var ExecutionEnvironment = __webpack_require__(241);
+	var ModalPortal = React.createFactory(__webpack_require__(242));
+	var ariaAppHider = __webpack_require__(257);
+	var elementClass = __webpack_require__(258);
 	var renderSubtreeIntoContainer = __webpack_require__(33).unstable_renderSubtreeIntoContainer;
-	var Assign = __webpack_require__(245);
+	var Assign = __webpack_require__(246);
 	
 	var SafeHTMLElement = ExecutionEnvironment.canUseDOM ? window.HTMLElement : {};
 	var AppElement = ExecutionEnvironment.canUseDOM ? document.body : {appendChild: function() {}};
@@ -27181,7 +27219,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 240 */
+/* 241 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -27226,14 +27264,14 @@
 
 
 /***/ },
-/* 241 */
+/* 242 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var div = React.DOM.div;
-	var focusManager = __webpack_require__(242);
-	var scopeTab = __webpack_require__(244);
-	var Assign = __webpack_require__(245);
+	var focusManager = __webpack_require__(243);
+	var scopeTab = __webpack_require__(245);
+	var Assign = __webpack_require__(246);
 	
 	// so that our CSS is statically analyzable
 	var CLASS_NAMES = {
@@ -27424,10 +27462,10 @@
 
 
 /***/ },
-/* 242 */
+/* 243 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var findTabbable = __webpack_require__(243);
+	var findTabbable = __webpack_require__(244);
 	var modalElement = null;
 	var focusLaterElement = null;
 	var needToFocus = false;
@@ -27498,7 +27536,7 @@
 
 
 /***/ },
-/* 243 */
+/* 244 */
 /***/ function(module, exports) {
 
 	/*!
@@ -27554,10 +27592,10 @@
 
 
 /***/ },
-/* 244 */
+/* 245 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var findTabbable = __webpack_require__(243);
+	var findTabbable = __webpack_require__(244);
 	
 	module.exports = function(node, event) {
 	  var tabbable = findTabbable(node);
@@ -27579,7 +27617,7 @@
 
 
 /***/ },
-/* 245 */
+/* 246 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -27590,9 +27628,9 @@
 	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 * Available under MIT license <https://lodash.com/license>
 	 */
-	var baseAssign = __webpack_require__(246),
-	    createAssigner = __webpack_require__(252),
-	    keys = __webpack_require__(248);
+	var baseAssign = __webpack_require__(247),
+	    createAssigner = __webpack_require__(253),
+	    keys = __webpack_require__(249);
 	
 	/**
 	 * A specialized version of `_.assign` for customizing assigned values without
@@ -27665,7 +27703,7 @@
 
 
 /***/ },
-/* 246 */
+/* 247 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -27676,8 +27714,8 @@
 	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 * Available under MIT license <https://lodash.com/license>
 	 */
-	var baseCopy = __webpack_require__(247),
-	    keys = __webpack_require__(248);
+	var baseCopy = __webpack_require__(248),
+	    keys = __webpack_require__(249);
 	
 	/**
 	 * The base implementation of `_.assign` without support for argument juggling,
@@ -27698,7 +27736,7 @@
 
 
 /***/ },
-/* 247 */
+/* 248 */
 /***/ function(module, exports) {
 
 	/**
@@ -27736,7 +27774,7 @@
 
 
 /***/ },
-/* 248 */
+/* 249 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -27747,9 +27785,9 @@
 	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 * Available under MIT license <https://lodash.com/license>
 	 */
-	var getNative = __webpack_require__(249),
-	    isArguments = __webpack_require__(250),
-	    isArray = __webpack_require__(251);
+	var getNative = __webpack_require__(250),
+	    isArguments = __webpack_require__(251),
+	    isArray = __webpack_require__(252);
 	
 	/** Used to detect unsigned integer values. */
 	var reIsUint = /^\d+$/;
@@ -27978,7 +28016,7 @@
 
 
 /***/ },
-/* 249 */
+/* 250 */
 /***/ function(module, exports) {
 
 	/**
@@ -28121,7 +28159,7 @@
 
 
 /***/ },
-/* 250 */
+/* 251 */
 /***/ function(module, exports) {
 
 	/**
@@ -28370,7 +28408,7 @@
 
 
 /***/ },
-/* 251 */
+/* 252 */
 /***/ function(module, exports) {
 
 	/**
@@ -28556,7 +28594,7 @@
 
 
 /***/ },
-/* 252 */
+/* 253 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -28567,9 +28605,9 @@
 	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 * Available under MIT license <https://lodash.com/license>
 	 */
-	var bindCallback = __webpack_require__(253),
-	    isIterateeCall = __webpack_require__(254),
-	    restParam = __webpack_require__(255);
+	var bindCallback = __webpack_require__(254),
+	    isIterateeCall = __webpack_require__(255),
+	    restParam = __webpack_require__(256);
 	
 	/**
 	 * Creates a function that assigns properties of source object(s) to a given
@@ -28614,7 +28652,7 @@
 
 
 /***/ },
-/* 253 */
+/* 254 */
 /***/ function(module, exports) {
 
 	/**
@@ -28685,7 +28723,7 @@
 
 
 /***/ },
-/* 254 */
+/* 255 */
 /***/ function(module, exports) {
 
 	/**
@@ -28823,7 +28861,7 @@
 
 
 /***/ },
-/* 255 */
+/* 256 */
 /***/ function(module, exports) {
 
 	/**
@@ -28896,7 +28934,7 @@
 
 
 /***/ },
-/* 256 */
+/* 257 */
 /***/ function(module, exports) {
 
 	var _element = typeof document !== 'undefined' ? document.body : null;
@@ -28944,7 +28982,7 @@
 
 
 /***/ },
-/* 257 */
+/* 258 */
 /***/ function(module, exports) {
 
 	module.exports = function(opts) {
@@ -29009,15 +29047,15 @@
 
 
 /***/ },
-/* 258 */
+/* 259 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Dispatcher = __webpack_require__(259);
-	var SessionApiUtils = __webpack_require__(263);
-	var SessionConstants = __webpack_require__(264);
-	var ErrorActions = __webpack_require__(265);
+	var Dispatcher = __webpack_require__(260);
+	var SessionApiUtils = __webpack_require__(264);
+	var SessionConstants = __webpack_require__(265);
+	var ErrorActions = __webpack_require__(266);
 	
 	var SessionActions = {
 	  login: function login(userData) {
@@ -29027,6 +29065,9 @@
 	  },
 	  facebookLogin: function facebookLogin() {
 	    SessionApiUtils.facebookLogin(this.receiveUser);
+	  },
+	  googleLogin: function googleLogin() {
+	    SessionApiUtils.googleLogin(this.receiveUser);
 	  },
 	  receiveUser: function receiveUser(userData) {
 	    Dispatcher.dispatch({
@@ -29053,17 +29094,17 @@
 	module.exports = SessionActions;
 
 /***/ },
-/* 259 */
+/* 260 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var AppDispatcher = __webpack_require__(260).Dispatcher;
+	var AppDispatcher = __webpack_require__(261).Dispatcher;
 	
 	module.exports = new AppDispatcher();
 
 /***/ },
-/* 260 */
+/* 261 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -29075,11 +29116,11 @@
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 	
-	module.exports.Dispatcher = __webpack_require__(261);
+	module.exports.Dispatcher = __webpack_require__(262);
 
 
 /***/ },
-/* 261 */
+/* 262 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -29101,7 +29142,7 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var invariant = __webpack_require__(262);
+	var invariant = __webpack_require__(263);
 	
 	var _prefix = 'ID_';
 	
@@ -29316,7 +29357,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 262 */
+/* 263 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -29371,7 +29412,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 263 */
+/* 264 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -29411,27 +29452,56 @@
 	      }
 	    });
 	  },
+	  googleLogin: function googleLogin(cb, failure) {
+	    window.gapi.auth.authorize({
+	      immediate: false,
+	      response_type: 'code',
+	      cookie_policy: 'single_host_origin',
+	      client_id: '103867363030-iq1ait30ssbtobrqhcmugffnjgvsok9d.apps.googleusercontent.com',
+	      scope: 'email profile'
+	    }, function (response) {
+	      if (response) {
+	        if (response && !response.error) {
+	          $.ajax({
+	            type: 'POST',
+	            url: "users/auth/google_oauth2/callback",
+	            data: response,
+	            success: function success(data) {
+	              console.log(data);
+	            }
+	          });
+	        } else {
+	          console.log("something else happened");
+	        }
+	      }
+	    });
+	  },
 	  facebookLogin: function facebookLogin(cb) {
 	    window.FB.getLoginStatus(function (response) {
-	      console.log(response.authResponse.signedRequest);
-	      $.ajax({
-	        method: "GET",
-	        url: "/users/auth/facebook/",
-	        dataType: "json",
-	        data: {
-	          app_id: "1790155654560761",
-	          signed_request: response.authResponse.signedRequest
-	        },
+	      // console.log(response);
+	      if (!response.authResponse) {
+	        window.FB.login(function (resp) {
+	          $.ajax({
+	            method: "GET",
+	            url: "/users/auth/facebook/callback",
+	            dataType: "json",
+	            // data: {
+	            //   app_id: "1790155654560761",
+	            //   signed_request: resp.authResponse.signedRequest,
+	            //   authenticity_token: this.getMetaContent("csrf-token")
+	            // },
 	
-	        success: function success(res) {
-	          console.log(res);
-	          cb(res);
-	        },
+	            success: function success(res) {
+	              console.log(res);
+	              cb(res);
+	            },
 	
-	        error: function error() {
-	          console.log("error in SessionApiUtil#facebookLogin");
-	        }
-	      });
+	            error: function error() {
+	              console.log("error in SessionApiUtil#facebookLogin");
+	            }
+	          });
+	        }, { scope: 'email' });
+	      }
 	    });
 	  },
 	  logout: function logout(cb, failure) {
@@ -29454,7 +29524,7 @@
 	};
 
 /***/ },
-/* 264 */
+/* 265 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -29465,14 +29535,14 @@
 	};
 
 /***/ },
-/* 265 */
+/* 266 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var AppDispatcher = __webpack_require__(259);
+	var AppDispatcher = __webpack_require__(260);
 	
-	var ErrorConstants = __webpack_require__(266);
+	var ErrorConstants = __webpack_require__(267);
 	
 	var ErrorActions = {
 	  setErrors: function setErrors(form, errors) {
@@ -29492,7 +29562,7 @@
 	module.exports = ErrorActions;
 
 /***/ },
-/* 266 */
+/* 267 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -29505,14 +29575,14 @@
 	module.exports = ErrorConstants;
 
 /***/ },
-/* 267 */
+/* 268 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Dispatcher = __webpack_require__(259);
-	var Store = __webpack_require__(268).Store;
-	var SessionConstants = __webpack_require__(264);
+	var Dispatcher = __webpack_require__(260);
+	var Store = __webpack_require__(269).Store;
+	var SessionConstants = __webpack_require__(265);
 	
 	var SessionStore = new Store(Dispatcher);
 	
@@ -29555,7 +29625,7 @@
 	module.exports = SessionStore;
 
 /***/ },
-/* 268 */
+/* 269 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -29567,15 +29637,15 @@
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 	
-	module.exports.Container = __webpack_require__(269);
-	module.exports.MapStore = __webpack_require__(272);
-	module.exports.Mixin = __webpack_require__(284);
-	module.exports.ReduceStore = __webpack_require__(273);
-	module.exports.Store = __webpack_require__(274);
+	module.exports.Container = __webpack_require__(270);
+	module.exports.MapStore = __webpack_require__(273);
+	module.exports.Mixin = __webpack_require__(285);
+	module.exports.ReduceStore = __webpack_require__(274);
+	module.exports.Store = __webpack_require__(275);
 
 
 /***/ },
-/* 269 */
+/* 270 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -29597,10 +29667,10 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxStoreGroup = __webpack_require__(270);
+	var FluxStoreGroup = __webpack_require__(271);
 	
-	var invariant = __webpack_require__(262);
-	var shallowEqual = __webpack_require__(271);
+	var invariant = __webpack_require__(263);
+	var shallowEqual = __webpack_require__(272);
 	
 	var DEFAULT_OPTIONS = {
 	  pure: true,
@@ -29758,7 +29828,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 270 */
+/* 271 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -29777,7 +29847,7 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var invariant = __webpack_require__(262);
+	var invariant = __webpack_require__(263);
 	
 	/**
 	 * FluxStoreGroup allows you to execute a callback on every dispatch after
@@ -29839,7 +29909,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 271 */
+/* 272 */
 /***/ function(module, exports) {
 
 	/**
@@ -29894,7 +29964,7 @@
 	module.exports = shallowEqual;
 
 /***/ },
-/* 272 */
+/* 273 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -29915,10 +29985,10 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxReduceStore = __webpack_require__(273);
-	var Immutable = __webpack_require__(283);
+	var FluxReduceStore = __webpack_require__(274);
+	var Immutable = __webpack_require__(284);
 	
-	var invariant = __webpack_require__(262);
+	var invariant = __webpack_require__(263);
 	
 	/**
 	 * This is a simple store. It allows caching key value pairs. An implementation
@@ -30044,7 +30114,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 273 */
+/* 274 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -30065,10 +30135,10 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxStore = __webpack_require__(274);
+	var FluxStore = __webpack_require__(275);
 	
-	var abstractMethod = __webpack_require__(282);
-	var invariant = __webpack_require__(262);
+	var abstractMethod = __webpack_require__(283);
+	var invariant = __webpack_require__(263);
 	
 	var FluxReduceStore = (function (_FluxStore) {
 	  _inherits(FluxReduceStore, _FluxStore);
@@ -30151,7 +30221,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 274 */
+/* 275 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -30170,11 +30240,11 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var _require = __webpack_require__(275);
+	var _require = __webpack_require__(276);
 	
 	var EventEmitter = _require.EventEmitter;
 	
-	var invariant = __webpack_require__(262);
+	var invariant = __webpack_require__(263);
 	
 	/**
 	 * This class should be extended by the stores in your application, like so:
@@ -30334,7 +30404,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 275 */
+/* 276 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -30347,14 +30417,14 @@
 	 */
 	
 	var fbemitter = {
-	  EventEmitter: __webpack_require__(276)
+	  EventEmitter: __webpack_require__(277)
 	};
 	
 	module.exports = fbemitter;
 
 
 /***/ },
-/* 276 */
+/* 277 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -30373,11 +30443,11 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var EmitterSubscription = __webpack_require__(277);
-	var EventSubscriptionVendor = __webpack_require__(279);
+	var EmitterSubscription = __webpack_require__(278);
+	var EventSubscriptionVendor = __webpack_require__(280);
 	
-	var emptyFunction = __webpack_require__(281);
-	var invariant = __webpack_require__(280);
+	var emptyFunction = __webpack_require__(282);
+	var invariant = __webpack_require__(281);
 	
 	/**
 	 * @class BaseEventEmitter
@@ -30551,7 +30621,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 277 */
+/* 278 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -30572,7 +30642,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var EventSubscription = __webpack_require__(278);
+	var EventSubscription = __webpack_require__(279);
 	
 	/**
 	 * EmitterSubscription represents a subscription with listener and context data.
@@ -30604,7 +30674,7 @@
 	module.exports = EmitterSubscription;
 
 /***/ },
-/* 278 */
+/* 279 */
 /***/ function(module, exports) {
 
 	/**
@@ -30658,7 +30728,7 @@
 	module.exports = EventSubscription;
 
 /***/ },
-/* 279 */
+/* 280 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -30677,7 +30747,7 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var invariant = __webpack_require__(280);
+	var invariant = __webpack_require__(281);
 	
 	/**
 	 * EventSubscriptionVendor stores a set of EventSubscriptions that are
@@ -30767,7 +30837,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 280 */
+/* 281 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -30822,7 +30892,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 281 */
+/* 282 */
 /***/ function(module, exports) {
 
 	/**
@@ -30864,7 +30934,7 @@
 	module.exports = emptyFunction;
 
 /***/ },
-/* 282 */
+/* 283 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -30881,7 +30951,7 @@
 	
 	'use strict';
 	
-	var invariant = __webpack_require__(262);
+	var invariant = __webpack_require__(263);
 	
 	function abstractMethod(className, methodName) {
 	   true ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Subclasses of %s must override %s() with their own implementation.', className, methodName) : invariant(false) : undefined;
@@ -30891,7 +30961,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 283 */
+/* 284 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -35875,7 +35945,7 @@
 	}));
 
 /***/ },
-/* 284 */
+/* 285 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -35892,9 +35962,9 @@
 	
 	'use strict';
 	
-	var FluxStoreGroup = __webpack_require__(270);
+	var FluxStoreGroup = __webpack_require__(271);
 	
-	var invariant = __webpack_require__(262);
+	var invariant = __webpack_require__(263);
 	
 	/**
 	 * `FluxContainer` should be preferred over this mixin, but it requires using
@@ -35998,14 +36068,14 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 285 */
+/* 286 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Dispatcher = __webpack_require__(259);
-	var Store = __webpack_require__(268).Store;
-	var ErrorConstants = __webpack_require__(266);
+	var Dispatcher = __webpack_require__(260);
+	var Store = __webpack_require__(269).Store;
+	var ErrorConstants = __webpack_require__(267);
 	
 	var ErrorStore = new Store(Dispatcher);
 	
@@ -36053,7 +36123,71 @@
 	module.exports = ErrorStore;
 
 /***/ },
-/* 286 */
+/* 287 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1);
+	var ReactRouter = __webpack_require__(172);
+	var hashHistory = ReactRouter.hashHistory;
+	
+	var Searchbar = React.createClass({
+	  displayName: 'Searchbar',
+	
+	  getInitialState: function getInitialState() {
+	    return {
+	      query: ""
+	    };
+	  },
+	  updateQuery: function updateQuery(e) {
+	    this.setState({ query: e.target.value });
+	  },
+	  search: function search(e) {
+	    e.preventDefault();
+	    var tagNames = this.state.query.split(",").map(function (tag) {
+	      return tag.trim();
+	    });
+	    hashHistory.push({
+	      pathname: "search",
+	      query: { tagNames: tagNames }
+	    });
+	    this.setState({ query: "" });
+	  },
+	  trySearch: function trySearch(e) {
+	    if (e.keyCode === 13) {
+	      this.search(e);
+	    }
+	  },
+	
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      { className: 'searchbar' },
+	      React.createElement(
+	        'div',
+	        { className: 'search-icon' },
+	        React.createElement('input', { type: 'button', onClick: this.search,
+	          className: 'search-icon-img' })
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'search-field' },
+	        React.createElement('input', { type: 'text',
+	          onChange: this.updateQuery,
+	          onKeyUp: this.trySearch,
+	          value: this.state.query,
+	          placeholder: 'Song name, artist, etc.\'' })
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = Searchbar;
+
+/***/ },
+/* 288 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -36085,7 +36219,7 @@
 	module.exports = Footer;
 
 /***/ },
-/* 287 */
+/* 289 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -36113,15 +36247,15 @@
 	module.exports = Body;
 
 /***/ },
-/* 288 */
+/* 290 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var TrackApiUtils = __webpack_require__(294);
-	var ErrorActions = __webpack_require__(265);
-	var Dispatcher = __webpack_require__(259);
-	var TrackConstants = __webpack_require__(289);
+	var TrackApiUtils = __webpack_require__(291);
+	var ErrorActions = __webpack_require__(266);
+	var Dispatcher = __webpack_require__(260);
+	var TrackConstants = __webpack_require__(292);
 	
 	var TrackActions = {
 	  fetchAllTracks: function fetchAllTracks() {
@@ -36138,7 +36272,29 @@
 	module.exports = TrackActions;
 
 /***/ },
-/* 289 */
+/* 291 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	module.exports = {
+	  fetchTracks: function fetchTracks(cb, failureCb) {
+	    $.ajax({
+	      method: 'GET',
+	      url: '/api/tracks',
+	      success: function success(response) {
+	        cb(response);
+	      },
+	
+	      error: function error(response) {
+	        failureCb(response);
+	      }
+	    });
+	  }
+	};
+
+/***/ },
+/* 292 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -36148,13 +36304,13 @@
 	};
 
 /***/ },
-/* 290 */
+/* 293 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1);
-	var UserActions = __webpack_require__(291);
+	var UserActions = __webpack_require__(294);
 	
 	var SignupForm = React.createClass({
 	  displayName: 'SignupForm',
@@ -36257,16 +36413,16 @@
 	module.exports = SignupForm;
 
 /***/ },
-/* 291 */
+/* 294 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var UserApiUtil = __webpack_require__(292);
-	var AppDispatcher = __webpack_require__(259);
-	var ErrorActions = __webpack_require__(265);
+	var UserApiUtil = __webpack_require__(295);
+	var AppDispatcher = __webpack_require__(260);
+	var ErrorActions = __webpack_require__(266);
 	
-	var UserConstants = __webpack_require__(293);
+	var UserConstants = __webpack_require__(296);
 	
 	var UserActions = {
 	  fetchAllUsers: function fetchAllUsers() {
@@ -36307,7 +36463,7 @@
 	module.exports = UserActions;
 
 /***/ },
-/* 292 */
+/* 295 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -36385,7 +36541,7 @@
 	module.exports = UserApiUtil;
 
 /***/ },
-/* 293 */
+/* 296 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -36399,43 +36555,15 @@
 	module.exports = UserConstants;
 
 /***/ },
-/* 294 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	module.exports = {
-	  fetchTracks: function fetchTracks(cb, failureCb) {
-	    $.ajax({
-	      method: 'GET',
-	      url: '/api/tracks',
-	      success: function success(response) {
-	        cb(response);
-	      },
-	
-	      error: function error(response) {
-	        failureCb(response);
-	      }
-	    });
-	  }
-	};
-
-/***/ },
-/* 295 */
-/***/ function(module, exports, __webpack_require__) {
-
-	!function(e,t){ true?module.exports=t(__webpack_require__(1)):"function"==typeof define&&define.amd?define(["react"],t):"object"==typeof exports?exports.FacebookLogin=t(require("react")):e.FacebookLogin=t(e.react)}(this,function(e){return function(e){function t(n){if(o[n])return o[n].exports;var r=o[n]={exports:{},id:n,loaded:!1};return e[n].call(r.exports,r,r.exports,t),r.loaded=!0,r.exports}var o={};return t.m=e,t.c=o,t.p="",t(0)}([function(e,t,o){e.exports=o(2)},function(e,t,o){"use strict";function n(e){return e&&e.__esModule?e:{"default":e}}function r(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}function i(e,t){if(!e)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return!t||"object"!=typeof t&&"function"!=typeof t?e:t}function a(e,t){if("function"!=typeof t&&null!==t)throw new TypeError("Super expression must either be null or a function, not "+typeof t);e.prototype=Object.create(t&&t.prototype,{constructor:{value:e,enumerable:!1,writable:!0,configurable:!0}}),t&&(Object.setPrototypeOf?Object.setPrototypeOf(e,t):e.__proto__=t)}Object.defineProperty(t,"__esModule",{value:!0});var s=function(){function e(e,t){for(var o=0;o<t.length;o++){var n=t[o];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(e,n.key,n)}}return function(t,o,n){return o&&e(t.prototype,o),n&&e(t,n),t}}(),c=o(5),l=n(c),p=o(3),u=n(p),f=function(e){function t(e){r(this,t);var o=i(this,Object.getPrototypeOf(t).call(this,e));return o.responseApi=function(e){window.FB.api("/me",{fields:o.props.fields},function(t){Object.assign(t,e),o.props.callback(t)})},o.checkLoginState=function(e){e.authResponse?o.responseApi(e.authResponse):o.props.callback&&o.props.callback({status:e.status})},o.click=function(){var e=o.props,t=e.scope,n=e.appId;navigator.userAgent.match("CriOS")?window.location.href="https://www.facebook.com/dialog/oauth?client_id="+n+"&redirect_uri="+window.location.href+"&state=facebookdirect&"+t:window.FB.login(o.checkLoginState,{scope:t})},o}return a(t,e),s(t,[{key:"componentDidMount",value:function(){var e=this,t=this.props,o=t.appId,n=t.xfbml,r=t.cookie,i=t.version,a=t.autoLoad,s=t.language,c=document.createElement("div");c.id="fb-root",document.body.appendChild(c),window.fbAsyncInit=function(){window.FB.init({version:"v"+i,appId:o,xfbml:n,cookie:r}),(a||window.location.search.includes("facebookdirect"))&&window.FB.getLoginStatus(e.checkLoginState)},function(e,t,o){var n=e.getElementsByTagName(t)[0],r=n,i=n;e.getElementById(o)||(i=e.createElement(t),i.id=o,i.src="//connect.facebook.net/"+s+"/all.js",r.parentNode.insertBefore(i,r))}(document,"script","facebook-jssdk")}},{key:"renderWithFontAwesome",value:function(){var e=this.props,t=e.cssClass,o=e.size,n=e.icon,r=e.textButton;return l["default"].createElement("span",null,l["default"].createElement("link",{rel:"stylesheet",href:"//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"}),l["default"].createElement("button",{type:this.props.typeButton,className:t+" "+o,onClick:this.click},l["default"].createElement("i",{className:"fa "+n})," ",r),l["default"].createElement("style",{dangerouslySetInnerHTML:{__html:u["default"]}}))}},{key:"render",value:function(){var e=this.props,t=e.cssClass,o=e.size,n=e.icon,r=e.textButton;return n?this.renderWithFontAwesome():l["default"].createElement("span",null,l["default"].createElement("button",{className:t+" "+o,onClick:this.click},r),l["default"].createElement("style",{dangerouslySetInnerHTML:{__html:u["default"]}}))}}]),t}(l["default"].Component);f.propTypes={callback:c.PropTypes.func.isRequired,appId:c.PropTypes.string.isRequired,xfbml:c.PropTypes.bool,cookie:c.PropTypes.bool,scope:c.PropTypes.string,textButton:c.PropTypes.string,typeButton:c.PropTypes.string,autoLoad:c.PropTypes.bool,size:c.PropTypes.string,fields:c.PropTypes.string,cssClass:c.PropTypes.string,version:c.PropTypes.string,icon:c.PropTypes.string,language:c.PropTypes.string},f.defaultProps={textButton:"Login with Facebook",typeButton:"button",scope:"public_profile,email",xfbml:!1,cookie:!1,size:"metro",fields:"name",cssClass:"kep-login-facebook",version:"2.3",language:"en_US"},t["default"]=f},function(e,t,o){"use strict";function n(e){return e&&e.__esModule?e:{"default":e}}Object.defineProperty(t,"__esModule",{value:!0});var r=o(1),i=n(r);t["default"]=i["default"]},function(e,t,o){t=e.exports=o(4)(),t.push([e.id,".kep-login-facebook{font-family:Helvetica,sans-serif;font-weight:700;-webkit-font-smoothing:antialiased;color:#fff;cursor:pointer;display:inline-block;font-size:calc(.27548vw + 12.71074px);text-decoration:none;text-transform:uppercase;transition:background-color .3s,border-color .3s;background-color:#4c69ba;border:calc(.06887vw + .67769px) solid #4c69ba;padding:calc(.34435vw + 13.38843px) calc(.34435vw + 18.38843px)}.kep-login-facebook.small{padding:calc(.34435vw + 3.38843px) calc(.34435vw + 8.38843px)}.kep-login-facebook.medium{padding:calc(.34435vw + 8.38843px) calc(.34435vw + 13.38843px)}.kep-login-facebook.metro{border-radius:0}.kep-login-facebook .fa{margin-right:calc(.34435vw + 3.38843px)}",""]),t.locals={"kep-login-facebook":"kep-login-facebook",small:"small",medium:"medium",metro:"metro",fa:"fa"}},function(e,t){e.exports=function(){var e=[];return e.toString=function(){for(var e=[],t=0;t<this.length;t++){var o=this[t];o[2]?e.push("@media "+o[2]+"{"+o[1]+"}"):e.push(o[1])}return e.join("")},e.i=function(t,o){"string"==typeof t&&(t=[[null,t,""]]);for(var n={},r=0;r<this.length;r++){var i=this[r][0];"number"==typeof i&&(n[i]=!0)}for(r=0;r<t.length;r++){var a=t[r];"number"==typeof a[0]&&n[a[0]]||(o&&!a[2]?a[2]=o:o&&(a[2]="("+a[2]+") and ("+o+")"),e.push(a))}},e}},function(t,o){t.exports=e}])});
-
-/***/ },
-/* 296 */
+/* 297 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1);
-	var TrackActions = __webpack_require__(288);
-	var TracksStore = __webpack_require__(297);
-	var TrackIndexItem = __webpack_require__(298);
+	var TrackActions = __webpack_require__(290);
+	var TracksStore = __webpack_require__(298);
+	var TrackIndexItem = __webpack_require__(299);
 	
 	var TracksIndex = React.createClass({
 	  displayName: 'TracksIndex',
@@ -36466,14 +36594,14 @@
 	module.exports = TracksIndex;
 
 /***/ },
-/* 297 */
+/* 298 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Dispatcher = __webpack_require__(259);
-	var Store = __webpack_require__(268).Store;
-	var TrackConstants = __webpack_require__(289);
+	var Dispatcher = __webpack_require__(260);
+	var Store = __webpack_require__(269).Store;
+	var TrackConstants = __webpack_require__(292);
 	
 	var TrackStore = new Store(Dispatcher);
 	
@@ -36506,7 +36634,7 @@
 	module.exports = TrackStore;
 
 /***/ },
-/* 298 */
+/* 299 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -36544,6 +36672,43 @@
 	});
 	
 	module.exports = TrackIndexItem;
+
+/***/ },
+/* 300 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var React = __webpack_require__(1);
+	
+	var Index = React.createClass({
+	  displayName: "Index",
+	
+	
+	  render: function render() {
+	    return React.createElement(
+	      "div",
+	      { className: "index" },
+	      React.createElement(
+	        "div",
+	        { className: "index-photo" },
+	        React.createElement(
+	          "h1",
+	          { className: "index-header" },
+	          "Cumulonimbus"
+	        ),
+	        React.createElement(
+	          "p",
+	          { className: "index-desc" },
+	          "Great music. Anywhere. Any time."
+	        )
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = Index;
 
 /***/ }
 /******/ ]);

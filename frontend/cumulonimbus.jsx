@@ -12,10 +12,12 @@ const App = require('./components/app.jsx');
 const SignupForm = require('./components/signup_form');
 const LoginForm = require('./components/login_form');
 const TracksIndex = require('./components/tracks_index');
+const Index = require('./components/index');
 
 const appRouter = (
   <Router history={ hashHistory }>
     <Route path="/" component={ App }>
+      <IndexRoute component={Index}></IndexRoute>
       <Route path="/users/signup" component={SignupForm}></Route>
       <Route path="/users/login" component={LoginForm}/>
       <Route path="tracks/all" component={TracksIndex}/>

@@ -35,27 +35,59 @@ module.exports = {
       });
     },
 
+    googleLogin(cb, failure) {
+      window.gapi.auth.authorize({
+        immediate: false,
+        response_type: 'code',
+        cookie_policy: 'single_host_origin',
+        client_id: '103867363030-iq1ait30ssbtobrqhcmugffnjgvsok9d.apps.googleusercontent.com',
+        scope: 'email profile'
+      }, function(response) {
+        if(response){
+          if(response && !response.error){
+            $.ajax({
+              type: 'POST',
+              url: "users/auth/google_oauth2/callback",
+              data: response,
+              success: (data) =>{
+                console.log(data);
+              }
+            });
+          }
+          else{
+            console.log("something else happened");
+          }
+        }
+      });
+      },
+
     facebookLogin(cb) {
       window.FB.getLoginStatus((response) =>{
-        console.log(response.authResponse.signedRequest);
-        $.ajax({
-            method: "GET",
-            url: "/users/auth/facebook/",
-            dataType: "json",
-            data: {
-              app_id: "1790155654560761",
-              signed_request: response.authResponse.signedRequest
-            },
+        // console.log(response);
+        if(!response.authResponse){
+          window.FB.login((resp) =>{
+            $.ajax({
+                method: "GET",
+                url: "/users/auth/facebook/callback",
+                dataType: "json",
+                // data: {
+                //   app_id: "1790155654560761",
+                //   signed_request: resp.authResponse.signedRequest,
+                //   authenticity_token: this.getMetaContent("csrf-token")
+                // },
 
-            success: (res) => {
-              console.log(res);
-              cb(res);
-            },
+                success: (res) => {
+                  console.log(res);
+                  cb(res);
+                },
 
-            error() {
-              console.log("error in SessionApiUtil#facebookLogin");
-            }
-          });
+                error() {
+                  console.log("error in SessionApiUtil#facebookLogin");
+                }
+              });
+          }, {scope: 'email'});
+        }
+
       });
 
       },
