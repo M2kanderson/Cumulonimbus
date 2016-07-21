@@ -26741,6 +26741,7 @@
 	var Body = __webpack_require__(289);
 	var SessionActions = __webpack_require__(259);
 	var SessionStore = __webpack_require__(268);
+	var SessionConstants = __webpack_require__(265);
 	var TrackActions = __webpack_require__(290);
 	
 	var App = React.createClass({
@@ -26758,6 +26759,7 @@
 	      method: "GET",
 	      url: "/auth/is_signed_in.json"
 	    }).done(function (data) {
+	      SessionActions.receiveUser(data.user);
 	      this.setState({ signedIn: data.signed_in });
 	    }.bind(this));
 	  },
@@ -29583,6 +29585,7 @@
 	var Dispatcher = __webpack_require__(260);
 	var Store = __webpack_require__(269).Store;
 	var SessionConstants = __webpack_require__(265);
+	var LikeConstants = __webpack_require__(302);
 	
 	var SessionStore = new Store(Dispatcher);
 	
@@ -29597,6 +29600,15 @@
 	  _currentUser = currentUser;
 	};
 	
+	SessionStore.addLike = function (trackId) {
+	  _currentUser.liked_tracks.push(parseInt(trackId));
+	};
+	
+	SessionStore.removeLike = function (trackId) {
+	  var trackIdx = _currentUser.liked_tracks.indexOf(parseInt(trackId));
+	  _currentUser.liked_tracks.splice(trackIdx, 1);
+	};
+	
 	SessionStore.__onDispatch = function (payload) {
 	  switch (payload.actionType) {
 	    case SessionConstants.LOGIN:
@@ -29605,6 +29617,14 @@
 	      break;
 	    case SessionConstants.LOGOUT:
 	      _logout();
+	      this.__emitChange();
+	      break;
+	    case LikeConstants.LIKE_RECEIVED:
+	      SessionStore.addLike(payload.like.track_id);
+	      this.__emitChange();
+	      break;
+	    case LikeConstants.LIKE_REMOVED:
+	      SessionStore.removeLike(payload.like.track_id);
 	      this.__emitChange();
 	      break;
 	  }
@@ -36619,6 +36639,7 @@
 	var Dispatcher = __webpack_require__(260);
 	var Store = __webpack_require__(269).Store;
 	var TrackConstants = __webpack_require__(292);
+	var LikeConstants = __webpack_require__(302);
 	
 	var TrackStore = new Store(Dispatcher);
 	
@@ -36639,10 +36660,27 @@
 	  });
 	};
 	
+	TrackStore.addLike = function (trackId, userId) {
+	  _tracks[trackId].user_likes.push(parseInt(userId));
+	};
+	
+	TrackStore.removeLike = function (trackId, userId) {
+	  var userIdx = _tracks[trackId].user_likes.indexOf(parseInt(userId));
+	  _tracks[trackId].user_likes.splice(userIdx, 1);
+	};
+	
 	TrackStore.__onDispatch = function (payload) {
 	  switch (payload.actionType) {
 	    case TrackConstants.FETCH_TRACKS:
 	      this.setTracks(payload.tracks);
+	      this.__emitChange();
+	      break;
+	    case LikeConstants.LIKE_RECEIVED:
+	      TrackStore.addLike(payload.like.track_id, payload.like.user_id);
+	      this.__emitChange();
+	      break;
+	    case LikeConstants.LIKE_REMOVED:
+	      TrackStore.removeLike(payload.like.track_id, payload.like.user_id);
 	      this.__emitChange();
 	      break;
 	  }
@@ -36657,10 +36695,47 @@
 	'use strict';
 	
 	var React = __webpack_require__(1);
+	var SessionStore = __webpack_require__(268);
+	var LikeActions = __webpack_require__(303);
 	var PlayerActions = __webpack_require__(301);
 	
 	var TrackIndexItem = React.createClass({
 	  displayName: 'TrackIndexItem',
+	
+	  getInitialState: function getInitialState() {
+	    return {
+	      currentUser: SessionStore.currentUser()
+	    };
+	  },
+	  componentDidMount: function componentDidMount() {
+	    this.userListener = SessionStore.addListener(this._userChanged);
+	  },
+	  _userChanged: function _userChanged() {
+	    this.setState({ currentUser: SessionStore.currentUser });
+	  },
+	
+	  _isLiked: function _isLiked() {
+	    var likeText = "Like";
+	    var currentUser = this.state.currentUser;
+	    if (currentUser.liked_tracks) {
+	      var currentUserLikes = currentUser.liked_tracks;
+	
+	      if (currentUserLikes.indexOf(this.props.track.id) !== -1) {
+	        likeText = "Unlike";
+	      }
+	    }
+	    return likeText;
+	  },
+	
+	  toggleLike: function toggleLike() {
+	    var data = { track_id: this.props.track.id };
+	
+	    if (this._isLiked() === "Like") {
+	      LikeActions.createLike(data);
+	    } else {
+	      LikeActions.deleteLike(data);
+	    }
+	  },
 	  render: function render() {
 	    var text = this.props.track.title;
 	    if (this.props.track.artist) {
@@ -36684,6 +36759,17 @@
 	          null,
 	          text
 	        )
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'likes' },
+	        'Number of Likes: ',
+	        this.props.track.like_count
+	      ),
+	      React.createElement(
+	        'button',
+	        { onClick: this.toggleLike },
+	        this._isLiked()
 	      )
 	    );
 	  },
@@ -36743,6 +36829,79 @@
 	    song.play();
 	  }
 	};
+
+/***/ },
+/* 302 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	module.exports = {
+	  LIKE_RECEIVED: "LIKE_RECEIVED",
+	  LIKE_REMOVED: "LIKE_REMOVED"
+	};
+
+/***/ },
+/* 303 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var LikeApiUtil = __webpack_require__(304);
+	var LikeConstants = __webpack_require__(302);
+	var AppDispatcher = __webpack_require__(260);
+	
+	var LikeActions = {
+	  createLike: function createLike(data) {
+	    LikeApiUtil.createLike(data, this.receiveLike);
+	  },
+	
+	  deleteLike: function deleteLike(data) {
+	    LikeApiUtil.deleteLike(data, this.removeLike);
+	  },
+	
+	  receiveLike: function receiveLike(like) {
+	    AppDispatcher.dispatch({
+	      actionType: LikeConstants.LIKE_RECEIVED,
+	      like: like
+	    });
+	  },
+	  removeLike: function removeLike(like) {
+	    AppDispatcher.dispatch({
+	      actionType: LikeConstants.LIKE_REMOVED,
+	      like: like
+	    });
+	  }
+	};
+	
+	module.exports = LikeActions;
+
+/***/ },
+/* 304 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	var LikeApiUtil = {
+	  createLike: function createLike(data, success) {
+	    $.ajax({
+	      url: 'api/likes',
+	      type: 'POST',
+	      data: { like: data },
+	      success: success
+	    });
+	  },
+	  deleteLike: function deleteLike(data, success) {
+	    $.ajax({
+	      url: 'api/likes/1',
+	      type: 'DELETE',
+	      data: { like: data },
+	      success: success
+	    });
+	  }
+	};
+	
+	module.exports = LikeApiUtil;
 
 /***/ }
 /******/ ]);
