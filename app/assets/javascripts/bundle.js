@@ -36637,37 +36637,41 @@
 /* 299 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 	
 	var React = __webpack_require__(1);
+	var PlayerActions = __webpack_require__(301);
 	
 	var TrackIndexItem = React.createClass({
-	  displayName: "TrackIndexItem",
+	  displayName: 'TrackIndexItem',
 	  render: function render() {
 	    var text = this.props.track.title;
 	    if (this.props.track.artist) {
-	      text += " - " + this.props.track.artist;
+	      text += ' - ' + this.props.track.artist;
 	    }
 	
 	    return React.createElement(
-	      "li",
-	      { className: "track-index-item" },
+	      'li',
+	      { className: 'track-index-item' },
 	      React.createElement(
-	        "div",
-	        { className: "track-image" },
-	        React.createElement("img", { src: this.props.track.image_url, width: "225", height: "225" }),
-	        React.createElement("span", { className: "track-image-overlay", id: "overlay-" + this.props.track.id })
+	        'div',
+	        { className: 'track-image' },
+	        React.createElement('img', { onClick: this._playTrack, src: this.props.track.image_url, width: '225', height: '225' }),
+	        React.createElement('span', { className: 'track-image-overlay', id: 'overlay-' + this.props.track.id })
 	      ),
 	      React.createElement(
-	        "div",
-	        { className: "track-text" },
+	        'div',
+	        { className: 'track-text' },
 	        React.createElement(
-	          "p",
+	          'p',
 	          null,
 	          text
 	        )
 	      )
 	    );
+	  },
+	  _playTrack: function _playTrack() {
+	    PlayerActions.playTrack(this.props.track);
 	  }
 	});
 	
@@ -36709,6 +36713,19 @@
 	});
 	
 	module.exports = Index;
+
+/***/ },
+/* 301 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	module.exports = {
+	  playTrack: function playTrack(track) {
+	    var song = new Audio(track.audio_url);
+	    song.play();
+	  }
+	};
 
 /***/ }
 /******/ ]);
