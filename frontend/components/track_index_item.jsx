@@ -1,6 +1,7 @@
 const React = require('react');
 const SessionStore = require('../stores/session_store');
 const LikeActions = require('../actions/like_actions');
+const PlayerActions = require('../actions/player_actions');
 
 const TrackIndexItem = React.createClass({
   getInitialState: function() {
@@ -44,7 +45,7 @@ const TrackIndexItem = React.createClass({
 
     return (<li className="track-index-item">
         <div className="track-image">
-          <img src={this.props.track.image_url} width="225" height="225"></img>
+          <img onClick={this._playTrack} src={this.props.track.image_url} width="225" height="225"></img>
           <span className="track-image-overlay" id={`overlay-${this.props.track.id}`}></span>
         </div>
         <div className="track-text">
@@ -55,6 +56,10 @@ const TrackIndexItem = React.createClass({
         </div>
         <button onClick={this.toggleLike}>{this._isLiked()}</button>
     </li>);
+  },
+
+  _playTrack(){
+    PlayerActions.playTrack(this.props.track);
   }
 });
 

@@ -25,7 +25,6 @@ const appRouter = (
   </Router>
 );
 
-
 document.addEventListener('DOMContentLoaded', function() {
   const root = document.getElementById('content');
   ReactDOM.render(appRouter, root);

@@ -36717,6 +36717,7 @@
 	var React = __webpack_require__(1);
 	var SessionStore = __webpack_require__(273);
 	var LikeActions = __webpack_require__(302);
+	var PlayerActions = __webpack_require__(304);
 	
 	var TrackIndexItem = React.createClass({
 	  displayName: 'TrackIndexItem',
@@ -36767,7 +36768,7 @@
 	      React.createElement(
 	        'div',
 	        { className: 'track-image' },
-	        React.createElement('img', { src: this.props.track.image_url, width: '225', height: '225' }),
+	        React.createElement('img', { onClick: this._playTrack, src: this.props.track.image_url, width: '225', height: '225' }),
 	        React.createElement('span', { className: 'track-image-overlay', id: 'overlay-' + this.props.track.id })
 	      ),
 	      React.createElement(
@@ -36791,6 +36792,9 @@
 	        this._isLiked()
 	      )
 	    );
+	  },
+	  _playTrack: function _playTrack() {
+	    PlayerActions.playTrack(this.props.track);
 	  }
 	});
 	
@@ -36868,6 +36872,19 @@
 	};
 	
 	module.exports = LikeApiUtil;
+
+/***/ },
+/* 304 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	module.exports = {
+	  playTrack: function playTrack(track) {
+	    var song = new Audio(track.audio_url);
+	    song.play();
+	  }
+	};
 
 /***/ }
 /******/ ]);
