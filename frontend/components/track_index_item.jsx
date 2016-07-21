@@ -6,7 +6,8 @@ const PlayerActions = require('../actions/player_actions');
 const TrackIndexItem = React.createClass({
   getInitialState: function() {
     return {
-      currentUser: SessionStore.currentUser()
+      currentUser: SessionStore.currentUser(),
+      trackPlaying: false
     };
   },
   componentDidMount(){
@@ -60,7 +61,19 @@ const TrackIndexItem = React.createClass({
   },
 
   _playTrack(){
-    PlayerActions.playTrack(this.props.track);
+    if(!this.state.trackPlaying){
+      if(!this.player){
+        this.player = PlayerActions.playTrack(this.props.track);
+      }
+      else{
+        this.player.play();
+      }
+      this.setState({trackPlaying: true});
+    }
+    else{
+      PlayerActions.pauseTrack(this.player);
+      this.setState({trackPlaying: false});
+    }
   }
 });
 

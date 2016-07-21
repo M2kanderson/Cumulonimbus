@@ -36643,17 +36643,15 @@
 	    }
 	
 	    return React.createElement(
-	      'ul',
+	      'div',
 	      { id: 'tracks-index' },
-	      rows.map(function (row) {
-	        return React.createElement(
-	          'div',
-	          { key: row[0].id, className: 'track-index-row' },
-	          row.map(function (track) {
-	            return React.createElement(TrackIndexItem, { key: track.id, track: track });
-	          })
-	        );
-	      })
+	      React.createElement(
+	        'ul',
+	        { className: 'tracks' },
+	        this.state.tracks.map(function (track) {
+	          return React.createElement(TrackIndexItem, { key: track.id, track: track });
+	        })
+	      )
 	    );
 	  },
 	  componentWillUnmount: function componentWillUnmount() {
@@ -36741,7 +36739,8 @@
 	
 	  getInitialState: function getInitialState() {
 	    return {
-	      currentUser: SessionStore.currentUser()
+	      currentUser: SessionStore.currentUser(),
+	      trackPlaying: false
 	    };
 	  },
 	  componentDidMount: function componentDidMount() {
@@ -36811,7 +36810,17 @@
 	    );
 	  },
 	  _playTrack: function _playTrack() {
-	    PlayerActions.playTrack(this.props.track);
+	    if (!this.state.trackPlaying) {
+	      if (!this.player) {
+	        this.player = PlayerActions.playTrack(this.props.track);
+	      } else {
+	        this.player.play();
+	      }
+	      this.setState({ trackPlaying: true });
+	    } else {
+	      PlayerActions.pauseTrack(this.player);
+	      this.setState({ trackPlaying: false });
+	    }
 	  }
 	});
 	
@@ -36889,6 +36898,10 @@
 	  playTrack: function playTrack(track) {
 	    var song = new Audio(track.audio_url);
 	    song.play();
+	    return song;
+	  },
+	  pauseTrack: function pauseTrack(song) {
+	    song.pause();
 	  }
 	};
 

@@ -225,9 +225,17 @@ footer{
 
 #tracks-index{
   display: flex;
+  align-items: center;
+  justify-content: center;
   width: 80%;
   flex-direction: column;
   padding-top: 30px;
+}
+
+.tracks{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
 }
 
 .track-index-row {
