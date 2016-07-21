@@ -1,6 +1,7 @@
 const Dispatcher = require('../dispatcher/dispatcher');
 const Store = require('flux/utils').Store;
 const TrackConstants = require('../constants/track_constants');
+const LikeConstants = require('../constants/like_constants');
 
 const TrackStore = new Store(Dispatcher);
 
@@ -21,10 +22,27 @@ TrackStore.setTracks = function(tracks){
   });
 };
 
+TrackStore.addLike = function(trackId, userId){
+  _tracks[trackId].user_likes.push(parseInt(userId));
+};
+
+TrackStore.removeLike = function(trackId, userId){
+  let userIdx = _tracks[trackId].user_likes.indexOf(parseInt(userId));
+  _tracks[trackId].user_likes.splice(userIdx, 1);
+};
+
 TrackStore.__onDispatch = function(payload){
   switch (payload.actionType) {
     case TrackConstants.FETCH_TRACKS:
       this.setTracks(payload.tracks);
+      this.__emitChange();
+      break;
+    case LikeConstants.LIKE_RECEIVED:
+      TrackStore.addLike(payload.like.track_id, payload.like.user_id);
+      this.__emitChange();
+      break;
+    case LikeConstants.LIKE_REMOVED:
+      TrackStore.removeLike(payload.like.track_id, payload.like.user_id);
       this.__emitChange();
       break;
   }

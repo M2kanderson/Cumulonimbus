@@ -1,6 +1,41 @@
 const React = require('react');
+const SessionStore = require('../stores/session_store');
+const LikeActions = require('../actions/like_actions');
 
 const TrackIndexItem = React.createClass({
+  getInitialState: function() {
+    return {
+      currentUser: SessionStore.currentUser()
+    };
+  },
+  componentDidMount(){
+    this.userListener = SessionStore.addListener(this._userChanged);
+  },
+  _userChanged(){
+    this.setState({currentUser: SessionStore.currentUser});
+  },
+  _isLiked: function(){
+    let likeText = "Like";
+    let currentUser = this.state.currentUser;
+    if(currentUser.liked_tracks){
+      let currentUserLikes = currentUser.liked_tracks;
+
+      if(currentUserLikes.indexOf(this.props.track.id) !== -1){
+        likeText = "Unlike";
+      }
+    }
+    return likeText;
+  },
+
+  toggleLike(){
+    let data = {track_id : this.props.track.id};
+
+    if(this._isLiked() === "Like"){
+      LikeActions.createLike(data);
+    } else{
+      LikeActions.deleteLike(data);
+    }
+  },
   render(){
     let text = this.props.track.title;
     if (this.props.track.artist) {
@@ -15,6 +50,10 @@ const TrackIndexItem = React.createClass({
         <div className="track-text">
           <p>{text}</p>
         </div>
+        <div className="likes">
+          Number of Likes: {this.props.track.like_count}
+        </div>
+        <button onClick={this.toggleLike}>{this._isLiked()}</button>
     </li>);
   }
 });

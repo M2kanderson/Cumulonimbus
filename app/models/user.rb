@@ -28,4 +28,8 @@ class User < ActiveRecord::Base
   # attr_accessible :email, :name, :password, :password_confirmation, :remember_me
 
   has_many :authorizations, :dependent => :destroy
+  has_many :likes
+  has_many :liked_tracks,
+    through: :likes,
+    source: :track
 end
