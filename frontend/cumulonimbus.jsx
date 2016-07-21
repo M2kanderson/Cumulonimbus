@@ -14,6 +14,8 @@ const LoginForm = require('./components/login_form');
 const TracksIndex = require('./components/tracks_index');
 const Index = require('./components/index');
 
+const SessionActions = require('./actions/session_actions');
+
 const appRouter = (
   <Router history={ hashHistory }>
     <Route path="/" component={ App }>
@@ -25,7 +27,22 @@ const appRouter = (
   </Router>
 );
 
-document.addEventListener('DOMContentLoaded', function() {
+let getCurrentUser = function(cb){
+  $.ajax({
+    method: "GET",
+    url: "/auth/is_signed_in.json"
+  })
+  .done(function(data){
+    SessionActions.receiveUser(data.user);
+    cb();
+  }.bind(this));
+};
+
+let renderApp = function(){
   const root = document.getElementById('content');
   ReactDOM.render(appRouter, root);
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+  getCurrentUser(renderApp);
 });

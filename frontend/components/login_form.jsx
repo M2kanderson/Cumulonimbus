@@ -115,9 +115,9 @@ const LoginForm = React.createClass({
   },
 
   closeModal: function() {
-    this.props.toggleForm();
+    this.props.closeForm();
     this.setState({modalIsOpen: false});
-    hashHistory.push('/');
+    // hashHistory.push('/');
   },
 
   demoLogin(e) {

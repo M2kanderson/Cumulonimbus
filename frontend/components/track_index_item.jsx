@@ -13,7 +13,7 @@ const TrackIndexItem = React.createClass({
     this.userListener = SessionStore.addListener(this._userChanged);
   },
   _userChanged(){
-    this.setState({currentUser: SessionStore.currentUser});
+    // this.setState({currentUser: SessionStore.currentUser});
   },
   _isLiked: function(){
     let likeText = "Like";

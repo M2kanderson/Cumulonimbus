@@ -15,14 +15,14 @@ var App = React.createClass({
 
   // Devise with React
   componentDidMount() {
-    $.ajax({
-      method: "GET",
-      url: "/auth/is_signed_in.json"
-    })
-    .done(function(data){
-      SessionActions.receiveUser(data.user);
-      this.setState({ signedIn: data.signed_in });
-    }.bind(this));
+    // $.ajax({
+    //   method: "GET",
+    //   url: "/auth/is_signed_in.json"
+    // })
+    // .done(function(data){
+    //   SessionActions.receiveUser(data.user);
+    //   this.setState({ signedIn: data.signed_in });
+    // }.bind(this));
   },
 
   render: function() {
