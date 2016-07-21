@@ -76,7 +76,7 @@
   /* July 20 I commented these out because centering the flex children of the body */
   /* sent half of the tracks index off the top of the screen -MM */
 
-  /*justify-content: center;*/
+  justify-content: center;
   /*align-items: center;*/
   /*height: 700px;*/
   justify-content: center;
