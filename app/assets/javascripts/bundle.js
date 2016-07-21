@@ -36578,11 +36578,28 @@
 	    this.setState({ tracks: TracksStore.allTracks() });
 	  },
 	  render: function render() {
+	    var numTracks = this.state.tracks.length;
+	    var numRows = Math.ceil(numTracks / 4);
+	    var rows = [];
+	    for (var i = 0; i < numRows; i++) {
+	      rows.push([]);
+	    }
+	    for (var _i = 0; _i < numTracks; _i++) {
+	      var RowIndex = Math.floor(_i / 4);
+	      rows[RowIndex].push(this.state.tracks[_i]);
+	    }
+	
 	    return React.createElement(
 	      'ul',
-	      null,
-	      this.state.tracks.map(function (track) {
-	        return React.createElement(TrackIndexItem, { track: track, key: track.id });
+	      { id: 'tracks-index' },
+	      rows.map(function (row) {
+	        return React.createElement(
+	          'div',
+	          { key: row[0].id, className: 'track-index-row' },
+	          row.map(function (track) {
+	            return React.createElement(TrackIndexItem, { key: track.id, track: track });
+	          })
+	        );
 	      })
 	    );
 	  },

@@ -73,9 +73,12 @@
   margin-top: 75px;
   display: flex;
   flex: 1;
-  justify-content: center;
-  align-items: center;
-  height: 700px;
+  /* July 20 I commented these out because centering the flex children of the body */
+  /* sent half of the tracks index off the top of the screen -MM */
+
+  /*justify-content: center;*/
+  /*align-items: center;*/
+  /*height: 700px;*/
   width: 100%;
   background-color: blue;
 }
@@ -217,4 +220,28 @@ footer{
   .searchbar{
     margin-right: 0 !important;
   }
+}
+
+#tracks-index{
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  padding-top: 30px;
+}
+
+.track-index-row {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  padding: 0 10px 0 10px;
+}
+
+.track-image:hover{
+  cursor: pointer;
+}
+
+.track-text {
+  width: 225px;
+  margin: 8px 0 8px 0;
+  text-align: center;
 }

@@ -18,12 +18,27 @@ const TracksIndex = React.createClass({
   },
 
   render(){
+    const numTracks = this.state.tracks.length;
+    const numRows = Math.ceil(numTracks / 4);
+    const rows = [];
+    for (let i = 0; i < numRows; i++) { rows.push([]); }
+    for (let i = 0; i < numTracks; i++) {
+      const RowIndex = Math.floor(i / 4);
+      rows[RowIndex].push(this.state.tracks[i]);
+    }
+
     return (
-      <ul>
-      {this.state.tracks.map((track) => {
-        return (<TrackIndexItem track={track} key={track.id}/>);
-      })}
-    </ul>
+      <ul id="tracks-index">
+        {rows.map(row => {
+          return (
+            <div key={row[0].id} className="track-index-row">{
+              row.map(track => {
+                return <TrackIndexItem key={track.id} track={track}/>;
+              })
+            }</div>
+          );
+        })}
+      </ul>
   );
   },
 

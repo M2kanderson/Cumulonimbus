@@ -8,7 +8,8 @@ const TrackIndexItem = React.createClass({
       text += ` - ${this.props.track.artist}`;
     }
 
-    return (<li className="track-index-item">
+    return (
+      <li className="track-index-item">
         <div className="track-image">
           <img onClick={this._playTrack} src={this.props.track.image_url} width="225" height="225"></img>
           <span className="track-image-overlay" id={`overlay-${this.props.track.id}`}></span>
