@@ -91,10 +91,11 @@ body {
 
 .media-controls {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   padding: 12px;
-  background-color: #282F31;
+  background-color: rgba(40,47,49,1);
   color: #fff;
+  border-radius: 5px;
 
   svg, path, polygon {
     transform-origin: 50% 50%;
@@ -315,6 +316,7 @@ input[type="range"] {
   background-repeat: no-repeat;
 }
 
+
 .pause{
   background: url('http://res.cloudinary.com/pulsr/image/upload/c_scale,h_30/v1469197582/Cumulonimbus/Pause.png');
 
@@ -322,4 +324,39 @@ input[type="range"] {
   // margin-top: 3px;
   // padding-bottom: 0;
 
+}
+
+.media-control--mute-unmute{
+  border: none;
+  font-size: 0;
+  width: 30px;
+  height: 30px;
+  padding-right: 25px;
+  cursor: pointer;
+  outline: none;
+}
+
+.mute{
+  background: url('http://res.cloudinary.com/pulsr/image/upload/c_scale,h_20/v1469203206/Cumulonimbus/mute-128.png');
+  background-repeat: no-repeat;
+  margin-left: 25px;
+  margin-top: 10px;
+}
+
+
+.unmute{
+  background: url('http://res.cloudinary.com/pulsr/image/upload/c_scale,h_30/v1469203455/Cumulonimbus/media-volume-2.png');
+  background-repeat: no-repeat;
+
+}
+
+.mute-unmute-background-circle{
+  position: relative;
+  background-color: white;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

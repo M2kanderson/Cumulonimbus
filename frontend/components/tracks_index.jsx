@@ -51,7 +51,9 @@ const TracksIndex = React.createClass({
             );
           })}
         </ul>
-        {this.state.currTrack ? <MusicPlayer src={url} /> : ""}
+        <div className= "music-player-container">
+          {this.state.currTrack ? <MusicPlayer track={this.state.currTrack} src={url} /> : ""}
+        </div>
       </div>
   );
   },
