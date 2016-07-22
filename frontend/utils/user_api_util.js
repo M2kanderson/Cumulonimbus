@@ -1,3 +1,5 @@
+const SessionActions = require('../actions/session_actions');
+
 const UserApiUtil = {
   fetchAllUsers(success, error){
     $.ajax({
@@ -32,6 +34,11 @@ const UserApiUtil = {
       data_type: 'json',
       data: {user: user},
       success: function(resp) {
+        const userData = {
+          email: user.email,
+          password: user.password
+        };
+        SessionActions.login(userData);
         success(resp);
       },
       error: function(resp) {

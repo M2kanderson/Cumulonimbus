@@ -304,3 +304,5 @@ titles.length.times do |i|
     Track.create!(title: titles[i], image_url: image_urls[i],
                     audio_url: audio_urls[i], like_count: rand(39) + 1)
 end
+
+User.create({username: 'demo@demo.com', password: 'password'})

@@ -39,31 +39,25 @@ const SignupForm = React.createClass({
         onRequestClose={this.closeModal}
         style={customStyles}
         >
-        <h2>Sign up</h2>
-        <form onSubmit={this._createUser}>
+        <form className="session-form" onSubmit={this._createUser}>
+          <h2 className="form-text">Sign up</h2>
+          <label className="form-text">Enter your <span className="bolded">email</span> and <span className="bolded">password</span>.</label><br/>
           <div className="field">
-            <label for="name">Name: </label><br />
-            <input type="text" onChange={this._updateName}></input>
-          </div>
-          <div className="field">
-            <label for="email">Email: </label><br />
-            <input type="email" onChange={this._updateEmail}></input>
+            <input className="session-textbox" placeholder="Your email" type="email" onChange={this._updateEmail}></input>
           </div>
 
           <div className="field">
-            <label for="password">Password: </label><br />
-            <input type="password" autoComplete="off"
+            <input className="session-textbox" placeholder="Password" type="password" autoComplete="off"
                                    onChange={this._updatePassword}></input>
           </div>
 
           <div className="field">
-            <label for="password_confirmation">Confirm Password: </label><br />
-            <input type="password" autoComplete="off"
+            <input className="session-textbox" placeholder="Confirm password" type="password" autoComplete="off"
                    onChange={this._updatePassConfirm}></input>
           </div>
 
           <div className="actions">
-            <input type="submit"></input>
+            <input className="session-button" type="submit"></input>
           </div>
         </form>
       </Modal>
@@ -74,7 +68,6 @@ const SignupForm = React.createClass({
   closeModal: function() {
     this.props.closeForm();
     this.setState({modalIsOpen: false});
-    // hashHistory.push('/');
   }
 
 

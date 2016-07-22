@@ -3,10 +3,10 @@ const SessionApiUtils = require('../utils/session_api_utils');
 const SessionConstants = require('../constants/session_constants.js');
 const ErrorActions = require('./error_actions');
 
+
+
 const SessionActions = {
   login(userData) {
-    console.log("logging in");
-
     SessionApiUtils.login(userData, this.receiveUser, ErrorActions.setErrors);
   },
   facebookLogin(){
@@ -30,13 +30,6 @@ const SessionActions = {
   removeCurrentUser() {
     Dispatcher.dispatch({
       actionType: SessionConstants.LOGOUT
-    });
-  },
-
-  receiveErrors(errors) {
-    Dispatcher.dispatch({
-      actionType: SessionConstants.DISPLAY_ERRORS,
-      errors: errors
     });
   }
 };

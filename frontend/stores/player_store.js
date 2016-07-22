@@ -28,6 +28,9 @@ PlayerStore.loadSong = function(track){
 PlayerStore.playLoadedSong = function(){
   if (_loadedSong){
     _loadedSong.play();
+    // Dismount the song 30 seconds after it begins playing. 30 seconds is constants
+    // because every song listed is a 30 sec preview. Normally, this would be variable
+    // based on the full song length
     this.timeout = setTimeout(this.clearSong, 30000);
   }
 };

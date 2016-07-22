@@ -57,10 +57,10 @@
 	
 	//components
 	var App = __webpack_require__(235);
-	var SignupForm = __webpack_require__(294);
+	var SignupForm = __webpack_require__(288);
 	var LoginForm = __webpack_require__(237);
-	var TracksIndex = __webpack_require__(298);
-	var Index = __webpack_require__(305);
+	var TracksIndex = __webpack_require__(300);
+	var Index = __webpack_require__(306);
 	
 	var SessionActions = __webpack_require__(259);
 	
@@ -26753,13 +26753,13 @@
 	
 	var React = __webpack_require__(1);
 	var Header = __webpack_require__(236);
-	var Footer = __webpack_require__(289);
-	var Body = __webpack_require__(290);
+	var Footer = __webpack_require__(293);
+	var Body = __webpack_require__(294);
 	var SessionActions = __webpack_require__(259);
 	var SessionStore = __webpack_require__(268);
 	var SessionConstants = __webpack_require__(265);
-	var TrackActions = __webpack_require__(291);
-	var PlayerStore = __webpack_require__(306);
+	var TrackActions = __webpack_require__(295);
+	var PlayerStore = __webpack_require__(298);
 	
 	var App = React.createClass({
 	  displayName: 'App',
@@ -26814,9 +26814,9 @@
 	
 	var React = __webpack_require__(1);
 	var LoginForm = __webpack_require__(237);
-	var SignupForm = __webpack_require__(294);
+	var SignupForm = __webpack_require__(288);
 	var SessionActions = __webpack_require__(259);
-	var Searchbar = __webpack_require__(288);
+	var Searchbar = __webpack_require__(292);
 	
 	var Header = React.createClass({
 	  displayName: 'Header',
@@ -26919,12 +26919,12 @@
 	
 	var React = __webpack_require__(1);
 	var Modal = __webpack_require__(239);
-	var Link = __webpack_require__(172).Link;
 	var hashHistory = __webpack_require__(172).hashHistory;
 	var SessionActions = __webpack_require__(259);
 	var SessionStore = __webpack_require__(268);
 	var ErrorsStore = __webpack_require__(287);
 	var ErrorActions = __webpack_require__(266);
+	var SessionConstants = __webpack_require__(265);
 	// const SessionConstants = require('./constants/session_constants');
 	
 	// const FacebookLogin = require('react-facebook-login');
@@ -26983,12 +26983,7 @@
 	        'form',
 	        { className: 'session-form', onSubmit: this.handleSubmit },
 	        React.createElement(
-	          Link,
-	          { className: 'form-top-text', to: 'signup' },
-	          'Need an account?'
-	        ),
-	        React.createElement(
-	          'h1',
+	          'h2',
 	          { className: 'form-text' },
 	          'Sign in to Cumulonimbus'
 	        ),
@@ -27013,37 +27008,52 @@
 	        React.createElement('br', null),
 	        React.createElement(
 	          'div',
-	          null,
+	          { className: 'actions' },
 	          React.createElement(
 	            'button',
-	            { type: 'button', className: 'demo-button', onClick: this.demoLogin, value: 'Demo Login' },
+	            { type: 'button', className: 'session-button', onClick: this.demoLogin, value: 'Demo Login' },
 	            'Demo Login'
 	          )
 	        ),
-	        React.createElement('input', { className: 'session-textbox text-input', placeholder: 'email', onChange: this.changeUsername, type: 'text', value: this.state.email }),
-	        React.createElement('input', { className: 'session-textbox text-input', placeholder: 'password', onChange: this.changePassword, type: 'password', value: this.state.password }),
-	        React.createElement('input', { id: 'login', className: 'session-button', type: 'submit', value: 'Sign In' }),
 	        React.createElement(
-	          'button',
-	          { onClick: this.facebookLogin },
-	          'Log in facebook'
+	          'div',
+	          { className: 'field' },
+	          React.createElement('input', { className: 'session-textbox', placeholder: 'Your email', onChange: this.changeUsername, type: 'text', value: this.state.email })
 	        ),
 	        React.createElement(
-	          'button',
-	          { onClick: this.googleLogin },
-	          'Log in Google'
+	          'div',
+	          { className: 'field' },
+	          React.createElement('input', { className: 'session-textbox', placeholder: 'Password', onChange: this.changePassword, type: 'password', value: this.state.password })
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'actions' },
+	          React.createElement('input', { id: 'login', className: 'session-button', type: 'submit', value: 'Sign In' })
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'actions' },
+	          React.createElement(
+	            'button',
+	            { className: 'session-button', onClick: this.facebookLogin },
+	            'Log in facebook'
+	          )
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'actions' },
+	          React.createElement(
+	            'button',
+	            { className: 'session-button', onClick: this.googleLogin },
+	            'Log in Google'
+	          )
 	        ),
 	        React.createElement(_reactFacebookLogin2.default, { appId: '1790155654560761',
 	          autoLoad: true, fields: 'name,email,picture',
 	          callback: this.responseFacebook,
 	          cssClass: 'facebook-button',
 	          icon: 'fa-facebook' }),
-	        React.createElement('br', null),
-	        React.createElement(
-	          Link,
-	          { className: 'form-bottom-text', to: '/' },
-	          'Home'
-	        )
+	        React.createElement('br', null)
 	      )
 	    );
 	  },
@@ -27079,10 +27089,10 @@
 	
 	  demoLogin: function demoLogin(e) {
 	    e.preventDefault();
-	    // SessionActions.logIn({
-	    //   email: SessionConstants.DEMO_USERNAME,
-	    //   password: SessionConstants.DEMO_PASSWORD
-	    // });
+	    SessionActions.login({
+	      email: SessionConstants.DEMO_USERNAME,
+	      password: SessionConstants.DEMO_PASSWORD
+	    });
 	  },
 	  componentWillUnmount: function componentWillUnmount() {
 	    this.loginListener.remove();
@@ -29094,8 +29104,6 @@
 	
 	var SessionActions = {
 	  login: function login(userData) {
-	    console.log("logging in");
-	
 	    SessionApiUtils.login(userData, this.receiveUser, ErrorActions.setErrors);
 	  },
 	  facebookLogin: function facebookLogin() {
@@ -29116,12 +29124,6 @@
 	  removeCurrentUser: function removeCurrentUser() {
 	    Dispatcher.dispatch({
 	      actionType: SessionConstants.LOGOUT
-	    });
-	  },
-	  receiveErrors: function receiveErrors(errors) {
-	    Dispatcher.dispatch({
-	      actionType: SessionConstants.DISPLAY_ERRORS,
-	      errors: errors
 	    });
 	  }
 	};
@@ -29566,7 +29568,9 @@
 	
 	module.exports = {
 	  LOGIN: 'LOGIN',
-	  LOGOUT: 'LOGOUT'
+	  LOGOUT: 'LOGOUT',
+	  DEMO_USERNAME: 'demo@demo.com',
+	  DEMO_PASSWORD: 'password'
 	};
 
 /***/ },
@@ -29619,6 +29623,7 @@
 	var Store = __webpack_require__(269).Store;
 	var SessionConstants = __webpack_require__(265);
 	var LikeConstants = __webpack_require__(286);
+	var hashHistory = __webpack_require__(172).hashHistory;
 	
 	var SessionStore = new Store(Dispatcher);
 	
@@ -29626,11 +29631,12 @@
 	
 	var _logout = function _logout() {
 	  _currentUser = {};
+	  hashHistory.push('/');
 	};
 	
 	var _login = function _login(currentUser) {
-	  console.log("logging in current user");
 	  _currentUser = currentUser;
+	  hashHistory.push('/tracks/all');
 	};
 	
 	SessionStore.addLike = function (trackId) {
@@ -36193,6 +36199,277 @@
 	'use strict';
 	
 	var React = __webpack_require__(1);
+	var UserActions = __webpack_require__(289);
+	var Modal = __webpack_require__(239);
+	var Link = __webpack_require__(172).Link;
+	var hashHistory = __webpack_require__(172).hashHistory;
+	
+	var SignupForm = React.createClass({
+	  displayName: 'SignupForm',
+	
+	  getInitialState: function getInitialState() {
+	    return {
+	      email: "",
+	      // uid: "",
+	      password: "",
+	      password_confirmation: "",
+	      modalIsOpen: false
+	      // name: ""
+	    };
+	  },
+	  _updateName: function _updateName(e) {
+	    // this.setState({name: e.target.value});
+	  },
+	  _updateEmail: function _updateEmail(e) {
+	    this.setState({ email: e.target.value });
+	  },
+	  _updatePassword: function _updatePassword(e) {
+	    this.setState({ password: e.target.value });
+	  },
+	  _updatePassConfirm: function _updatePassConfirm(e) {
+	    this.setState({ password_confirmation: e.target.value });
+	  },
+	  _createUser: function _createUser(e) {
+	    e.preventDefault();
+	    UserActions.createUser(this.state);
+	  },
+	
+	  render: function render() {
+	    return React.createElement(
+	      Modal,
+	      {
+	        isOpen: this.props.modalOpen,
+	        onAfterOpen: this.afterOpenModal,
+	        onRequestClose: this.closeModal,
+	        style: customStyles
+	      },
+	      React.createElement(
+	        'form',
+	        { className: 'session-form', onSubmit: this._createUser },
+	        React.createElement(
+	          'h2',
+	          { className: 'form-text' },
+	          'Sign up'
+	        ),
+	        React.createElement(
+	          'label',
+	          { className: 'form-text' },
+	          'Enter your ',
+	          React.createElement(
+	            'span',
+	            { className: 'bolded' },
+	            'email'
+	          ),
+	          ' and ',
+	          React.createElement(
+	            'span',
+	            { className: 'bolded' },
+	            'password'
+	          ),
+	          '.'
+	        ),
+	        React.createElement('br', null),
+	        React.createElement(
+	          'div',
+	          { className: 'field' },
+	          React.createElement('input', { className: 'session-textbox', placeholder: 'Your email', type: 'email', onChange: this._updateEmail })
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'field' },
+	          React.createElement('input', { className: 'session-textbox', placeholder: 'Password', type: 'password', autoComplete: 'off',
+	            onChange: this._updatePassword })
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'field' },
+	          React.createElement('input', { className: 'session-textbox', placeholder: 'Confirm password', type: 'password', autoComplete: 'off',
+	            onChange: this._updatePassConfirm })
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'actions' },
+	          React.createElement('input', { className: 'session-button', type: 'submit' })
+	        )
+	      )
+	    );
+	  },
+	
+	  closeModal: function closeModal() {
+	    this.props.closeForm();
+	    this.setState({ modalIsOpen: false });
+	  }
+	
+	});
+	
+	var customStyles = {
+	  content: {
+	    top: '50%',
+	    left: '50%',
+	    right: 'auto',
+	    bottom: 'auto',
+	    marginRight: '-50%',
+	    transform: 'translate(-50%, -50%)'
+	  }
+	};
+	module.exports = SignupForm;
+
+/***/ },
+/* 289 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var UserApiUtil = __webpack_require__(290);
+	var AppDispatcher = __webpack_require__(260);
+	var ErrorActions = __webpack_require__(266);
+	
+	var UserConstants = __webpack_require__(291);
+	
+	var UserActions = {
+	  fetchAllUsers: function fetchAllUsers() {
+	    UserApiUtil.fetchAllUsers(this.receiveAllUsers, ErrorActions.setErrors);
+	  },
+	  fetchUser: function fetchUser(id) {
+	    UserApiUtil.fetchUser(id, this.receiveUser, ErrorActions.setErrors);
+	  },
+	  createUser: function createUser(user) {
+	    UserApiUtil.createUser(user, this.receiveUser, ErrorActions.setErrors);
+	  },
+	  updateUser: function updateUser(user) {
+	    UserApiUtil.updateUser(user, this.receiveUser, ErrorActions.setErrors);
+	  },
+	  deleteUser: function deleteUser(id) {
+	    UserApiUtil.deleteUser(id, this.removeUser, ErrorActions.setErrors);
+	  },
+	  receiveAllUsers: function receiveAllUsers(users) {
+	    AppDispatcher.dispatch({
+	      actionType: UserConstants.USERS_RECEIVED,
+	      users: users
+	    });
+	  },
+	  receiveUser: function receiveUser(user) {
+	    AppDispatcher.dispatch({
+	      actionType: UserConstants.USER_RECEIVED,
+	      user: user
+	    });
+	  },
+	  removeUser: function removeUser(user) {
+	    AppDispatcher.dispatch({
+	      actionType: UserConstants.USER_REMOVED,
+	      user: user
+	    });
+	  }
+	};
+	
+	module.exports = UserActions;
+
+/***/ },
+/* 290 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var SessionActions = __webpack_require__(259);
+	
+	var UserApiUtil = {
+	  fetchAllUsers: function fetchAllUsers(_success, _error) {
+	    $.ajax({
+	      url: 'api/users',
+	      type: 'GET',
+	      data_type: 'json',
+	      success: function success(resp) {
+	        _success(resp);
+	      },
+	      error: function error(resp) {
+	        _error("fetchAllUsers", resp);
+	      }
+	    });
+	  },
+	  fetchUser: function fetchUser(id, _success2, _error2) {
+	    $.ajax({
+	      url: 'api/users/' + id,
+	      type: 'GET',
+	      data_type: 'json',
+	      success: function success(resp) {
+	        _success2(resp);
+	      },
+	      error: function error(resp) {
+	        _error2("fetchUser", resp);
+	      }
+	    });
+	  },
+	  createUser: function createUser(user, _success3, _error3) {
+	    $.ajax({
+	      url: '/users.json',
+	      type: 'POST',
+	      data_type: 'json',
+	      data: { user: user },
+	      success: function success(resp) {
+	        var userData = {
+	          email: user.email,
+	          password: user.password
+	        };
+	        SessionActions.login(userData);
+	        _success3(resp);
+	      },
+	      error: function error(resp) {
+	        _error3("createUser", resp);
+	      }
+	    });
+	  },
+	  updateUser: function updateUser(user, _success4, _error4) {
+	    $.ajax({
+	      url: 'api/users/' + user.id,
+	      type: 'PATCH',
+	      data_type: 'json',
+	      data: { user: user },
+	      success: function success(resp) {
+	        _success4(resp);
+	      },
+	      error: function error(resp) {
+	        _error4("updateUser", resp);
+	      }
+	    });
+	  },
+	  deleteUser: function deleteUser(id, _success5, _error5) {
+	    $.ajax({
+	      url: 'api/users/' + id,
+	      type: 'DELETE',
+	      data_type: 'json',
+	      success: function success(resp) {
+	        _success5(resp);
+	      },
+	      error: function error(resp) {
+	        _error5("deleteUser", resp);
+	      }
+	    });
+	  }
+	};
+	
+	module.exports = UserApiUtil;
+
+/***/ },
+/* 291 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	var UserConstants = {
+	  USERS_RECEIVED: "USERS_RECEIVED",
+	  USER_RECEIVED: "USER_RECEIVED",
+	  USER_REMOVED: "USER_REMOVED"
+	};
+	
+	module.exports = UserConstants;
+
+/***/ },
+/* 292 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1);
 	var ReactRouter = __webpack_require__(172);
 	var hashHistory = ReactRouter.hashHistory;
 	
@@ -36251,7 +36528,7 @@
 	module.exports = Searchbar;
 
 /***/ },
-/* 289 */
+/* 293 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -36283,7 +36560,7 @@
 	module.exports = Footer;
 
 /***/ },
-/* 290 */
+/* 294 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -36311,15 +36588,15 @@
 	module.exports = Body;
 
 /***/ },
-/* 291 */
+/* 295 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var TrackApiUtils = __webpack_require__(292);
+	var TrackApiUtils = __webpack_require__(296);
 	var ErrorActions = __webpack_require__(266);
 	var Dispatcher = __webpack_require__(260);
-	var TrackConstants = __webpack_require__(293);
+	var TrackConstants = __webpack_require__(297);
 	
 	var TrackActions = {
 	  fetchAllTracks: function fetchAllTracks() {
@@ -36336,7 +36613,7 @@
 	module.exports = TrackActions;
 
 /***/ },
-/* 292 */
+/* 296 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -36358,7 +36635,7 @@
 	};
 
 /***/ },
-/* 293 */
+/* 297 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -36368,291 +36645,99 @@
 	};
 
 /***/ },
-/* 294 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var React = __webpack_require__(1);
-	var UserActions = __webpack_require__(295);
-	var Modal = __webpack_require__(239);
-	var Link = __webpack_require__(172).Link;
-	var hashHistory = __webpack_require__(172).hashHistory;
-	
-	var SignupForm = React.createClass({
-	  displayName: 'SignupForm',
-	
-	  getInitialState: function getInitialState() {
-	    return {
-	      email: "",
-	      // uid: "",
-	      password: "",
-	      password_confirmation: "",
-	      modalIsOpen: false
-	      // name: ""
-	    };
-	  },
-	  _updateName: function _updateName(e) {
-	    // this.setState({name: e.target.value});
-	  },
-	  _updateEmail: function _updateEmail(e) {
-	    this.setState({ email: e.target.value });
-	  },
-	  _updatePassword: function _updatePassword(e) {
-	    this.setState({ password: e.target.value });
-	  },
-	  _updatePassConfirm: function _updatePassConfirm(e) {
-	    this.setState({ password_confirmation: e.target.value });
-	  },
-	  _createUser: function _createUser(e) {
-	    e.preventDefault();
-	    UserActions.createUser(this.state);
-	  },
-	
-	  render: function render() {
-	    return React.createElement(
-	      Modal,
-	      {
-	        isOpen: this.props.modalOpen,
-	        onAfterOpen: this.afterOpenModal,
-	        onRequestClose: this.closeModal,
-	        style: customStyles
-	      },
-	      React.createElement(
-	        'h2',
-	        null,
-	        'Sign up'
-	      ),
-	      React.createElement(
-	        'form',
-	        { onSubmit: this._createUser },
-	        React.createElement(
-	          'div',
-	          { className: 'field' },
-	          React.createElement(
-	            'label',
-	            { 'for': 'name' },
-	            'Name: '
-	          ),
-	          React.createElement('br', null),
-	          React.createElement('input', { type: 'text', onChange: this._updateName })
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'field' },
-	          React.createElement(
-	            'label',
-	            { 'for': 'email' },
-	            'Email: '
-	          ),
-	          React.createElement('br', null),
-	          React.createElement('input', { type: 'email', onChange: this._updateEmail })
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'field' },
-	          React.createElement(
-	            'label',
-	            { 'for': 'password' },
-	            'Password: '
-	          ),
-	          React.createElement('br', null),
-	          React.createElement('input', { type: 'password', autoComplete: 'off',
-	            onChange: this._updatePassword })
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'field' },
-	          React.createElement(
-	            'label',
-	            { 'for': 'password_confirmation' },
-	            'Confirm Password: '
-	          ),
-	          React.createElement('br', null),
-	          React.createElement('input', { type: 'password', autoComplete: 'off',
-	            onChange: this._updatePassConfirm })
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'actions' },
-	          React.createElement('input', { type: 'submit' })
-	        )
-	      )
-	    );
-	  },
-	
-	  closeModal: function closeModal() {
-	    this.props.closeForm();
-	    this.setState({ modalIsOpen: false });
-	    // hashHistory.push('/');
-	  }
-	
-	});
-	
-	var customStyles = {
-	  content: {
-	    top: '50%',
-	    left: '50%',
-	    right: 'auto',
-	    bottom: 'auto',
-	    marginRight: '-50%',
-	    transform: 'translate(-50%, -50%)'
-	  }
-	};
-	module.exports = SignupForm;
-
-/***/ },
-/* 295 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var UserApiUtil = __webpack_require__(296);
-	var AppDispatcher = __webpack_require__(260);
-	var ErrorActions = __webpack_require__(266);
-	
-	var UserConstants = __webpack_require__(297);
-	
-	var UserActions = {
-	  fetchAllUsers: function fetchAllUsers() {
-	    UserApiUtil.fetchAllUsers(this.receiveAllUsers, ErrorActions.setErrors);
-	  },
-	  fetchUser: function fetchUser(id) {
-	    UserApiUtil.fetchUser(id, this.receiveUser, ErrorActions.setErrors);
-	  },
-	  createUser: function createUser(user) {
-	    UserApiUtil.createUser(user, this.receiveUser, ErrorActions.setErrors);
-	  },
-	  updateUser: function updateUser(user) {
-	    UserApiUtil.updateUser(user, this.receiveUser, ErrorActions.setErrors);
-	  },
-	  deleteUser: function deleteUser(id) {
-	    UserApiUtil.deleteUser(id, this.removeUser, ErrorActions.setErrors);
-	  },
-	  receiveAllUsers: function receiveAllUsers(users) {
-	    AppDispatcher.dispatch({
-	      actionType: UserConstants.USERS_RECEIVED,
-	      users: users
-	    });
-	  },
-	  receiveUser: function receiveUser(user) {
-	    AppDispatcher.dispatch({
-	      actionType: UserConstants.USER_RECEIVED,
-	      user: user
-	    });
-	  },
-	  removeUser: function removeUser(user) {
-	    AppDispatcher.dispatch({
-	      actionType: UserConstants.USER_REMOVED,
-	      user: user
-	    });
-	  }
-	};
-	
-	module.exports = UserActions;
-
-/***/ },
-/* 296 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	var UserApiUtil = {
-	  fetchAllUsers: function fetchAllUsers(_success, _error) {
-	    $.ajax({
-	      url: 'api/users',
-	      type: 'GET',
-	      data_type: 'json',
-	      success: function success(resp) {
-	        _success(resp);
-	      },
-	      error: function error(resp) {
-	        _error("fetchAllUsers", resp);
-	      }
-	    });
-	  },
-	  fetchUser: function fetchUser(id, _success2, _error2) {
-	    $.ajax({
-	      url: 'api/users/' + id,
-	      type: 'GET',
-	      data_type: 'json',
-	      success: function success(resp) {
-	        _success2(resp);
-	      },
-	      error: function error(resp) {
-	        _error2("fetchUser", resp);
-	      }
-	    });
-	  },
-	  createUser: function createUser(user, _success3, _error3) {
-	    $.ajax({
-	      url: '/users.json',
-	      type: 'POST',
-	      data_type: 'json',
-	      data: { user: user },
-	      success: function success(resp) {
-	        _success3(resp);
-	      },
-	      error: function error(resp) {
-	        _error3("createUser", resp);
-	      }
-	    });
-	  },
-	  updateUser: function updateUser(user, _success4, _error4) {
-	    $.ajax({
-	      url: 'api/users/' + user.id,
-	      type: 'PATCH',
-	      data_type: 'json',
-	      data: { user: user },
-	      success: function success(resp) {
-	        _success4(resp);
-	      },
-	      error: function error(resp) {
-	        _error4("updateUser", resp);
-	      }
-	    });
-	  },
-	  deleteUser: function deleteUser(id, _success5, _error5) {
-	    $.ajax({
-	      url: 'api/users/' + id,
-	      type: 'DELETE',
-	      data_type: 'json',
-	      success: function success(resp) {
-	        _success5(resp);
-	      },
-	      error: function error(resp) {
-	        _error5("deleteUser", resp);
-	      }
-	    });
-	  }
-	};
-	
-	module.exports = UserApiUtil;
-
-/***/ },
-/* 297 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	var UserConstants = {
-	  USERS_RECEIVED: "USERS_RECEIVED",
-	  USER_RECEIVED: "USER_RECEIVED",
-	  USER_REMOVED: "USER_REMOVED"
-	};
-	
-	module.exports = UserConstants;
-
-/***/ },
 /* 298 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
+	var Dispatcher = __webpack_require__(260);
+	var Store = __webpack_require__(269).Store;
+	var PlayerConstants = __webpack_require__(299);
+	
+	var PlayerStore = new Store(Dispatcher);
+	
+	// HOW TO USE THE PLAYER STORE:
+	// To play a song, first PlayerStore.loadSong(track). There should be a track.audio_url
+	// property which that function will read from.
+	
+	// This loads the song without playing it, like you might load a vinyl into a record player.
+	// To actually play the song, call PlayerStore.playLoadedSong()
+	
+	// To pause a song, call PlayerStore.pauseSong();
+	
+	var _loadedSong = null;
+	var _trackUrl = null;
+	
+	PlayerStore.loadSong = function (track) {
+	  if (_loadedSong) {
+	    this.pauseSong();
+	  }
+	  var song = new Audio(track.audio_url);
+	  _trackUrl = track.audio_url;
+	  _loadedSong = song;
+	};
+	
+	PlayerStore.playLoadedSong = function () {
+	  if (_loadedSong) {
+	    _loadedSong.play();
+	    // Dismount the song 30 seconds after it begins playing. 30 seconds is constants
+	    // because every song listed is a 30 sec preview. Normally, this would be variable
+	    // based on the full song length
+	    this.timeout = setTimeout(this.clearSong, 30000);
+	  }
+	};
+	
+	PlayerStore.clearSong = function () {
+	  _loadedSong = null;
+	  _trackUrl = null;
+	  clearTimeout(this.timeout);
+	};
+	
+	PlayerStore.pauseSong = function () {
+	  if (_loadedSong) {
+	    _loadedSong.pause();
+	    this.clearSong();
+	  }
+	};
+	
+	PlayerStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case PlayerConstants.TOGGLE_TRACK:
+	      if (payload.track.audio_url === _trackUrl) {
+	        this.pauseSong();
+	        this.__emitChange();
+	        break;
+	      } else {
+	        this.loadSong(payload.track);
+	        this.playLoadedSong();
+	        this.__emitChange();
+	        break;
+	      }
+	  }
+	};
+	
+	module.exports = PlayerStore;
+
+/***/ },
+/* 299 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	module.exports = {
+	  TOGGLE_TRACK: "TOGGLE_TRACK"
+	};
+
+/***/ },
+/* 300 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
 	var React = __webpack_require__(1);
-	var TrackActions = __webpack_require__(291);
-	var TracksStore = __webpack_require__(299);
-	var TrackIndexItem = __webpack_require__(300);
+	var TrackActions = __webpack_require__(295);
+	var TracksStore = __webpack_require__(301);
+	var TrackIndexItem = __webpack_require__(302);
 	
 	var TracksIndex = React.createClass({
 	  displayName: 'TracksIndex',
@@ -36698,14 +36783,14 @@
 	module.exports = TracksIndex;
 
 /***/ },
-/* 299 */
+/* 301 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var Dispatcher = __webpack_require__(260);
 	var Store = __webpack_require__(269).Store;
-	var TrackConstants = __webpack_require__(293);
+	var TrackConstants = __webpack_require__(297);
 	var LikeConstants = __webpack_require__(286);
 	
 	var TrackStore = new Store(Dispatcher);
@@ -36760,15 +36845,15 @@
 	module.exports = TrackStore;
 
 /***/ },
-/* 300 */
+/* 302 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1);
 	var SessionStore = __webpack_require__(268);
-	var LikeActions = __webpack_require__(301);
-	var PlayerActions = __webpack_require__(303);
+	var LikeActions = __webpack_require__(303);
+	var PlayerActions = __webpack_require__(305);
 	
 	var TrackIndexItem = React.createClass({
 	  displayName: 'TrackIndexItem',
@@ -36865,12 +36950,12 @@
 	module.exports = TrackIndexItem;
 
 /***/ },
-/* 301 */
+/* 303 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var LikeApiUtil = __webpack_require__(302);
+	var LikeApiUtil = __webpack_require__(304);
 	var LikeConstants = __webpack_require__(286);
 	var AppDispatcher = __webpack_require__(260);
 	
@@ -36900,7 +36985,7 @@
 	module.exports = LikeActions;
 
 /***/ },
-/* 302 */
+/* 304 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -36927,13 +37012,13 @@
 	module.exports = LikeApiUtil;
 
 /***/ },
-/* 303 */
+/* 305 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var Dispatcher = __webpack_require__(260);
-	var PlayerConstants = __webpack_require__(304);
+	var PlayerConstants = __webpack_require__(299);
 	
 	module.exports = {
 	  toggleTrack: function toggleTrack(track) {
@@ -36945,17 +37030,7 @@
 	};
 
 /***/ },
-/* 304 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	module.exports = {
-	  TOGGLE_TRACK: "TOGGLE_TRACK"
-	};
-
-/***/ },
-/* 305 */
+/* 306 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -36990,77 +37065,6 @@
 	});
 	
 	module.exports = Index;
-
-/***/ },
-/* 306 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var Dispatcher = __webpack_require__(260);
-	var Store = __webpack_require__(269).Store;
-	var PlayerConstants = __webpack_require__(304);
-	
-	var PlayerStore = new Store(Dispatcher);
-	
-	// HOW TO USE THE PLAYER STORE:
-	// To play a song, first PlayerStore.loadSong(track). There should be a track.audio_url
-	// property which that function will read from.
-	
-	// This loads the song without playing it, like you might load a vinyl into a record player.
-	// To actually play the song, call PlayerStore.playLoadedSong()
-	
-	// To pause a song, call PlayerStore.pauseSong();
-	
-	var _loadedSong = null;
-	var _trackUrl = null;
-	
-	PlayerStore.loadSong = function (track) {
-	  if (_loadedSong) {
-	    this.pauseSong();
-	  }
-	  var song = new Audio(track.audio_url);
-	  _trackUrl = track.audio_url;
-	  _loadedSong = song;
-	};
-	
-	PlayerStore.playLoadedSong = function () {
-	  if (_loadedSong) {
-	    _loadedSong.play();
-	    this.timeout = setTimeout(this.clearSong, 30000);
-	  }
-	};
-	
-	PlayerStore.clearSong = function () {
-	  _loadedSong = null;
-	  _trackUrl = null;
-	  clearTimeout(this.timeout);
-	};
-	
-	PlayerStore.pauseSong = function () {
-	  if (_loadedSong) {
-	    _loadedSong.pause();
-	    this.clearSong();
-	  }
-	};
-	
-	PlayerStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case PlayerConstants.TOGGLE_TRACK:
-	      if (payload.track.audio_url === _trackUrl) {
-	        this.pauseSong();
-	        this.__emitChange();
-	        break;
-	      } else {
-	        this.loadSong(payload.track);
-	        this.playLoadedSong();
-	        this.__emitChange();
-	        break;
-	      }
-	  }
-	};
-	
-	module.exports = PlayerStore;
 
 /***/ }
 /******/ ]);
