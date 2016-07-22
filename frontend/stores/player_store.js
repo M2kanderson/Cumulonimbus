@@ -20,9 +20,9 @@ PlayerStore.loadSong = function(track){
   if (_loadedSong){
     this.pauseSong();
   }
-  const song = new Audio(track.audio_url);
+  // const song = new Audio(track.audio_url);
   _trackUrl = track.audio_url;
-  _loadedSong = song;
+  _loadedSong = track;
 };
 
 PlayerStore.playLoadedSong = function(){
@@ -63,5 +63,10 @@ PlayerStore.__onDispatch = function(payload){
       }
   }
 };
+
+PlayerStore.loadedSong = function(){
+  return _loadedSong;
+};
+
 
 module.exports = PlayerStore;

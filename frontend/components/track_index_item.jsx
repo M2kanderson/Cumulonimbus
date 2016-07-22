@@ -43,6 +43,7 @@ const TrackIndexItem = React.createClass({
       text += ` - ${this.props.track.artist}`;
     }
 
+
     return (
       <li className="track-index-item">
         <div className="track-image">
