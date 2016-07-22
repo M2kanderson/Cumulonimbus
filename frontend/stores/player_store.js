@@ -31,19 +31,19 @@ PlayerStore.playLoadedSong = function(){
     // Dismount the song 30 seconds after it begins playing. 30 seconds is constants
     // because every song listed is a 30 sec preview. Normally, this would be variable
     // based on the full song length
-    this.timeout = setTimeout(this.clearSong, 30000);
+    // this.timeout = setTimeout(this.clearSong, 30000);
   }
 };
 
 PlayerStore.clearSong = function(){
   _loadedSong = null;
   _trackUrl = null;
-  clearTimeout(this.timeout);
+  // clearTimeout(this.timeout);
 };
 
 PlayerStore.pauseSong = function(){
   if (_loadedSong) {
-    _loadedSong.pause();
+    // _loadedSong.pause();
     this.clearSong();
   }
 };
@@ -57,7 +57,7 @@ PlayerStore.__onDispatch = function(payload){
         break;
       } else {
         this.loadSong(payload.track);
-        this.playLoadedSong();
+        // this.playLoadedSong();
         this.__emitChange();
         break;
       }
