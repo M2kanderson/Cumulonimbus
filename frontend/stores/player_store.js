@@ -64,7 +64,7 @@ PlayerStore.__onDispatch = function(payload){
   }
 };
 
-PlayerStore._loadedSong = function(){
+PlayerStore.loadedSong = function(){
   return _loadedSong;
 };
 
