@@ -1,8 +1,9 @@
-var React = require('react');
+const React = require('react');
 const LoginForm = require('./login_form');
 const SignupForm = require('./signup_form');
 const SessionActions = require('../actions/session_actions');
 const Searchbar = require('./searchbar');
+const hashHistory = require('react-router').hashHistory;
 
 var Header = React.createClass({
   getInitialState: function() {
@@ -50,7 +51,7 @@ var Header = React.createClass({
     return (
       <div className="header">
         <div className="header-left">
-          <img src="http://res.cloudinary.com/pulsr/image/upload/c_crop,y_0/v1468955200/Cumulonimbus/Cumulonimbus-logo.png"></img>
+          <img id="logo" onClick={this.redirectHome} src="http://res.cloudinary.com/pulsr/image/upload/c_crop,y_0/v1468955200/Cumulonimbus/Cumulonimbus-logo.png"/>
         </div>
         <div className="header-right">
           <section className="header-buttons">
@@ -65,6 +66,10 @@ var Header = React.createClass({
 
       </div>
     );
+  },
+
+  redirectHome(){
+    hashHistory.push('/');
   }
 
 });

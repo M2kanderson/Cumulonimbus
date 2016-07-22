@@ -48,7 +48,7 @@ const TrackIndexItem = React.createClass({
       <li className="track-index-item">
         <div className="track-container">
           <div className="track-image">
-            <img onClick={this._toggleTrack} src={this.props.track.image_url} width="225" height="225"></img>
+            <img onClick={this._toggleTrack} src={this.props.track.image_url} width="225" height="225"/>
             <span className="track-image-overlay" id={`overlay-${this.props.track.id}`}></span>
           </div>
           <div className="track-text">
@@ -61,7 +61,7 @@ const TrackIndexItem = React.createClass({
             Number of Likes: {this.props.track.like_count}
           </div>
           <button className="like-button" onClick={this.toggleLike}>
-            {this._isLiked() === "Like" ? <img className="like-heart" src="http://www.clker.com/cliparts/X/P/1/i/X/X/white-heart-md.png" width="17" height="15"/> : "Unlike"}
+            {this._isLiked() === "Like" ? <img className="like-heart" src="http://res.cloudinary.com/dpyncrw04/image/upload/v1469220374/white-heart-md_qmrgxn.png" width="17" height="15"/> : "Unlike"}
             </button>
         </div>
       </li>);

@@ -26819,6 +26819,7 @@
 	var SignupForm = __webpack_require__(288);
 	var SessionActions = __webpack_require__(259);
 	var Searchbar = __webpack_require__(292);
+	var hashHistory = __webpack_require__(172).hashHistory;
 	
 	var Header = React.createClass({
 	  displayName: 'Header',
@@ -26872,7 +26873,7 @@
 	      React.createElement(
 	        'div',
 	        { className: 'header-left' },
-	        React.createElement('img', { src: 'http://res.cloudinary.com/pulsr/image/upload/c_crop,y_0/v1468955200/Cumulonimbus/Cumulonimbus-logo.png' })
+	        React.createElement('img', { id: 'logo', onClick: this.redirectHome, src: 'http://res.cloudinary.com/pulsr/image/upload/c_crop,y_0/v1468955200/Cumulonimbus/Cumulonimbus-logo.png' })
 	      ),
 	      React.createElement(
 	        'div',
@@ -26901,8 +26902,11 @@
 	      React.createElement(LoginForm, { modalOpen: this.state.login, closeForm: this.closeLogin }),
 	      React.createElement(SignupForm, { modalOpen: this.state.signup, closeForm: this.closeSignup })
 	    );
-	  }
+	  },
 	
+	  redirectHome: function redirectHome() {
+	    hashHistory.push('/');
+	  }
 	});
 	
 	module.exports = Header;
@@ -27128,6 +27132,10 @@
 	    bottom: 'auto',
 	    marginRight: '-50%',
 	    transform: 'translate(-50%, -50%)'
+	  },
+	
+	  overlay: {
+	    zIndex: 2
 	  }
 	};
 	
@@ -36312,6 +36320,10 @@
 	    bottom: 'auto',
 	    marginRight: '-50%',
 	    transform: 'translate(-50%, -50%)'
+	  },
+	
+	  overlay: {
+	    zIndex: 2
 	  }
 	};
 	module.exports = SignupForm;
@@ -36757,8 +36769,6 @@
 	    this.trackListener = TracksStore.addListener(this._onChange);
 	    this.playerListener = PlayerStore.addListener(this._onPlayerChange);
 	    TrackActions.fetchAllTracks();
-	    this.likeHeart = new Image(5, 5);
-	    this.likeHeart.src = "https://s32.postimg.org/vmugd76md/Heart_Filled_128.png";
 	  },
 	  _onChange: function _onChange() {
 	    this.setState({ tracks: TracksStore.allTracks() });
@@ -36955,7 +36965,7 @@
 	        React.createElement(
 	          'button',
 	          { className: 'like-button', onClick: this.toggleLike },
-	          this._isLiked() === "Like" ? React.createElement('img', { className: 'like-heart', src: 'http://www.clker.com/cliparts/X/P/1/i/X/X/white-heart-md.png', width: '17', height: '15' }) : "Unlike"
+	          this._isLiked() === "Like" ? React.createElement('img', { className: 'like-heart', src: 'http://res.cloudinary.com/dpyncrw04/image/upload/v1469220374/white-heart-md_qmrgxn.png', width: '17', height: '15' }) : "Unlike"
 	        )
 	      )
 	    );
