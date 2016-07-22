@@ -20,7 +20,7 @@ const appRouter = (
   <Router history={ hashHistory }>
     <Route path="/" component={ App }>
       <IndexRoute component={Index}></IndexRoute>
-      <Route path="/users/signup" component={SignupForm}></Route>
+      <Route path="/users/signup" component={SignupForm}/>
       <Route path="/users/login" component={LoginForm}/>
       <Route path="tracks/all" component={TracksIndex}/>
     </Route>

@@ -26814,6 +26814,7 @@
 	
 	var React = __webpack_require__(1);
 	var LoginForm = __webpack_require__(237);
+	var SignupForm = __webpack_require__(294);
 	var SessionActions = __webpack_require__(259);
 	var Searchbar = __webpack_require__(288);
 	
@@ -26854,6 +26855,13 @@
 	
 	    this.setState({ signup: true });
 	  },
+	  closeSignup: function closeSignup(e) {
+	    if (e) {
+	      e.preventDefault();
+	    }
+	
+	    this.setState({ signup: false });
+	  },
 	
 	  render: function render() {
 	    return React.createElement(
@@ -26878,7 +26886,7 @@
 	          ),
 	          React.createElement(
 	            'button',
-	            { className: 'button' },
+	            { className: 'button', onClick: this.signUp },
 	            ' Sign Up'
 	          ),
 	          React.createElement(
@@ -26888,7 +26896,8 @@
 	          )
 	        )
 	      ),
-	      React.createElement(LoginForm, { modalOpen: this.state.login, closeForm: this.closeLogin })
+	      React.createElement(LoginForm, { modalOpen: this.state.login, closeForm: this.closeLogin }),
+	      React.createElement(SignupForm, { modalOpen: this.state.signup, closeForm: this.closeSignup })
 	    );
 	  }
 	
@@ -36366,6 +36375,9 @@
 	
 	var React = __webpack_require__(1);
 	var UserActions = __webpack_require__(295);
+	var Modal = __webpack_require__(239);
+	var Link = __webpack_require__(172).Link;
+	var hashHistory = __webpack_require__(172).hashHistory;
 	
 	var SignupForm = React.createClass({
 	  displayName: 'SignupForm',
@@ -36375,7 +36387,8 @@
 	      email: "",
 	      // uid: "",
 	      password: "",
-	      password_confirmation: ""
+	      password_confirmation: "",
+	      modalIsOpen: false
 	      // name: ""
 	    };
 	  },
@@ -36398,8 +36411,13 @@
 	
 	  render: function render() {
 	    return React.createElement(
-	      'div',
-	      null,
+	      Modal,
+	      {
+	        isOpen: this.props.modalOpen,
+	        onAfterOpen: this.afterOpenModal,
+	        onRequestClose: this.closeModal,
+	        style: customStyles
+	      },
 	      React.createElement(
 	        'h2',
 	        null,
@@ -36461,10 +36479,26 @@
 	        )
 	      )
 	    );
+	  },
+	
+	  closeModal: function closeModal() {
+	    this.props.closeForm();
+	    this.setState({ modalIsOpen: false });
+	    // hashHistory.push('/');
 	  }
 	
 	});
 	
+	var customStyles = {
+	  content: {
+	    top: '50%',
+	    left: '50%',
+	    right: 'auto',
+	    bottom: 'auto',
+	    marginRight: '-50%',
+	    transform: 'translate(-50%, -50%)'
+	  }
+	};
 	module.exports = SignupForm;
 
 /***/ },

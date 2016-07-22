@@ -1,5 +1,8 @@
 const React = require('react');
 const UserActions = require('../actions/user_actions');
+const Modal = require('react-modal');
+const Link = require('react-router').Link;
+const hashHistory = require('react-router').hashHistory;
 
 const SignupForm = React.createClass({
   getInitialState: function() {
@@ -7,7 +10,8 @@ const SignupForm = React.createClass({
       email: "",
       // uid: "",
       password: "",
-      password_confirmation: ""
+      password_confirmation: "",
+      modalIsOpen: false
       // name: ""
     };
   },
@@ -29,7 +33,12 @@ const SignupForm = React.createClass({
   },
   render: function() {
     return (
-      <div>
+      <Modal
+        isOpen={this.props.modalOpen}
+        onAfterOpen={this.afterOpenModal}
+        onRequestClose={this.closeModal}
+        style={customStyles}
+        >
         <h2>Sign up</h2>
         <form onSubmit={this._createUser}>
           <div className="field">
@@ -57,11 +66,28 @@ const SignupForm = React.createClass({
             <input type="submit"></input>
           </div>
         </form>
-      </div>
+      </Modal>
 
     );
+  },
+
+  closeModal: function() {
+    this.props.closeForm();
+    this.setState({modalIsOpen: false});
+    // hashHistory.push('/');
   }
+
 
 });
 
+const customStyles = {
+  content : {
+    top                   : '50%',
+    left                  : '50%',
+    right                 : 'auto',
+    bottom                : 'auto',
+    marginRight           : '-50%',
+    transform             : 'translate(-50%, -50%)'
+  }
+};
 module.exports = SignupForm;
