@@ -16,7 +16,7 @@ const TrackIndexItem = React.createClass({
     // this.setState({currentUser: SessionStore.currentUser});
   },
   _isLiked: function(){
-    let likeText = <img src="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-ios7-heart-128.png" width="20" height="20"/>;
+    let likeText = "Like";
     let currentUser = this.state.currentUser;
     if(currentUser.liked_tracks){
       let currentUserLikes = currentUser.liked_tracks;
@@ -31,7 +31,7 @@ const TrackIndexItem = React.createClass({
   toggleLike(){
     let data = {track_id : this.props.track.id};
 
-    if(this._isLiked() === <img src="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-ios7-heart-128.png" width="20" height="20"/>){
+    if(this._isLiked() === "Like"){
       LikeActions.createLike(data);
     } else{
       LikeActions.deleteLike(data);
@@ -46,17 +46,24 @@ const TrackIndexItem = React.createClass({
 
     return (
       <li className="track-index-item">
-        <div className="track-image">
-          <img onClick={this._toggleTrack} src={this.props.track.image_url} width="225" height="225"></img>
-          <span className="track-image-overlay" id={`overlay-${this.props.track.id}`}></span>
+        <div className="track-container">
+          <div className="track-image">
+            <img onClick={this._toggleTrack} src={this.props.track.image_url} width="225" height="225"></img>
+            <span className="track-image-overlay" id={`overlay-${this.props.track.id}`}></span>
+          </div>
+          <div className="track-text">
+            {text}
+          </div>
         </div>
-        <div className="track-text">
-          {text}
+
+        <div className="like-container">
+          <div className="likes">
+            Number of Likes: {this.props.track.like_count}
+          </div>
+          <button className="like-button" onClick={this.toggleLike}>
+            {this._isLiked() === "Like" ? <img className="like-heart" src="http://www.clker.com/cliparts/X/P/1/i/X/X/white-heart-md.png" width="17" height="15"/> : "Unlike"}
+            </button>
         </div>
-        <div className="likes">
-          Number of Likes: {this.props.track.like_count}
-        </div>
-        <button className="like-button" onClick={this.toggleLike}>{this._isLiked()}</button>
       </li>);
   },
 
