@@ -250,7 +250,14 @@ footer{
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: space-between;
   margin-bottom: 5px;
+}
+
+.track-container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .track-text {
@@ -258,6 +265,12 @@ footer{
   text-align: center;
   width: 225px;
   font-family: 'Lato', sans-serif;
+}
+
+.like-container{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
 
 .likes {
@@ -268,7 +281,7 @@ footer{
   background-color: #ff4000;
   color: white;
   font-family: 'Lato', sans-serif;
-  border: 0;
+  border: 1px solid gray;
 
   /*padding: 0px 20px;*/
   /*margin: 3px;*/
@@ -278,6 +291,16 @@ footer{
   border-radius: 3px;
   height: 32px;
   outline: none;
+  align-self: center;
+}
+
+.like-button:hover{
+  cursor: pointer;
+  border: 1px solid black;
+}
+
+.like-heart{
+  margin-top: 4px;
 }
 
 /* FORMS */

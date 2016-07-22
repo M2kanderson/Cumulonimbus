@@ -36894,7 +36894,7 @@
 	  },
 	
 	  _isLiked: function _isLiked() {
-	    var likeText = React.createElement('img', { src: 'https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-ios7-heart-128.png', width: '20', height: '20' });
+	    var likeText = "Like";
 	    var currentUser = this.state.currentUser;
 	    if (currentUser.liked_tracks) {
 	      var currentUserLikes = currentUser.liked_tracks;
@@ -36909,7 +36909,7 @@
 	  toggleLike: function toggleLike() {
 	    var data = { track_id: this.props.track.id };
 	
-	    if (this._isLiked() === React.createElement('img', { src: 'https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-ios7-heart-128.png', width: '20', height: '20' })) {
+	    if (this._isLiked() === "Like") {
 	      LikeActions.createLike(data);
 	    } else {
 	      LikeActions.deleteLike(data);
@@ -36926,25 +36926,33 @@
 	      { className: 'track-index-item' },
 	      React.createElement(
 	        'div',
-	        { className: 'track-image' },
-	        React.createElement('img', { onClick: this._toggleTrack, src: this.props.track.image_url, width: '225', height: '225' }),
-	        React.createElement('span', { className: 'track-image-overlay', id: 'overlay-' + this.props.track.id })
+	        { className: 'track-container' },
+	        React.createElement(
+	          'div',
+	          { className: 'track-image' },
+	          React.createElement('img', { onClick: this._toggleTrack, src: this.props.track.image_url, width: '225', height: '225' }),
+	          React.createElement('span', { className: 'track-image-overlay', id: 'overlay-' + this.props.track.id })
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'track-text' },
+	          text
+	        )
 	      ),
 	      React.createElement(
 	        'div',
-	        { className: 'track-text' },
-	        text
-	      ),
-	      React.createElement(
-	        'div',
-	        { className: 'likes' },
-	        'Number of Likes: ',
-	        this.props.track.like_count
-	      ),
-	      React.createElement(
-	        'button',
-	        { className: 'like-button', onClick: this.toggleLike },
-	        this._isLiked()
+	        { className: 'like-container' },
+	        React.createElement(
+	          'div',
+	          { className: 'likes' },
+	          'Number of Likes: ',
+	          this.props.track.like_count
+	        ),
+	        React.createElement(
+	          'button',
+	          { className: 'like-button', onClick: this.toggleLike },
+	          this._isLiked() === "Like" ? React.createElement('img', { className: 'like-heart', src: 'http://www.clker.com/cliparts/X/P/1/i/X/X/white-heart-md.png', width: '17', height: '15' }) : "Unlike"
+	        )
 	      )
 	    );
 	  },

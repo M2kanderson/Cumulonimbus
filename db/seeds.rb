@@ -47,7 +47,8 @@ artists = ["Béla Bartók", "Millennium", "Tim Legend", "Eric Church", "Ir Sais"
   "Los Caminantes HN", "DJ Y.T", "Lt. Charles A. Zimmerman", "RD Project", "Autoramas", "Rea K", "Bo Burnham", "John Mayer", "Mindless Behavior", "Different Heaven", "Eek-A-Mouse", "Enrique Iglesias", "Feke Pál", "Anamanaguchi", "Norris Man", "Flo Rida", "PJ", "Mac Miller", "Hail The Sun", "ScHoolboy Q",
   "İrem Derici", "Into It. Over It.", "Millennium", "Minimal 69", "Drake", "CL", "Andrew kn", "HQ Rox", "C.B Murdoc", "RM Project", "J. Tillman", "Coccodrillo Band", "Above & Beyond", "Mogey", "E-40", "O.T. Genasis", "ZZ Top", "Marc E. Bassy", "Julión Álvarez y su Norteño Banda", "Flo Rida",
   "Carl Philipp Emanuel Bach", "Lindsey Stirling", "R.B. Greaves", "R.B. Greaves", "Keith Washington", "Africaine 808", "Perro Zw", "Baipa Alerwa", "Germs", "Carrie Underwood", "G-Val", "SG Lewis", "Edward Sharpe & The Magnetic Zeros", "QM", "TÂCHES", "Rod Glidewell", "Coolio", "Future", "AC/DC", "dj-Jo",
-  "Indust.", "Yo Gotti", "TZ Project", "ef", "Adele", "Yo Gotti", "Pastor T.L. Barrett and the Youth for Christ Choir", "Sp-Dj", "Randy Rhodes", "Lil Uzi Vert", "Deca", "Young Scooter", "Dave East", "Trey Songz", "Jerry Purpdrank", "ScHoolboy Q", "Israel Kamakawiwo'ole", "Lana Del Rey", "50 Cent", "Rihanna"]
+  "Indust.", "Yo Gotti", "TZ Project", "ef", "Adele", "Yo Gotti", "Pastor T.L. Barrett and the Youth for Christ Choir", "Sp-Dj", "Randy Rhodes", "Lil Uzi Vert", "Deca", "Young Scooter", "Dave East", "Trey Songz", "Jerry Purpdrank", "ScHoolboy Q", "Israel Kamakawiwo'ole", "Lana Del Rey", "50 Cent", "Rihanna"]l
+  
 titles.length.times do |i|
     Track.create!(title: titles[i], image_url: image_urls[i],
                     audio_url: audio_urls[i], artist: artists[i], like_count: rand(39) + 1)
