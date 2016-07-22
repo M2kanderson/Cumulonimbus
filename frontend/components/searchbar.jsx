@@ -15,10 +15,10 @@ const Searchbar = React.createClass({
   },
   search(e){
     e.preventDefault();
-    let tagNames = this.state.query.split(",").map((tag) => tag.trim());
+    let search = this.state.query;
     hashHistory.push({
-      pathname: "search",
-      query: {tagNames:tagNames}
+      pathname: "tracks/filtered",
+      query: {search:search}
     });
     this.setState({query:""});
   },
@@ -42,7 +42,7 @@ const Searchbar = React.createClass({
                  onChange={this.updateQuery}
                  onKeyUp={this.trySearch}
                  value={this.state.query}
-                 placeholder="Song name, artist, etc.'"></input>
+                 placeholder="Song title or artist e.g. Michael Jackson"></input>
         </div>
       </div>
 

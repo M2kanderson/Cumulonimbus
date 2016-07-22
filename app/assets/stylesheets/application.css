@@ -357,6 +357,7 @@ h2{
 .track-info{
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
   padding-bottom: 5px;
@@ -370,10 +371,22 @@ h2{
 
 .track-name span{
   color: #afcde2;
+  margin-left: 20px;
+}
+
+.artist-name{
+  font-family: 'Neuton', serif;
+  font-size: 16px;
+}
+
+.artist-name span{
+  margin-left: 20px;
+  color: #afcde2;
 }
 
 .track-cover{
   width: 50px;
   height: 50px;
   margin-right: 20px;
+  border-radius: 3px;
 }

@@ -61,6 +61,7 @@
 	var LoginForm = __webpack_require__(237);
 	var TracksIndex = __webpack_require__(298);
 	var Index = __webpack_require__(304);
+	var TracksFiltered = __webpack_require__(339);
 	
 	var SessionActions = __webpack_require__(259);
 	
@@ -73,7 +74,8 @@
 	    React.createElement(IndexRoute, { component: Index }),
 	    React.createElement(Route, { path: '/users/signup', component: SignupForm }),
 	    React.createElement(Route, { path: '/users/login', component: LoginForm }),
-	    React.createElement(Route, { path: 'tracks/all', component: TracksIndex })
+	    React.createElement(Route, { path: 'tracks/all', component: TracksIndex }),
+	    React.createElement(Route, { path: 'tracks/filtered', component: TracksFiltered })
 	  )
 	);
 	
@@ -36217,12 +36219,10 @@
 	  },
 	  search: function search(e) {
 	    e.preventDefault();
-	    var tagNames = this.state.query.split(",").map(function (tag) {
-	      return tag.trim();
-	    });
+	    var search = this.state.query;
 	    hashHistory.push({
-	      pathname: "search",
-	      query: { tagNames: tagNames }
+	      pathname: "tracks/filtered",
+	      query: { search: search }
 	    });
 	    this.setState({ query: "" });
 	  },
@@ -36249,7 +36249,7 @@
 	          onChange: this.updateQuery,
 	          onKeyUp: this.trySearch,
 	          value: this.state.query,
-	          placeholder: 'Song name, artist, etc.\'' })
+	          placeholder: 'Song title or artist e.g. Michael Jackson' })
 	      )
 	    );
 	  }
@@ -36333,6 +36333,9 @@
 	  fetchAllTracks: function fetchAllTracks() {
 	    TrackApiUtils.fetchTracks(this.receiveTracks, ErrorActions.setErrors);
 	  },
+	  fetchFilteredTracks: function fetchFilteredTracks(query) {
+	    TrackApiUtils.fetchFilteredTracks(query, this.receiveTracks, ErrorActions.setErrors);
+	  },
 	  receiveTracks: function receiveTracks(tracks) {
 	    Dispatcher.dispatch({
 	      actionType: TrackConstants.FETCH_TRACKS,
@@ -36354,6 +36357,20 @@
 	    $.ajax({
 	      method: 'GET',
 	      url: '/api/tracks',
+	      success: function success(response) {
+	        cb(response);
+	      },
+	
+	      error: function error(response) {
+	        failureCb(response);
+	      }
+	    });
+	  },
+	  fetchFilteredTracks: function fetchFilteredTracks(query, cb, failureCb) {
+	    $.ajax({
+	      method: 'GET',
+	      url: '/api/tracks',
+	      data: { query: query },
 	      success: function success(response) {
 	        cb(response);
 	      },
@@ -37059,6 +37076,16 @@
 	              'span',
 	              null,
 	              this.props.track.title
+	            )
+	          ),
+	          React.createElement(
+	            'p',
+	            { className: 'artist-name' },
+	            'Artist: ',
+	            React.createElement(
+	              'span',
+	              null,
+	              this.props.track.artist
 	            )
 	          )
 	        ),
@@ -39484,6 +39511,84 @@
 	});
 	
 	module.exports = withMediaProps(MuteUnmuteButton);
+
+/***/ },
+/* 339 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1);
+	var TrackActions = __webpack_require__(291);
+	var TracksStore = __webpack_require__(299);
+	var PlayerStore = __webpack_require__(336);
+	var TrackIndexItem = __webpack_require__(300);
+	var MusicPlayer = __webpack_require__(305);
+	
+	var TracksFiltered = React.createClass({
+	  displayName: 'TracksFiltered',
+	  getInitialState: function getInitialState() {
+	    return { tracks: TracksStore.allTracks(),
+	      currTrack: null };
+	  },
+	  componentDidMount: function componentDidMount() {
+	    this.trackListener = TracksStore.addListener(this._onChange);
+	    TrackActions.fetchFilteredTracks(this.props.location.query.search);
+	    this.playerListener = PlayerStore.addListener(this._onPlayerChange);
+	    // this.likeHeart = new Image(17, 15);
+	    // this.likeHeart.src = ("https://s32.postimg.org/vmugd76md/Heart_Filled_128.png");
+	  },
+	  componentWillReceiveProps: function componentWillReceiveProps() {
+	    TrackActions.fetchFilteredTracks(this.props.location.query.search);
+	  },
+	  _onChange: function _onChange() {
+	    this.setState({ tracks: TracksStore.allTracks() });
+	  },
+	  _onPlayerChange: function _onPlayerChange() {
+	    this.setState({ currTrack: PlayerStore.loadedSong() });
+	  },
+	  render: function render() {
+	    var numTracks = this.state.tracks.length;
+	    var numRows = Math.ceil(numTracks / 4);
+	    var rows = [];
+	    for (var i = 0; i < numRows; i++) {
+	      rows.push([]);
+	    }
+	    for (var _i = 0; _i < numTracks; _i++) {
+	      var RowIndex = Math.floor(_i / 4);
+	      rows[RowIndex].push(this.state.tracks[_i]);
+	    }
+	    var url = void 0;
+	    if (this.state.currTrack) {
+	      url = this.state.currTrack.audio_url + ".mp3";
+	    } else {
+	      url = "";
+	    }
+	
+	    return React.createElement(
+	      'div',
+	      { id: 'tracks-index' },
+	      React.createElement(
+	        'ul',
+	        { className: 'tracks' },
+	        this.state.tracks.map(function (track) {
+	          return React.createElement(TrackIndexItem, { key: track.id, track: track });
+	        })
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'music-player-container' },
+	        this.state.currTrack ? React.createElement(MusicPlayer, { track: this.state.currTrack, src: url }) : ""
+	      )
+	    );
+	  },
+	  componentWillUnmount: function componentWillUnmount() {
+	    this.trackListener.remove();
+	    this.playerListener.remove();
+	  }
+	});
+	
+	module.exports = TracksFiltered;
 
 /***/ }
 /******/ ]);
