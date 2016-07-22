@@ -36794,7 +36794,11 @@
 	          return React.createElement(TrackIndexItem, { key: track.id, track: track });
 	        })
 	      ),
-	      this.state.currTrack ? React.createElement(MusicPlayer, { src: url }) : ""
+	      React.createElement(
+	        'div',
+	        { className: 'music-player-container' },
+	        this.state.currTrack ? React.createElement(MusicPlayer, { track: this.state.currTrack, src: url }) : ""
+	      )
 	    );
 	  },
 	  componentWillUnmount: function componentWillUnmount() {
@@ -37076,6 +37080,7 @@
 	var Fullscreen = controls.Fullscreen;
 	
 	var PlayPauseButton = __webpack_require__(336);
+	var MuteUnmuteButton = __webpack_require__(338);
 	
 	var MusicPlayer = React.createClass({
 	  displayName: 'MusicPlayer',
@@ -37090,7 +37095,7 @@
 	
 	    return React.createElement(
 	      'div',
-	      null,
+	      { className: 'music-player' },
 	      React.createElement(
 	        'div',
 	        { onClick: function onClick() {
@@ -37101,12 +37106,31 @@
 	      React.createElement(
 	        'nav',
 	        { className: 'media-controls' },
-	        React.createElement(PlayPauseButton, { className: 'media-control media-control--play-pause' }),
-	        React.createElement(CurrentTime, { className: 'media-control media-control--current-time' }),
-	        React.createElement(SeekBar, { className: 'media-control media-control--volume-range' }),
-	        React.createElement(Duration, { className: 'media-control media-control--duration' }),
-	        React.createElement(MuteUnmute, { className: 'media-control media-control--mute-unmute' }),
-	        React.createElement(Volume, { className: 'media-control media-control--volume' })
+	        React.createElement(
+	          'div',
+	          { className: 'track-info' },
+	          React.createElement(
+	            'p',
+	            { className: 'track-name' },
+	            'Now Playing: ',
+	            React.createElement(
+	              'span',
+	              null,
+	              this.props.track.title
+	            )
+	          )
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'track-controls' },
+	          React.createElement('img', { className: 'track-cover', src: this.props.track.image_url }),
+	          React.createElement(PlayPauseButton, { className: 'media-control media-control--play-pause' }),
+	          React.createElement(CurrentTime, { className: 'media-control media-control--current-time' }),
+	          React.createElement(SeekBar, { className: 'media-control media-control--volume-range' }),
+	          React.createElement(Duration, { className: 'media-control media-control--duration' }),
+	          React.createElement(MuteUnmuteButton, { className: 'media-control media-control--mute-unmute' }),
+	          React.createElement(Volume, { className: 'media-control media-control--volume' })
+	        )
 	      )
 	    );
 	  }
@@ -39312,6 +39336,7 @@
 	
 	var React = __webpack_require__(1);
 	var withMediaProps = __webpack_require__(307).withMediaProps;
+	var PlayerStore = __webpack_require__(298);
 	
 	var PlayPauseButton = React.createClass({
 	  displayName: 'PlayPauseButton',
@@ -39321,7 +39346,23 @@
 	      className: "media-control media-control--play-pause play"
 	    };
 	  },
+	  componentDidMount: function componentDidMount() {
+	    this.playerListener = PlayerStore.addListener(this._onPlayerChange);
+	    this.props.media.play();
+	    this.setState({ className: "media-control media-control--play-pause pause" });
+	  },
+	  _onPlayerChange: function _onPlayerChange() {
+	    var _this = this;
 	
+	    PlayerStore.pauseSong();
+	    setTimeout(function () {
+	      _this.setState({ className: "media-control media-control--play-pause pause" });
+	      _this.props.media.play();
+	    }, 0);
+	  },
+	  componentWillUnmount: function componentWillUnmount() {
+	    this.playerListener.remove();
+	  },
 	  shouldComponentUpdate: function shouldComponentUpdate(_ref) {
 	    var media = _ref.media;
 	
@@ -39341,7 +39382,6 @@
 	    var style = _props.style;
 	    var media = _props.media;
 	
-	    console.log(style);
 	    return React.createElement('button', {
 	      type: 'button',
 	      className: this.state.className,
@@ -39390,6 +39430,68 @@
 	});
 	
 	module.exports = Index;
+
+/***/ },
+/* 338 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1);
+	var withMediaProps = __webpack_require__(307).withMediaProps;
+	var PlayerStore = __webpack_require__(298);
+	
+	var MuteUnmuteButton = React.createClass({
+	  displayName: 'MuteUnmuteButton',
+	
+	  getInitialState: function getInitialState() {
+	    return {
+	      className: "media-control media-control--mute-unmute mute"
+	    };
+	  },
+	  componentDidMount: function componentDidMount() {
+	    this.playerListener = PlayerStore.addListener(this._onPlayerChange);
+	    this.setState({ className: "media-control media-control--mute-unmute mute" });
+	  },
+	  _onPlayerChange: function _onPlayerChange() {
+	    this.setState({ className: "media-control media-control--mute-unmute mute" });
+	  },
+	  componentWillUnmount: function componentWillUnmount() {
+	    this.playerListener.remove();
+	  },
+	  shouldComponentUpdate: function shouldComponentUpdate(_ref) {
+	    var media = _ref.media;
+	
+	    return this.props.media.isMuted !== media.isMuted;
+	  },
+	  _handleMuteUnmute: function _handleMuteUnmute() {
+	    if (!this.props.media.isMuted) {
+	      this.setState({ className: "media-control media-control--mute-unmute unmute" });
+	    } else {
+	      this.setState({ className: "media-control media-control--mute-unmute mute" });
+	    }
+	    this.props.media.muteUnmute();
+	  },
+	  render: function render() {
+	    var _props = this.props;
+	    var className = _props.className;
+	    var style = _props.style;
+	    var media = _props.media;
+	
+	    return React.createElement(
+	      'div',
+	      { className: 'mute-unmute-background-circle' },
+	      React.createElement('button', {
+	        type: 'button',
+	        className: this.state.className,
+	        style: style,
+	        onClick: this._handleMuteUnmute
+	      })
+	    );
+	  }
+	});
+	
+	module.exports = withMediaProps(MuteUnmuteButton);
 
 /***/ }
 /******/ ]);

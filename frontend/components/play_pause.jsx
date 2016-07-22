@@ -1,11 +1,28 @@
 var React = require('react');
 const withMediaProps = require('react-media-player').withMediaProps;
+const PlayerStore = require('../stores/player_store');
 
 var PlayPauseButton = React.createClass({
   getInitialState: function() {
     return {
       className:"media-control media-control--play-pause play"
     };
+  },
+  componentDidMount(){
+    this.playerListener = PlayerStore.addListener(this._onPlayerChange);
+    this.props.media.play();
+    this.setState({className:"media-control media-control--play-pause pause"});
+  },
+  _onPlayerChange(){
+    PlayerStore.pauseSong();
+    setTimeout(() =>{
+      this.setState({className:"media-control media-control--play-pause pause"});
+      this.props.media.play();
+    }, 0);
+
+  },
+  componentWillUnmount(){
+    this.playerListener.remove();
   },
 
   shouldComponentUpdate({ media }) {
@@ -23,7 +40,6 @@ var PlayPauseButton = React.createClass({
 
   render() {
     const { className, style, media } = this.props;
-    console.log(style);
     return (
       <button
         type="button"
