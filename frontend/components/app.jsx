@@ -6,6 +6,7 @@ const SessionActions = require('../actions/session_actions');
 const SessionStore = require('../stores/session_store');
 const SessionConstants = require('../constants/session_constants');
 const TrackActions = require('../actions/track_actions');
+const PlayerStore = require('../stores/player_store');
 
 var App = React.createClass({
   // Devise with React
@@ -15,14 +16,14 @@ var App = React.createClass({
 
   // Devise with React
   componentDidMount() {
-    $.ajax({
-      method: "GET",
-      url: "/auth/is_signed_in.json"
-    })
-    .done(function(data){
-      SessionActions.receiveUser(data.user);
-      this.setState({ signedIn: data.signed_in });
-    }.bind(this));
+    // $.ajax({
+    //   method: "GET",
+    //   url: "/auth/is_signed_in.json"
+    // })
+    // .done(function(data){
+    //   SessionActions.receiveUser(data.user);
+    //   this.setState({ signedIn: data.signed_in });
+    // }.bind(this));
   },
 
   render: function() {
@@ -43,5 +44,6 @@ var App = React.createClass({
 window.SessionActions = SessionActions;
 window.SessionStore = SessionStore;
 window.TrackActions = TrackActions;
+window.PlayerStore = PlayerStore;
 
 module.exports = App;

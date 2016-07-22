@@ -13,7 +13,7 @@ const TrackIndexItem = React.createClass({
     this.userListener = SessionStore.addListener(this._userChanged);
   },
   _userChanged(){
-    this.setState({currentUser: SessionStore.currentUser});
+    // this.setState({currentUser: SessionStore.currentUser});
   },
   _isLiked: function(){
     let likeText = "Like";
@@ -46,7 +46,7 @@ const TrackIndexItem = React.createClass({
     return (
       <li className="track-index-item">
         <div className="track-image">
-          <img onClick={this._playTrack} src={this.props.track.image_url} width="225" height="225"></img>
+          <img onClick={this._toggleTrack} src={this.props.track.image_url} width="225" height="225"></img>
           <span className="track-image-overlay" id={`overlay-${this.props.track.id}`}></span>
         </div>
         <div className="track-text">
@@ -59,8 +59,21 @@ const TrackIndexItem = React.createClass({
     </li>);
   },
 
-  _playTrack(){
-    PlayerActions.playTrack(this.props.track);
+  _toggleTrack(){
+    PlayerActions.toggleTrack(this.props.track);
+    // if(!this.state.trackPlaying){
+    //   if(!this.player){
+    //     this.player = PlayerActions.playTrack(this.props.track);
+    //   }
+    //   else{
+    //     this.player.play();
+    //   }
+    //   this.setState({trackPlaying: true});
+    // }
+    // else{
+    //   PlayerActions.pauseTrack(this.player);
+    //   this.setState({trackPlaying: false});
+    // }
   }
 });
 

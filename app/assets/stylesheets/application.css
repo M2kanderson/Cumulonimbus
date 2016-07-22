@@ -72,17 +72,16 @@
 .body{
   margin-top: 75px;
   display: flex;
+  justify-content: center;
   flex: 1;
   /* July 20 I commented these out because centering the flex children of the body */
   /* sent half of the tracks index off the top of the screen -MM */
 
   justify-content: center;
-  /*align-items: center;*/
+  align-items: center;*/
   /*height: 700px;*/
-  justify-content: center;
-  align-items: center;
   width: 100%;
-  background-color: blue;
+  background-color: #e2e2e2;
 }
 
 
@@ -178,7 +177,7 @@ footer{
    width: 300px;
  }
 .searchbar{
-  margin-right: 170px;
+  margin-right: 100px;
   margin-top: 8px;
   display: flex;
   flex-direction: row;
@@ -226,9 +225,17 @@ footer{
 
 #tracks-index{
   display: flex;
-  width: 100%;
+  align-items: center;
+  justify-content: center;
+  width: 80%;
   flex-direction: column;
   padding-top: 30px;
+}
+
+.tracks{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
 }
 
 .track-index-row {

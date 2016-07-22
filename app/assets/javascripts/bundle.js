@@ -57,10 +57,12 @@
 	
 	//components
 	var App = __webpack_require__(235);
-	var SignupForm = __webpack_require__(293);
+	var SignupForm = __webpack_require__(294);
 	var LoginForm = __webpack_require__(237);
-	var TracksIndex = __webpack_require__(297);
-	var Index = __webpack_require__(300);
+	var TracksIndex = __webpack_require__(298);
+	var Index = __webpack_require__(304);
+	
+	var SessionActions = __webpack_require__(259);
 	
 	var appRouter = React.createElement(
 	  Router,
@@ -75,9 +77,23 @@
 	  )
 	);
 	
-	document.addEventListener('DOMContentLoaded', function () {
+	var getCurrentUser = function getCurrentUser(cb) {
+	  $.ajax({
+	    method: "GET",
+	    url: "/auth/is_signed_in.json"
+	  }).done(function (data) {
+	    SessionActions.receiveUser(data.user);
+	    cb();
+	  }.bind(this));
+	};
+	
+	var renderApp = function renderApp() {
 	  var root = document.getElementById('content');
 	  ReactDOM.render(appRouter, root);
+	};
+	
+	document.addEventListener('DOMContentLoaded', function () {
+	  getCurrentUser(renderApp);
 	});
 
 /***/ },
@@ -26737,12 +26753,13 @@
 	
 	var React = __webpack_require__(1);
 	var Header = __webpack_require__(236);
-	var Footer = __webpack_require__(288);
-	var Body = __webpack_require__(289);
+	var Footer = __webpack_require__(289);
+	var Body = __webpack_require__(290);
 	var SessionActions = __webpack_require__(259);
 	var SessionStore = __webpack_require__(268);
 	var SessionConstants = __webpack_require__(265);
-	var TrackActions = __webpack_require__(290);
+	var TrackActions = __webpack_require__(291);
+	var PlayerStore = __webpack_require__(306);
 	
 	var App = React.createClass({
 	  displayName: 'App',
@@ -26755,13 +26772,14 @@
 	
 	  // Devise with React
 	  componentDidMount: function componentDidMount() {
-	    $.ajax({
-	      method: "GET",
-	      url: "/auth/is_signed_in.json"
-	    }).done(function (data) {
-	      SessionActions.receiveUser(data.user);
-	      this.setState({ signedIn: data.signed_in });
-	    }.bind(this));
+	    // $.ajax({
+	    //   method: "GET",
+	    //   url: "/auth/is_signed_in.json"
+	    // })
+	    // .done(function(data){
+	    //   SessionActions.receiveUser(data.user);
+	    //   this.setState({ signedIn: data.signed_in });
+	    // }.bind(this));
 	  },
 	
 	
@@ -26784,6 +26802,7 @@
 	window.SessionActions = SessionActions;
 	window.SessionStore = SessionStore;
 	window.TrackActions = TrackActions;
+	window.PlayerStore = PlayerStore;
 	
 	module.exports = App;
 
@@ -26796,7 +26815,7 @@
 	var React = __webpack_require__(1);
 	var LoginForm = __webpack_require__(237);
 	var SessionActions = __webpack_require__(259);
-	var Searchbar = __webpack_require__(287);
+	var Searchbar = __webpack_require__(288);
 	
 	var Header = React.createClass({
 	  displayName: 'Header',
@@ -26807,14 +26826,19 @@
 	      signup: false
 	    };
 	  },
-	  toggleLogin: function toggleLogin(e) {
+	  openLogin: function openLogin(e) {
 	    if (e) {
 	      e.preventDefault();
 	    }
-	    this.setState({ login: !this.state.login });
+	    this.setState({ login: true });
+	  },
+	  closeLogin: function closeLogin(e) {
+	    if (e) {
+	      e.preventDefault();
+	    }
+	    this.setState({ login: false });
 	  },
 	  signOut: function signOut(e) {
-	    console.log("hi");
 	    window.FB.getLoginStatus(function (resp) {
 	      if (resp.status === "connected") {
 	        window.FB.logout();
@@ -26849,7 +26873,7 @@
 	          React.createElement(Searchbar, null),
 	          React.createElement(
 	            'button',
-	            { className: 'button', onClick: this.toggleLogin },
+	            { className: 'button', onClick: this.openLogin },
 	            ' Sign In'
 	          ),
 	          React.createElement(
@@ -26864,7 +26888,7 @@
 	          )
 	        )
 	      ),
-	      React.createElement(LoginForm, { modalOpen: this.state.login, toggleForm: this.toggleLogin })
+	      React.createElement(LoginForm, { modalOpen: this.state.login, closeForm: this.closeLogin })
 	    );
 	  }
 	
@@ -26890,7 +26914,7 @@
 	var hashHistory = __webpack_require__(172).hashHistory;
 	var SessionActions = __webpack_require__(259);
 	var SessionStore = __webpack_require__(268);
-	var ErrorsStore = __webpack_require__(286);
+	var ErrorsStore = __webpack_require__(287);
 	var ErrorActions = __webpack_require__(266);
 	// const SessionConstants = require('./constants/session_constants');
 	
@@ -27039,9 +27063,9 @@
 	  },
 	
 	  closeModal: function closeModal() {
-	    this.props.toggleForm();
+	    this.props.closeForm();
 	    this.setState({ modalIsOpen: false });
-	    hashHistory.push('/');
+	    // hashHistory.push('/');
 	  },
 	
 	  demoLogin: function demoLogin(e) {
@@ -29585,7 +29609,7 @@
 	var Dispatcher = __webpack_require__(260);
 	var Store = __webpack_require__(269).Store;
 	var SessionConstants = __webpack_require__(265);
-	var LikeConstants = __webpack_require__(302);
+	var LikeConstants = __webpack_require__(286);
 	
 	var SessionStore = new Store(Dispatcher);
 	
@@ -36089,6 +36113,17 @@
 
 /***/ },
 /* 286 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	module.exports = {
+	  LIKE_RECEIVED: "LIKE_RECEIVED",
+	  LIKE_REMOVED: "LIKE_REMOVED"
+	};
+
+/***/ },
+/* 287 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -36143,7 +36178,7 @@
 	module.exports = ErrorStore;
 
 /***/ },
-/* 287 */
+/* 288 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -36207,7 +36242,7 @@
 	module.exports = Searchbar;
 
 /***/ },
-/* 288 */
+/* 289 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -36239,7 +36274,7 @@
 	module.exports = Footer;
 
 /***/ },
-/* 289 */
+/* 290 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -36267,15 +36302,15 @@
 	module.exports = Body;
 
 /***/ },
-/* 290 */
+/* 291 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var TrackApiUtils = __webpack_require__(291);
+	var TrackApiUtils = __webpack_require__(292);
 	var ErrorActions = __webpack_require__(266);
 	var Dispatcher = __webpack_require__(260);
-	var TrackConstants = __webpack_require__(292);
+	var TrackConstants = __webpack_require__(293);
 	
 	var TrackActions = {
 	  fetchAllTracks: function fetchAllTracks() {
@@ -36292,7 +36327,7 @@
 	module.exports = TrackActions;
 
 /***/ },
-/* 291 */
+/* 292 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -36314,7 +36349,7 @@
 	};
 
 /***/ },
-/* 292 */
+/* 293 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -36324,13 +36359,13 @@
 	};
 
 /***/ },
-/* 293 */
+/* 294 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1);
-	var UserActions = __webpack_require__(294);
+	var UserActions = __webpack_require__(295);
 	
 	var SignupForm = React.createClass({
 	  displayName: 'SignupForm',
@@ -36433,16 +36468,16 @@
 	module.exports = SignupForm;
 
 /***/ },
-/* 294 */
+/* 295 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var UserApiUtil = __webpack_require__(295);
+	var UserApiUtil = __webpack_require__(296);
 	var AppDispatcher = __webpack_require__(260);
 	var ErrorActions = __webpack_require__(266);
 	
-	var UserConstants = __webpack_require__(296);
+	var UserConstants = __webpack_require__(297);
 	
 	var UserActions = {
 	  fetchAllUsers: function fetchAllUsers() {
@@ -36483,7 +36518,7 @@
 	module.exports = UserActions;
 
 /***/ },
-/* 295 */
+/* 296 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -36561,7 +36596,7 @@
 	module.exports = UserApiUtil;
 
 /***/ },
-/* 296 */
+/* 297 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -36575,15 +36610,15 @@
 	module.exports = UserConstants;
 
 /***/ },
-/* 297 */
+/* 298 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1);
-	var TrackActions = __webpack_require__(290);
-	var TracksStore = __webpack_require__(298);
-	var TrackIndexItem = __webpack_require__(299);
+	var TrackActions = __webpack_require__(291);
+	var TracksStore = __webpack_require__(299);
+	var TrackIndexItem = __webpack_require__(300);
 	
 	var TracksIndex = React.createClass({
 	  displayName: 'TracksIndex',
@@ -36610,17 +36645,15 @@
 	    }
 	
 	    return React.createElement(
-	      'ul',
+	      'div',
 	      { id: 'tracks-index' },
-	      rows.map(function (row) {
-	        return React.createElement(
-	          'div',
-	          { key: row[0].id, className: 'track-index-row' },
-	          row.map(function (track) {
-	            return React.createElement(TrackIndexItem, { key: track.id, track: track });
-	          })
-	        );
-	      })
+	      React.createElement(
+	        'ul',
+	        { className: 'tracks' },
+	        this.state.tracks.map(function (track) {
+	          return React.createElement(TrackIndexItem, { key: track.id, track: track });
+	        })
+	      )
 	    );
 	  },
 	  componentWillUnmount: function componentWillUnmount() {
@@ -36631,15 +36664,15 @@
 	module.exports = TracksIndex;
 
 /***/ },
-/* 298 */
+/* 299 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var Dispatcher = __webpack_require__(260);
 	var Store = __webpack_require__(269).Store;
-	var TrackConstants = __webpack_require__(292);
-	var LikeConstants = __webpack_require__(302);
+	var TrackConstants = __webpack_require__(293);
+	var LikeConstants = __webpack_require__(286);
 	
 	var TrackStore = new Store(Dispatcher);
 	
@@ -36661,12 +36694,16 @@
 	};
 	
 	TrackStore.addLike = function (trackId, userId) {
-	  _tracks[trackId].user_likes.push(parseInt(userId));
+	  var track = _tracks[trackId];
+	  track.user_likes.push(parseInt(userId));
+	  track.like_count += 1;
 	};
 	
 	TrackStore.removeLike = function (trackId, userId) {
-	  var userIdx = _tracks[trackId].user_likes.indexOf(parseInt(userId));
-	  _tracks[trackId].user_likes.splice(userIdx, 1);
+	  var track = _tracks[trackId];
+	  var userIdx = track.user_likes.indexOf(parseInt(userId));
+	  track.like_count -= 1;
+	  track.user_likes.splice(userIdx, 1);
 	};
 	
 	TrackStore.__onDispatch = function (payload) {
@@ -36689,15 +36726,15 @@
 	module.exports = TrackStore;
 
 /***/ },
-/* 299 */
+/* 300 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1);
 	var SessionStore = __webpack_require__(268);
-	var LikeActions = __webpack_require__(303);
-	var PlayerActions = __webpack_require__(301);
+	var LikeActions = __webpack_require__(301);
+	var PlayerActions = __webpack_require__(303);
 	
 	var TrackIndexItem = React.createClass({
 	  displayName: 'TrackIndexItem',
@@ -36711,7 +36748,7 @@
 	    this.userListener = SessionStore.addListener(this._userChanged);
 	  },
 	  _userChanged: function _userChanged() {
-	    this.setState({ currentUser: SessionStore.currentUser });
+	    // this.setState({currentUser: SessionStore.currentUser});
 	  },
 	
 	  _isLiked: function _isLiked() {
@@ -36748,7 +36785,7 @@
 	      React.createElement(
 	        'div',
 	        { className: 'track-image' },
-	        React.createElement('img', { onClick: this._playTrack, src: this.props.track.image_url, width: '225', height: '225' }),
+	        React.createElement('img', { onClick: this._toggleTrack, src: this.props.track.image_url, width: '225', height: '225' }),
 	        React.createElement('span', { className: 'track-image-overlay', id: 'overlay-' + this.props.track.id })
 	      ),
 	      React.createElement(
@@ -36773,15 +36810,108 @@
 	      )
 	    );
 	  },
-	  _playTrack: function _playTrack() {
-	    PlayerActions.playTrack(this.props.track);
+	  _toggleTrack: function _toggleTrack() {
+	    PlayerActions.toggleTrack(this.props.track);
+	    // if(!this.state.trackPlaying){
+	    //   if(!this.player){
+	    //     this.player = PlayerActions.playTrack(this.props.track);
+	    //   }
+	    //   else{
+	    //     this.player.play();
+	    //   }
+	    //   this.setState({trackPlaying: true});
+	    // }
+	    // else{
+	    //   PlayerActions.pauseTrack(this.player);
+	    //   this.setState({trackPlaying: false});
+	    // }
 	  }
 	});
 	
 	module.exports = TrackIndexItem;
 
 /***/ },
-/* 300 */
+/* 301 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var LikeApiUtil = __webpack_require__(302);
+	var LikeConstants = __webpack_require__(286);
+	var AppDispatcher = __webpack_require__(260);
+	
+	var LikeActions = {
+	  createLike: function createLike(data) {
+	    LikeApiUtil.createLike(data, this.receiveLike);
+	  },
+	
+	  deleteLike: function deleteLike(data) {
+	    LikeApiUtil.deleteLike(data, this.removeLike);
+	  },
+	
+	  receiveLike: function receiveLike(like) {
+	    AppDispatcher.dispatch({
+	      actionType: LikeConstants.LIKE_RECEIVED,
+	      like: like
+	    });
+	  },
+	  removeLike: function removeLike(like) {
+	    AppDispatcher.dispatch({
+	      actionType: LikeConstants.LIKE_REMOVED,
+	      like: like
+	    });
+	  }
+	};
+	
+	module.exports = LikeActions;
+
+/***/ },
+/* 302 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	var LikeApiUtil = {
+	  createLike: function createLike(data, success) {
+	    $.ajax({
+	      url: 'api/likes',
+	      type: 'POST',
+	      data: { like: data },
+	      success: success
+	    });
+	  },
+	  deleteLike: function deleteLike(data, success) {
+	    $.ajax({
+	      url: 'api/likes/1',
+	      type: 'DELETE',
+	      data: { like: data },
+	      success: success
+	    });
+	  }
+	};
+	
+	module.exports = LikeApiUtil;
+
+/***/ },
+/* 303 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var Dispatcher = __webpack_require__(260);
+	var PlayerConstants = __webpack_require__(305);
+	
+	module.exports = {
+	  toggleTrack: function toggleTrack(track) {
+	    Dispatcher.dispatch({
+	      actionType: PlayerConstants.TOGGLE_TRACK,
+	      track: track
+	    });
+	  }
+	};
+
+/***/ },
+/* 304 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -36818,90 +36948,75 @@
 	module.exports = Index;
 
 /***/ },
-/* 301 */
+/* 305 */
 /***/ function(module, exports) {
 
 	"use strict";
 	
 	module.exports = {
-	  playTrack: function playTrack(track) {
-	    var song = new Audio(track.audio_url);
-	    song.play();
-	  }
+	  TOGGLE_TRACK: "TOGGLE_TRACK"
 	};
 
 /***/ },
-/* 302 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	module.exports = {
-	  LIKE_RECEIVED: "LIKE_RECEIVED",
-	  LIKE_REMOVED: "LIKE_REMOVED"
-	};
-
-/***/ },
-/* 303 */
+/* 306 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var LikeApiUtil = __webpack_require__(304);
-	var LikeConstants = __webpack_require__(302);
-	var AppDispatcher = __webpack_require__(260);
+	var Dispatcher = __webpack_require__(260);
+	var Store = __webpack_require__(269).Store;
+	var PlayerConstants = __webpack_require__(305);
 	
-	var LikeActions = {
-	  createLike: function createLike(data) {
-	    LikeApiUtil.createLike(data, this.receiveLike);
-	  },
+	var PlayerStore = new Store(Dispatcher);
 	
-	  deleteLike: function deleteLike(data) {
-	    LikeApiUtil.deleteLike(data, this.removeLike);
-	  },
+	var _loadedSong = null;
+	var _trackUrl = null;
 	
-	  receiveLike: function receiveLike(like) {
-	    AppDispatcher.dispatch({
-	      actionType: LikeConstants.LIKE_RECEIVED,
-	      like: like
-	    });
-	  },
-	  removeLike: function removeLike(like) {
-	    AppDispatcher.dispatch({
-	      actionType: LikeConstants.LIKE_REMOVED,
-	      like: like
-	    });
+	PlayerStore.loadSong = function (track) {
+	  if (_loadedSong) {
+	    this.pauseSong();
+	  }
+	  var song = new Audio(track.audio_url);
+	  _trackUrl = track.audio_url;
+	  _loadedSong = song;
+	};
+	
+	PlayerStore.playLoadedSong = function () {
+	  if (_loadedSong) {
+	    _loadedSong.play();
+	    setTimeout(this.clearSong, 30000);
 	  }
 	};
 	
-	module.exports = LikeActions;
-
-/***/ },
-/* 304 */
-/***/ function(module, exports) {
-
-	'use strict';
+	PlayerStore.clearSong = function () {
+	  _loadedSong = null;
+	  _trackUrl = null;
+	};
 	
-	var LikeApiUtil = {
-	  createLike: function createLike(data, success) {
-	    $.ajax({
-	      url: 'api/likes',
-	      type: 'POST',
-	      data: { like: data },
-	      success: success
-	    });
-	  },
-	  deleteLike: function deleteLike(data, success) {
-	    $.ajax({
-	      url: 'api/likes/1',
-	      type: 'DELETE',
-	      data: { like: data },
-	      success: success
-	    });
+	PlayerStore.pauseSong = function () {
+	  if (_loadedSong) {
+	    _loadedSong.pause();
+	    this.clearSong();
 	  }
 	};
 	
-	module.exports = LikeApiUtil;
+	PlayerStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case PlayerConstants.TOGGLE_TRACK:
+	      if (payload.track.audio_url === _trackUrl) {
+	        this.pauseSong();
+	        this.__emitChange();
+	        break;
+	      } else {
+	        this.loadSong(payload.track);
+	        this.playLoadedSong();
+	        this.__emitChange();
+	        break;
+	      }
+	  }
+	};
+	
+	module.exports = PlayerStore;
 
 /***/ }
 /******/ ]);

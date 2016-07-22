@@ -28,17 +28,16 @@ const TracksIndex = React.createClass({
     }
 
     return (
-      <ul id="tracks-index">
-        {rows.map(row => {
-          return (
-            <div key={row[0].id} className="track-index-row">{
-              row.map(track => {
-                return <TrackIndexItem key={track.id} track={track}/>;
-              })
-            }</div>
-          );
-        })}
-      </ul>
+      <div id="tracks-index">
+        <ul className = "tracks">
+          {this.state.tracks.map(track => {
+            return (
+              <TrackIndexItem key={track.id} track={track}/>
+            );
+          })}
+        </ul>
+
+      </div>
   );
   },
 

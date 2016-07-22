@@ -10,14 +10,19 @@ var Header = React.createClass({
       signup:false
     };
   },
-  toggleLogin(e){
+  openLogin(e){
     if(e){
       e.preventDefault();
     }
-    this.setState({login: !this.state.login});
+    this.setState({login: true});
+  },
+  closeLogin(e){
+    if(e){
+      e.preventDefault();
+    }
+    this.setState({login: false});
   },
   signOut(e){
-    console.log("hi");
     window.FB.getLoginStatus((resp) => {
       if(resp.status === "connected"){
         window.FB.logout();
@@ -42,12 +47,12 @@ var Header = React.createClass({
         <div className="header-right">
           <section className="header-buttons">
             <Searchbar />
-            <button className="button" onClick={this.toggleLogin}> Sign In</button>
+            <button className="button" onClick={this.openLogin}> Sign In</button>
             <button className="button"> Sign Up</button>
             <button className="button" onClick={this.signOut}> Log Out</button>
           </section>
         </div>
-        <LoginForm modalOpen={this.state.login} toggleForm={this.toggleLogin}/>
+        <LoginForm modalOpen={this.state.login} closeForm={this.closeLogin}/>
       </div>
     );
   }

@@ -23,12 +23,17 @@ TrackStore.setTracks = function(tracks){
 };
 
 TrackStore.addLike = function(trackId, userId){
-  _tracks[trackId].user_likes.push(parseInt(userId));
+  let track = _tracks[trackId];
+  track.user_likes.push(parseInt(userId));
+  track.like_count += 1;
+
 };
 
 TrackStore.removeLike = function(trackId, userId){
-  let userIdx = _tracks[trackId].user_likes.indexOf(parseInt(userId));
-  _tracks[trackId].user_likes.splice(userIdx, 1);
+  let track = _tracks[trackId];
+  let userIdx = track.user_likes.indexOf(parseInt(userId));
+  track.like_count -= 1;
+  track.user_likes.splice(userIdx, 1);
 };
 
 TrackStore.__onDispatch = function(payload){
