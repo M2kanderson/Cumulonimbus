@@ -36969,6 +36969,15 @@
 	
 	var PlayerStore = new Store(Dispatcher);
 	
+	// HOW TO USE THE PLAYER STORE:
+	// To play a song, first PlayerStore.loadSong(track). There should be a track.audio_url
+	// property which that function will read from.
+	
+	// This loads the song without playing it, like you might load a vinyl into a record player.
+	// To actually play the song, call PlayerStore.playLoadedSong()
+	
+	// To pause a song, call PlayerStore.pauseSong();
+	
 	var _loadedSong = null;
 	var _trackUrl = null;
 	
