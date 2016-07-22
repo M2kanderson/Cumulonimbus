@@ -13,6 +13,7 @@ const SignupForm = require('./components/signup_form');
 const LoginForm = require('./components/login_form');
 const TracksIndex = require('./components/tracks_index');
 const Index = require('./components/index');
+const TracksFiltered = require('./components/tracks_filtered');
 
 const SessionActions = require('./actions/session_actions');
 
@@ -23,6 +24,7 @@ const appRouter = (
       <Route path="/users/signup" component={SignupForm}/>
       <Route path="/users/login" component={LoginForm}/>
       <Route path="tracks/all" component={TracksIndex}/>
+      <Route path="tracks/filtered" component={TracksFiltered}/>
     </Route>
   </Router>
 );

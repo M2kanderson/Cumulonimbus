@@ -20,6 +20,7 @@ var MusicPlayer = React.createClass({
         <nav className="media-controls">
           <div className="track-info">
             <p className="track-name">Now Playing: <span>{this.props.track.title}</span></p>
+            <p className="artist-name">Artist: <span>{this.props.track.artist}</span></p>
           </div>
           <div className="track-controls">
             <img className="track-cover" src={this.props.track.image_url}></img>

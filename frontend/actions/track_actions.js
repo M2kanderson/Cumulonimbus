@@ -7,6 +7,9 @@ const TrackActions = {
   fetchAllTracks(){
     TrackApiUtils.fetchTracks(this.receiveTracks, ErrorActions.setErrors);
   },
+  fetchFilteredTracks(query){
+    TrackApiUtils.fetchFilteredTracks(query, this.receiveTracks, ErrorActions.setErrors);
+  },
 
   receiveTracks(tracks){
     Dispatcher.dispatch({
