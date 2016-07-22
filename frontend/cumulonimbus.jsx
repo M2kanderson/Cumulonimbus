@@ -20,7 +20,7 @@ const appRouter = (
   <Router history={ hashHistory }>
     <Route path="/" component={ App }>
       <IndexRoute component={Index}></IndexRoute>
-      <Route path="/users/signup" component={SignupForm}></Route>
+      <Route path="/users/signup" component={SignupForm}/>
       <Route path="/users/login" component={LoginForm}/>
       <Route path="tracks/all" component={TracksIndex}/>
     </Route>
@@ -33,7 +33,9 @@ let getCurrentUser = function(cb){
     url: "/auth/is_signed_in.json"
   })
   .done(function(data){
-    SessionActions.receiveUser(data.user);
+    if (data.signed_in) {
+      SessionActions.receiveUser(data.user);
+    }
     cb();
   }.bind(this));
 };

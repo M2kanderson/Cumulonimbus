@@ -6,8 +6,7 @@ const PlayerActions = require('../actions/player_actions');
 const TrackIndexItem = React.createClass({
   getInitialState: function() {
     return {
-      currentUser: SessionStore.currentUser(),
-      trackPlaying: false
+      currentUser: SessionStore.currentUser()
     };
   },
   componentDidMount(){
@@ -48,7 +47,7 @@ const TrackIndexItem = React.createClass({
     return (
       <li className="track-index-item">
         <div className="track-image">
-          <img onClick={this._playTrack} src={this.props.track.image_url} width="225" height="225"></img>
+          <img onClick={this._toggleTrack} src={this.props.track.image_url} width="225" height="225"></img>
           <span className="track-image-overlay" id={`overlay-${this.props.track.id}`}></span>
         </div>
         <div className="track-text">
@@ -61,21 +60,23 @@ const TrackIndexItem = React.createClass({
     </li>);
   },
 
-  _playTrack(){
-    if(!this.state.trackPlaying){
-      if(!this.player){
-        this.player = PlayerActions.playTrack(this.props.track);
-      }
-      else{
-        this.player.play();
-      }
-      this.setState({trackPlaying: true});
-    }
-    else{
-      PlayerActions.pauseTrack(this.player);
-      this.setState({trackPlaying: false});
-    }
+  _toggleTrack(){
+    PlayerActions.toggleTrack(this.props.track);
+    // if(!this.state.trackPlaying){
+    //   if(!this.player){
+    //     this.player = PlayerActions.playTrack(this.props.track);
+    //   }
+    //   else{
+    //     this.player.play();
+    //   }
+    //   this.setState({trackPlaying: true});
+    // }
+    // else{
+    //   PlayerActions.pauseTrack(this.player);
+    //   this.setState({trackPlaying: false});
+    // }
   }
 });
+
 
 module.exports = TrackIndexItem;

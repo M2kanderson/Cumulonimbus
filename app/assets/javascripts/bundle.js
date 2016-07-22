@@ -82,7 +82,9 @@
 	    method: "GET",
 	    url: "/auth/is_signed_in.json"
 	  }).done(function (data) {
-	    SessionActions.receiveUser(data.user);
+	    if (data.signed_in) {
+	      SessionActions.receiveUser(data.user);
+	    }
 	    cb();
 	  }.bind(this));
 	};
@@ -26759,6 +26761,7 @@
 	var SessionStore = __webpack_require__(268);
 	var SessionConstants = __webpack_require__(265);
 	var TrackActions = __webpack_require__(291);
+	var PlayerStore = __webpack_require__(336);
 	
 	var App = React.createClass({
 	  displayName: 'App',
@@ -26801,6 +26804,7 @@
 	window.SessionActions = SessionActions;
 	window.SessionStore = SessionStore;
 	window.TrackActions = TrackActions;
+	window.PlayerStore = PlayerStore;
 	
 	module.exports = App;
 
@@ -26812,6 +26816,7 @@
 	
 	var React = __webpack_require__(1);
 	var LoginForm = __webpack_require__(237);
+	var SignupForm = __webpack_require__(294);
 	var SessionActions = __webpack_require__(259);
 	var Searchbar = __webpack_require__(288);
 	
@@ -26852,6 +26857,13 @@
 	
 	    this.setState({ signup: true });
 	  },
+	  closeSignup: function closeSignup(e) {
+	    if (e) {
+	      e.preventDefault();
+	    }
+	
+	    this.setState({ signup: false });
+	  },
 	
 	  render: function render() {
 	    return React.createElement(
@@ -26876,7 +26888,7 @@
 	          ),
 	          React.createElement(
 	            'button',
-	            { className: 'button' },
+	            { className: 'button', onClick: this.signUp },
 	            ' Sign Up'
 	          ),
 	          React.createElement(
@@ -26886,7 +26898,8 @@
 	          )
 	        )
 	      ),
-	      React.createElement(LoginForm, { modalOpen: this.state.login, closeForm: this.closeLogin })
+	      React.createElement(LoginForm, { modalOpen: this.state.login, closeForm: this.closeLogin }),
+	      React.createElement(SignupForm, { modalOpen: this.state.signup, closeForm: this.closeSignup })
 	    );
 	  }
 	
@@ -26908,12 +26921,12 @@
 	
 	var React = __webpack_require__(1);
 	var Modal = __webpack_require__(239);
-	var Link = __webpack_require__(172).Link;
 	var hashHistory = __webpack_require__(172).hashHistory;
 	var SessionActions = __webpack_require__(259);
 	var SessionStore = __webpack_require__(268);
 	var ErrorsStore = __webpack_require__(287);
 	var ErrorActions = __webpack_require__(266);
+	var SessionConstants = __webpack_require__(265);
 	// const SessionConstants = require('./constants/session_constants');
 	
 	// const FacebookLogin = require('react-facebook-login');
@@ -26972,12 +26985,7 @@
 	        'form',
 	        { className: 'session-form', onSubmit: this.handleSubmit },
 	        React.createElement(
-	          Link,
-	          { className: 'form-top-text', to: 'signup' },
-	          'Need an account?'
-	        ),
-	        React.createElement(
-	          'h1',
+	          'h2',
 	          { className: 'form-text' },
 	          'Sign in to Cumulonimbus'
 	        ),
@@ -27002,37 +27010,52 @@
 	        React.createElement('br', null),
 	        React.createElement(
 	          'div',
-	          null,
+	          { className: 'actions' },
 	          React.createElement(
 	            'button',
-	            { type: 'button', className: 'demo-button', onClick: this.demoLogin, value: 'Demo Login' },
+	            { type: 'button', className: 'session-button', onClick: this.demoLogin, value: 'Demo Login' },
 	            'Demo Login'
 	          )
 	        ),
-	        React.createElement('input', { className: 'session-textbox text-input', placeholder: 'email', onChange: this.changeUsername, type: 'text', value: this.state.email }),
-	        React.createElement('input', { className: 'session-textbox text-input', placeholder: 'password', onChange: this.changePassword, type: 'password', value: this.state.password }),
-	        React.createElement('input', { id: 'login', className: 'session-button', type: 'submit', value: 'Sign In' }),
 	        React.createElement(
-	          'button',
-	          { onClick: this.facebookLogin },
-	          'Log in facebook'
+	          'div',
+	          { className: 'field' },
+	          React.createElement('input', { className: 'session-textbox', placeholder: 'Your email', onChange: this.changeUsername, type: 'text', value: this.state.email })
 	        ),
 	        React.createElement(
-	          'button',
-	          { onClick: this.googleLogin },
-	          'Log in Google'
+	          'div',
+	          { className: 'field' },
+	          React.createElement('input', { className: 'session-textbox', placeholder: 'Password', onChange: this.changePassword, type: 'password', value: this.state.password })
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'actions' },
+	          React.createElement('input', { id: 'login', className: 'session-button', type: 'submit', value: 'Sign In' })
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'actions' },
+	          React.createElement(
+	            'button',
+	            { className: 'session-button', onClick: this.facebookLogin },
+	            'Log in facebook'
+	          )
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'actions' },
+	          React.createElement(
+	            'button',
+	            { className: 'session-button', onClick: this.googleLogin },
+	            'Log in Google'
+	          )
 	        ),
 	        React.createElement(_reactFacebookLogin2.default, { appId: '1790155654560761',
 	          autoLoad: true, fields: 'name,email,picture',
 	          callback: this.responseFacebook,
 	          cssClass: 'facebook-button',
 	          icon: 'fa-facebook' }),
-	        React.createElement('br', null),
-	        React.createElement(
-	          Link,
-	          { className: 'form-bottom-text', to: '/' },
-	          'Home'
-	        )
+	        React.createElement('br', null)
 	      )
 	    );
 	  },
@@ -27068,10 +27091,10 @@
 	
 	  demoLogin: function demoLogin(e) {
 	    e.preventDefault();
-	    // SessionActions.logIn({
-	    //   email: SessionConstants.DEMO_USERNAME,
-	    //   password: SessionConstants.DEMO_PASSWORD
-	    // });
+	    SessionActions.login({
+	      email: SessionConstants.DEMO_USERNAME,
+	      password: SessionConstants.DEMO_PASSWORD
+	    });
 	  },
 	  componentWillUnmount: function componentWillUnmount() {
 	    this.loginListener.remove();
@@ -29083,8 +29106,6 @@
 	
 	var SessionActions = {
 	  login: function login(userData) {
-	    console.log("logging in");
-	
 	    SessionApiUtils.login(userData, this.receiveUser, ErrorActions.setErrors);
 	  },
 	  facebookLogin: function facebookLogin() {
@@ -29105,12 +29126,6 @@
 	  removeCurrentUser: function removeCurrentUser() {
 	    Dispatcher.dispatch({
 	      actionType: SessionConstants.LOGOUT
-	    });
-	  },
-	  receiveErrors: function receiveErrors(errors) {
-	    Dispatcher.dispatch({
-	      actionType: SessionConstants.DISPLAY_ERRORS,
-	      errors: errors
 	    });
 	  }
 	};
@@ -29555,7 +29570,9 @@
 	
 	module.exports = {
 	  LOGIN: 'LOGIN',
-	  LOGOUT: 'LOGOUT'
+	  LOGOUT: 'LOGOUT',
+	  DEMO_USERNAME: 'demo@demo.com',
+	  DEMO_PASSWORD: 'password'
 	};
 
 /***/ },
@@ -29608,6 +29625,7 @@
 	var Store = __webpack_require__(269).Store;
 	var SessionConstants = __webpack_require__(265);
 	var LikeConstants = __webpack_require__(286);
+	var hashHistory = __webpack_require__(172).hashHistory;
 	
 	var SessionStore = new Store(Dispatcher);
 	
@@ -29615,11 +29633,12 @@
 	
 	var _logout = function _logout() {
 	  _currentUser = {};
+	  hashHistory.push('/');
 	};
 	
 	var _login = function _login(currentUser) {
-	  console.log("logging in current user");
 	  _currentUser = currentUser;
+	  hashHistory.push('/tracks/all');
 	};
 	
 	SessionStore.addLike = function (trackId) {
@@ -29657,7 +29676,7 @@
 	};
 	
 	SessionStore.isUserLoggedIn = function () {
-	  if (_currentUser === undefined) {
+	  if (_currentUser === undefined || Object.keys(_currentUser).length === 0) {
 	    return false;
 	  } else {
 	    return !!_currentUser.id;
@@ -36364,6 +36383,9 @@
 	
 	var React = __webpack_require__(1);
 	var UserActions = __webpack_require__(295);
+	var Modal = __webpack_require__(239);
+	var Link = __webpack_require__(172).Link;
+	var hashHistory = __webpack_require__(172).hashHistory;
 	
 	var SignupForm = React.createClass({
 	  displayName: 'SignupForm',
@@ -36373,7 +36395,8 @@
 	      email: "",
 	      // uid: "",
 	      password: "",
-	      password_confirmation: ""
+	      password_confirmation: "",
+	      modalIsOpen: false
 	      // name: ""
 	    };
 	  },
@@ -36396,73 +36419,82 @@
 	
 	  render: function render() {
 	    return React.createElement(
-	      'div',
-	      null,
-	      React.createElement(
-	        'h2',
-	        null,
-	        'Sign up'
-	      ),
+	      Modal,
+	      {
+	        isOpen: this.props.modalOpen,
+	        onAfterOpen: this.afterOpenModal,
+	        onRequestClose: this.closeModal,
+	        style: customStyles
+	      },
 	      React.createElement(
 	        'form',
-	        { onSubmit: this._createUser },
+	        { className: 'session-form', onSubmit: this._createUser },
+	        React.createElement(
+	          'h2',
+	          { className: 'form-text' },
+	          'Sign up'
+	        ),
+	        React.createElement(
+	          'label',
+	          { className: 'form-text' },
+	          'Enter your ',
+	          React.createElement(
+	            'span',
+	            { className: 'bolded' },
+	            'email'
+	          ),
+	          ' and ',
+	          React.createElement(
+	            'span',
+	            { className: 'bolded' },
+	            'password'
+	          ),
+	          '.'
+	        ),
+	        React.createElement('br', null),
 	        React.createElement(
 	          'div',
 	          { className: 'field' },
-	          React.createElement(
-	            'label',
-	            { 'for': 'name' },
-	            'Name: '
-	          ),
-	          React.createElement('br', null),
-	          React.createElement('input', { type: 'text', onChange: this._updateName })
+	          React.createElement('input', { className: 'session-textbox', placeholder: 'Your email', type: 'email', onChange: this._updateEmail })
 	        ),
 	        React.createElement(
 	          'div',
 	          { className: 'field' },
-	          React.createElement(
-	            'label',
-	            { 'for': 'email' },
-	            'Email: '
-	          ),
-	          React.createElement('br', null),
-	          React.createElement('input', { type: 'email', onChange: this._updateEmail })
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'field' },
-	          React.createElement(
-	            'label',
-	            { 'for': 'password' },
-	            'Password: '
-	          ),
-	          React.createElement('br', null),
-	          React.createElement('input', { type: 'password', autoComplete: 'off',
+	          React.createElement('input', { className: 'session-textbox', placeholder: 'Password', type: 'password', autoComplete: 'off',
 	            onChange: this._updatePassword })
 	        ),
 	        React.createElement(
 	          'div',
 	          { className: 'field' },
-	          React.createElement(
-	            'label',
-	            { 'for': 'password_confirmation' },
-	            'Confirm Password: '
-	          ),
-	          React.createElement('br', null),
-	          React.createElement('input', { type: 'password', autoComplete: 'off',
+	          React.createElement('input', { className: 'session-textbox', placeholder: 'Confirm password', type: 'password', autoComplete: 'off',
 	            onChange: this._updatePassConfirm })
 	        ),
 	        React.createElement(
 	          'div',
 	          { className: 'actions' },
-	          React.createElement('input', { type: 'submit' })
+	          React.createElement('input', { className: 'session-button', type: 'submit' })
 	        )
 	      )
 	    );
+	  },
+	
+	  closeModal: function closeModal() {
+	    this.props.closeForm();
+	    this.setState({ modalIsOpen: false });
 	  }
 	
 	});
 	
+	var customStyles = {
+	  content: {
+	    top: '50%',
+	    left: '50%',
+	    right: 'auto',
+	    bottom: 'auto',
+	    marginRight: '-50%',
+	    transform: 'translate(-50%, -50%)'
+	  }
+	};
 	module.exports = SignupForm;
 
 /***/ },
@@ -36517,9 +36549,11 @@
 
 /***/ },
 /* 296 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
+	
+	var SessionActions = __webpack_require__(259);
 	
 	var UserApiUtil = {
 	  fetchAllUsers: function fetchAllUsers(_success, _error) {
@@ -36555,6 +36589,11 @@
 	      data_type: 'json',
 	      data: { user: user },
 	      success: function success(resp) {
+	        var userData = {
+	          email: user.email,
+	          password: user.password
+	        };
+	        SessionActions.login(userData);
 	        _success3(resp);
 	      },
 	      error: function error(resp) {
@@ -36739,8 +36778,7 @@
 	
 	  getInitialState: function getInitialState() {
 	    return {
-	      currentUser: SessionStore.currentUser(),
-	      trackPlaying: false
+	      currentUser: SessionStore.currentUser()
 	    };
 	  },
 	  componentDidMount: function componentDidMount() {
@@ -36785,7 +36823,7 @@
 	      React.createElement(
 	        'div',
 	        { className: 'track-image' },
-	        React.createElement('img', { onClick: this._playTrack, src: this.props.track.image_url, width: '225', height: '225' }),
+	        React.createElement('img', { onClick: this._toggleTrack, src: this.props.track.image_url, width: '225', height: '225' }),
 	        React.createElement('span', { className: 'track-image-overlay', id: 'overlay-' + this.props.track.id })
 	      ),
 	      React.createElement(
@@ -36810,18 +36848,21 @@
 	      )
 	    );
 	  },
-	  _playTrack: function _playTrack() {
-	    if (!this.state.trackPlaying) {
-	      if (!this.player) {
-	        this.player = PlayerActions.playTrack(this.props.track);
-	      } else {
-	        this.player.play();
-	      }
-	      this.setState({ trackPlaying: true });
-	    } else {
-	      PlayerActions.pauseTrack(this.player);
-	      this.setState({ trackPlaying: false });
-	    }
+	  _toggleTrack: function _toggleTrack() {
+	    PlayerActions.toggleTrack(this.props.track);
+	    // if(!this.state.trackPlaying){
+	    //   if(!this.player){
+	    //     this.player = PlayerActions.playTrack(this.props.track);
+	    //   }
+	    //   else{
+	    //     this.player.play();
+	    //   }
+	    //   this.setState({trackPlaying: true});
+	    // }
+	    // else{
+	    //   PlayerActions.pauseTrack(this.player);
+	    //   this.setState({trackPlaying: false});
+	    // }
 	  }
 	});
 	
@@ -36891,18 +36932,19 @@
 
 /***/ },
 /* 303 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
+	
+	var Dispatcher = __webpack_require__(260);
+	var PlayerConstants = __webpack_require__(337);
 	
 	module.exports = {
-	  playTrack: function playTrack(track) {
-	    var song = new Audio(track.audio_url);
-	    song.play();
-	    return song;
-	  },
-	  pauseTrack: function pauseTrack(song) {
-	    song.pause();
+	  toggleTrack: function toggleTrack(track) {
+	    Dispatcher.dispatch({
+	      actionType: PlayerConstants.TOGGLE_TRACK,
+	      track: track
+	    });
 	  }
 	};
 
@@ -39241,6 +39283,90 @@
 	});
 	
 	module.exports = withMediaProps(PlayPauseButton);
+
+/***/ },
+/* 336 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var Dispatcher = __webpack_require__(260);
+	var Store = __webpack_require__(269).Store;
+	var PlayerConstants = __webpack_require__(337);
+	
+	var PlayerStore = new Store(Dispatcher);
+	
+	// HOW TO USE THE PLAYER STORE:
+	// To play a song, first PlayerStore.loadSong(track). There should be a track.audio_url
+	// property which that function will read from.
+	
+	// This loads the song without playing it, like you might load a vinyl into a record player.
+	// To actually play the song, call PlayerStore.playLoadedSong()
+	
+	// To pause a song, call PlayerStore.pauseSong();
+	
+	var _loadedSong = null;
+	var _trackUrl = null;
+	
+	PlayerStore.loadSong = function (track) {
+	  if (_loadedSong) {
+	    this.pauseSong();
+	  }
+	  var song = new Audio(track.audio_url);
+	  _trackUrl = track.audio_url;
+	  _loadedSong = song;
+	};
+	
+	PlayerStore.playLoadedSong = function () {
+	  if (_loadedSong) {
+	    _loadedSong.play();
+	    // Dismount the song 30 seconds after it begins playing. 30 seconds is constants
+	    // because every song listed is a 30 sec preview. Normally, this would be variable
+	    // based on the full song length
+	    this.timeout = setTimeout(this.clearSong, 30000);
+	  }
+	};
+	
+	PlayerStore.clearSong = function () {
+	  _loadedSong = null;
+	  _trackUrl = null;
+	  clearTimeout(this.timeout);
+	};
+	
+	PlayerStore.pauseSong = function () {
+	  if (_loadedSong) {
+	    _loadedSong.pause();
+	    this.clearSong();
+	  }
+	};
+	
+	PlayerStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case PlayerConstants.TOGGLE_TRACK:
+	      if (payload.track.audio_url === _trackUrl) {
+	        this.pauseSong();
+	        this.__emitChange();
+	        break;
+	      } else {
+	        this.loadSong(payload.track);
+	        this.playLoadedSong();
+	        this.__emitChange();
+	        break;
+	      }
+	  }
+	};
+	
+	module.exports = PlayerStore;
+
+/***/ },
+/* 337 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	module.exports = {
+	  TOGGLE_TRACK: "TOGGLE_TRACK"
+	};
 
 /***/ }
 /******/ ]);

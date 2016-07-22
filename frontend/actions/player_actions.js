@@ -1,10 +1,11 @@
+const Dispatcher = require('../dispatcher/dispatcher');
+const PlayerConstants = require('../constants/player_constants');
+
 module.exports = {
-  playTrack(track){
-    const song = new Audio(track.audio_url);
-    song.play();
-    return song;
+  toggleTrack(track){
+    Dispatcher.dispatch({
+      actionType: PlayerConstants.TOGGLE_TRACK,
+      track: track
+    });
   },
-  pauseTrack(song){
-    song.pause();
-  }
 };

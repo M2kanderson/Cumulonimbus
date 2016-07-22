@@ -2,6 +2,7 @@ const Dispatcher = require('../dispatcher/dispatcher');
 const Store = require('flux/utils').Store;
 const SessionConstants = require('../constants/session_constants');
 const LikeConstants = require('../constants/like_constants');
+const hashHistory = require('react-router').hashHistory;
 
 const SessionStore = new Store(Dispatcher);
 
@@ -9,11 +10,12 @@ let _currentUser = {};
 
 const _logout = function(){
   _currentUser = {};
+  hashHistory.push('/');
 };
 
 const _login = function(currentUser){
-  console.log("logging in current user");
   _currentUser = currentUser;
+  hashHistory.push('/tracks/all');
 };
 
 SessionStore.addLike = function(trackId){
@@ -51,7 +53,7 @@ SessionStore.currentUser = function(){
 };
 
 SessionStore.isUserLoggedIn = function(){
-  if (_currentUser === undefined) {
+  if (_currentUser === undefined || Object.keys(_currentUser).length === 0) {
     return false;
   } else {
     return !!_currentUser.id;

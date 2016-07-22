@@ -1,5 +1,8 @@
 const React = require('react');
 const UserActions = require('../actions/user_actions');
+const Modal = require('react-modal');
+const Link = require('react-router').Link;
+const hashHistory = require('react-router').hashHistory;
 
 const SignupForm = React.createClass({
   getInitialState: function() {
@@ -7,7 +10,8 @@ const SignupForm = React.createClass({
       email: "",
       // uid: "",
       password: "",
-      password_confirmation: ""
+      password_confirmation: "",
+      modalIsOpen: false
       // name: ""
     };
   },
@@ -29,39 +33,54 @@ const SignupForm = React.createClass({
   },
   render: function() {
     return (
-      <div>
-        <h2>Sign up</h2>
-        <form onSubmit={this._createUser}>
+      <Modal
+        isOpen={this.props.modalOpen}
+        onAfterOpen={this.afterOpenModal}
+        onRequestClose={this.closeModal}
+        style={customStyles}
+        >
+        <form className="session-form" onSubmit={this._createUser}>
+          <h2 className="form-text">Sign up</h2>
+          <label className="form-text">Enter your <span className="bolded">email</span> and <span className="bolded">password</span>.</label><br/>
           <div className="field">
-            <label for="name">Name: </label><br />
-            <input type="text" onChange={this._updateName}></input>
-          </div>
-          <div className="field">
-            <label for="email">Email: </label><br />
-            <input type="email" onChange={this._updateEmail}></input>
+            <input className="session-textbox" placeholder="Your email" type="email" onChange={this._updateEmail}></input>
           </div>
 
           <div className="field">
-            <label for="password">Password: </label><br />
-            <input type="password" autoComplete="off"
+            <input className="session-textbox" placeholder="Password" type="password" autoComplete="off"
                                    onChange={this._updatePassword}></input>
           </div>
 
           <div className="field">
-            <label for="password_confirmation">Confirm Password: </label><br />
-            <input type="password" autoComplete="off"
+            <input className="session-textbox" placeholder="Confirm password" type="password" autoComplete="off"
                    onChange={this._updatePassConfirm}></input>
           </div>
 
           <div className="actions">
-            <input type="submit"></input>
+            <input className="session-button" type="submit"></input>
           </div>
         </form>
-      </div>
+      </Modal>
 
     );
+  },
+
+  closeModal: function() {
+    this.props.closeForm();
+    this.setState({modalIsOpen: false});
   }
+
 
 });
 
+const customStyles = {
+  content : {
+    top                   : '50%',
+    left                  : '50%',
+    right                 : 'auto',
+    bottom                : 'auto',
+    marginRight           : '-50%',
+    transform             : 'translate(-50%, -50%)'
+  }
+};
 module.exports = SignupForm;

@@ -1,11 +1,11 @@
 const React = require('react');
 const Modal = require('react-modal');
-const Link = require('react-router').Link;
 const hashHistory = require('react-router').hashHistory;
 const SessionActions = require('../actions/session_actions');
 const SessionStore = require('../stores/session_store');
 const ErrorsStore = require('../stores/errors_store');
 const ErrorActions = require('../actions/error_actions');
+const SessionConstants = require('../constants/session_constants');
 // const SessionConstants = require('./constants/session_constants');
 import FacebookLogin from 'react-facebook-login';
 // const FacebookLogin = require('react-facebook-login');
@@ -64,18 +64,33 @@ const LoginForm = React.createClass({
         style={customStyles}
         >
         <form className="session-form" onSubmit={this.handleSubmit}>
-          <Link className="form-top-text" to='signup'>Need an account?</Link>
-          <h1 className="form-text">Sign in to Cumulonimbus</h1>
+          <h2 className="form-text">Sign in to Cumulonimbus</h2>
             {this.fieldErrors()}
           <label className="form-text">Enter your <span className="bolded">email</span> and <span className="bolded">password</span>.</label><br/>
-          <div>
-            <button type="button" className="demo-button" onClick={this.demoLogin} value="Demo Login">Demo Login</button>
+          <div className="actions">
+            <button type="button" className="session-button" onClick={this.demoLogin} value="Demo Login">Demo Login</button>
           </div>
-            <input className="session-textbox text-input" placeholder="email" onChange={this.changeUsername} type="text" value={this.state.email}></input>
-            <input className="session-textbox text-input" placeholder="password" onChange={this.changePassword} type="password" value={this.state.password}></input>
+
+          <div className="field">
+            <input className="session-textbox" placeholder="Your email" onChange={this.changeUsername} type="text" value={this.state.email}></input>
+          </div>
+
+          <div className="field">
+            <input className="session-textbox" placeholder="Password" onChange={this.changePassword} type="password" value={this.state.password}></input>
+          </div>
+
+          <div className="actions">
             <input id="login" className="session-button" type="submit" value="Sign In"></input>
-            <button onClick={this.facebookLogin}>Log in facebook</button>
-            <button onClick={this.googleLogin}>Log in Google</button>
+          </div>
+
+          <div className="actions">
+            <button className="session-button" onClick={this.facebookLogin}>Log in facebook</button>
+          </div>
+
+          <div className="actions">
+            <button className="session-button" onClick={this.googleLogin}>Log in Google</button>
+          </div>
+
               <FacebookLogin appId="1790155654560761"
                              autoLoad={true} fields="name,email,picture"
                              callback={this.responseFacebook}
@@ -83,7 +98,6 @@ const LoginForm = React.createClass({
                              icon="fa-facebook"></FacebookLogin>
 
           <br/>
-          <Link className="form-bottom-text" to='/'>Home</Link>
         </form>
       </Modal>
   );},
@@ -122,10 +136,10 @@ const LoginForm = React.createClass({
 
   demoLogin(e) {
     e.preventDefault();
-    // SessionActions.logIn({
-    //   email: SessionConstants.DEMO_USERNAME,
-    //   password: SessionConstants.DEMO_PASSWORD
-    // });
+    SessionActions.login({
+      email: SessionConstants.DEMO_USERNAME,
+      password: SessionConstants.DEMO_PASSWORD
+    });
   },
 
   componentWillUnmount(){

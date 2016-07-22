@@ -1,5 +1,6 @@
 var React = require('react');
 const LoginForm = require('./login_form');
+const SignupForm = require('./signup_form');
 const SessionActions = require('../actions/session_actions');
 const Searchbar = require('./searchbar');
 
@@ -38,6 +39,13 @@ var Header = React.createClass({
 
     this.setState({signup: true});
   },
+  closeSignup(e) {
+    if (e) {
+      e.preventDefault();
+    }
+
+    this.setState({signup: false});
+  },
   render: function() {
     return (
       <div className="header">
@@ -48,11 +56,13 @@ var Header = React.createClass({
           <section className="header-buttons">
             <Searchbar />
             <button className="button" onClick={this.openLogin}> Sign In</button>
-            <button className="button"> Sign Up</button>
+            <button className="button" onClick={this.signUp}> Sign Up</button>
             <button className="button" onClick={this.signOut}> Log Out</button>
           </section>
         </div>
         <LoginForm modalOpen={this.state.login} closeForm={this.closeLogin}/>
+        <SignupForm modalOpen={this.state.signup} closeForm={this.closeSignup}/>
+
       </div>
     );
   }

@@ -1,4 +1,4 @@
-var React = require('react');
+const React = require('react');
 const Header = require('./header');
 const Footer = require('./footer');
 const Body = require('./body');
@@ -6,6 +6,7 @@ const SessionActions = require('../actions/session_actions');
 const SessionStore = require('../stores/session_store');
 const SessionConstants = require('../constants/session_constants');
 const TrackActions = require('../actions/track_actions');
+const PlayerStore = require('../stores/player_store');
 
 var App = React.createClass({
   // Devise with React
@@ -43,5 +44,6 @@ var App = React.createClass({
 window.SessionActions = SessionActions;
 window.SessionStore = SessionStore;
 window.TrackActions = TrackActions;
+window.PlayerStore = PlayerStore;
 
 module.exports = App;
