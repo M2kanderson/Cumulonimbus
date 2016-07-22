@@ -206,12 +206,16 @@ footer{
 }
 
 @media (max-width: 964px){
-  .header{
+/* July 21 commented these out because sizing the window smaller would cause */
+/* the Cumulonimbus logo to go to a new line, take on a different bg-color, */
+/* and also change its order -MM */
+
+  /*.header{
     flex-wrap: wrap;
-  }
+  }*/
   .header-left{
-    order: 2;
-    background-color: #272626;
+    /*order: 2;*/
+    /*background-color: #272626;*/
     width: 100%;
   }
   .header-right{
