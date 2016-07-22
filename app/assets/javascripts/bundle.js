@@ -36899,6 +36899,7 @@
 	    }
 	  },
 	  render: function render() {
+	    console.log(this.props.track);
 	    var text = this.props.track.title;
 	    if (this.props.track.artist) {
 	      text += ' - ' + this.props.track.artist;
@@ -37039,38 +37040,148 @@
 /* 306 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 	
 	var React = __webpack_require__(1);
+	var MusicPlayer = __webpack_require__(307);
 	
 	var Index = React.createClass({
-	  displayName: "Index",
+	  displayName: 'Index',
 	
 	
 	  render: function render() {
 	    return React.createElement(
-	      "div",
-	      { className: "index" },
+	      'div',
+	      { className: 'index' },
 	      React.createElement(
-	        "div",
-	        { className: "index-photo" },
+	        'div',
+	        { className: 'index-photo' },
 	        React.createElement(
-	          "h1",
-	          { className: "index-header" },
-	          "Cumulonimbus"
+	          'h1',
+	          { className: 'index-header' },
+	          'Cumulonimbus'
 	        ),
 	        React.createElement(
-	          "p",
-	          { className: "index-desc" },
-	          "Great music. Anywhere. Any time."
+	          'p',
+	          { className: 'index-desc' },
+	          'Great music. Anywhere. Any time.'
 	        )
-	      )
+	      ),
+	      React.createElement(MusicPlayer, { src: "https://p.scdn.co/mp3-preview/e881786aca1a5b3c8df35d94562cd90b329cb774" + ".mp3" })
 	    );
 	  }
 	
 	});
 	
 	module.exports = Index;
+
+/***/ },
+/* 307 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1);
+	
+	var withMediaPlayer = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"react-media-player\""); e.code = 'MODULE_NOT_FOUND'; throw e; }())).withMediaPlayer;
+	var controls = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"react-media-player\""); e.code = 'MODULE_NOT_FOUND'; throw e; }())).controls;
+	var PlayPause = controls.PlayPause;
+	var CurrentTime = controls.CurrentTime;
+	var Progress = controls.Progress;
+	var SeekBar = controls.SeekBar;
+	var Duration = controls.Duration;
+	var MuteUnmute = controls.MuteUnmute;
+	var Volume = controls.Volume;
+	var Fullscreen = controls.Fullscreen;
+	
+	var PlayPauseButton = __webpack_require__(308);
+	
+	var MusicPlayer = React.createClass({
+	  displayName: 'MusicPlayer',
+	  playPause: function playPause() {},
+	
+	  render: function render() {
+	    var _this = this;
+	
+	    var _props = this.props;
+	    var Player = _props.Player;
+	    var media = _props.media;
+	
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'div',
+	        { onClick: function onClick() {
+	            return _this.playPause();
+	          } },
+	        Player
+	      ),
+	      React.createElement(
+	        'nav',
+	        { className: 'media-controls' },
+	        React.createElement(PlayPauseButton, { className: 'media-control media-control--play-pause' }),
+	        React.createElement(CurrentTime, { className: 'media-control media-control--current-time' }),
+	        React.createElement(SeekBar, { className: 'media-control media-control--volume-range' }),
+	        React.createElement(Duration, { className: 'media-control media-control--duration' }),
+	        React.createElement(MuteUnmute, { className: 'media-control media-control--mute-unmute' }),
+	        React.createElement(Volume, { className: 'media-control media-control--volume' })
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = withMediaPlayer(MusicPlayer);
+
+/***/ },
+/* 308 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1);
+	var withMediaProps = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"react-media-player\""); e.code = 'MODULE_NOT_FOUND'; throw e; }())).withMediaProps;
+	
+	var PlayPauseButton = React.createClass({
+	  displayName: 'PlayPauseButton',
+	
+	  getInitialState: function getInitialState() {
+	    return {
+	      className: "media-control media-control--play-pause play"
+	    };
+	  },
+	
+	  shouldComponentUpdate: function shouldComponentUpdate(_ref) {
+	    var media = _ref.media;
+	
+	    return this.props.media.isPlaying !== media.isPlaying;
+	  },
+	  _handlePlayPause: function _handlePlayPause() {
+	    if (!this.props.media.isPlaying) {
+	      this.setState({ className: "media-control media-control--play-pause pause" });
+	    } else {
+	      this.setState({ className: "media-control media-control--play-pause play" });
+	    }
+	    this.props.media.playPause();
+	  },
+	  render: function render() {
+	    var _props = this.props;
+	    var className = _props.className;
+	    var style = _props.style;
+	    var media = _props.media;
+	
+	    console.log(style);
+	    return React.createElement('button', {
+	      type: 'button',
+	      className: this.state.className,
+	      style: style,
+	      onClick: this._handlePlayPause
+	    });
+	  }
+	});
+	
+	module.exports = withMediaProps(PlayPauseButton);
 
 /***/ }
 /******/ ]);

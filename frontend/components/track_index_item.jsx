@@ -38,6 +38,7 @@ const TrackIndexItem = React.createClass({
     }
   },
   render(){
+    console.log(this.props.track);
     let text = this.props.track.title;
     if (this.props.track.artist) {
       text += ` - ${this.props.track.artist}`;
@@ -76,5 +77,6 @@ const TrackIndexItem = React.createClass({
     // }
   }
 });
+
 
 module.exports = TrackIndexItem;
