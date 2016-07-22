@@ -36743,21 +36743,28 @@
 	var React = __webpack_require__(1);
 	var TrackActions = __webpack_require__(295);
 	var TracksStore = __webpack_require__(301);
+	var PlayerStore = __webpack_require__(298);
 	var TrackIndexItem = __webpack_require__(302);
+	var MusicPlayer = __webpack_require__(307);
 	
 	var TracksIndex = React.createClass({
 	  displayName: 'TracksIndex',
 	  getInitialState: function getInitialState() {
-	    return { tracks: [] };
+	    return { tracks: [],
+	      currTrack: null };
 	  },
 	  componentDidMount: function componentDidMount() {
 	    this.trackListener = TracksStore.addListener(this._onChange);
+	    this.playerListener = PlayerStore.addListener(this._onPlayerChange);
 	    TrackActions.fetchAllTracks();
 	    this.likeHeart = new Image(5, 5);
 	    this.likeHeart.src = "https://s32.postimg.org/vmugd76md/Heart_Filled_128.png";
 	  },
 	  _onChange: function _onChange() {
 	    this.setState({ tracks: TracksStore.allTracks() });
+	  },
+	  _onPlayerChange: function _onPlayerChange() {
+	    this.setState({ currTrack: PlayerStore.loadedSong() });
 	  },
 	  render: function render() {
 	    var numTracks = this.state.tracks.length;
@@ -36770,6 +36777,12 @@
 	      var RowIndex = Math.floor(_i / 4);
 	      rows[RowIndex].push(this.state.tracks[_i]);
 	    }
+	    var url = void 0;
+	    if (this.state.currTrack) {
+	      url = this.state.currTrack.audio_url + ".mp3";
+	    } else {
+	      url = "";
+	    }
 	
 	    return React.createElement(
 	      'div',
@@ -36780,11 +36793,13 @@
 	        this.state.tracks.map(function (track) {
 	          return React.createElement(TrackIndexItem, { key: track.id, track: track });
 	        })
-	      )
+	      ),
+	      this.state.currTrack ? React.createElement(MusicPlayer, { src: url }) : ""
 	    );
 	  },
 	  componentWillUnmount: function componentWillUnmount() {
 	    this.trackListener.remove();
+	    this.playerListener.remove();
 	  }
 	});
 	
@@ -37063,8 +37078,7 @@
 	          { className: 'index-desc' },
 	          'Great music. Anywhere. Any time.'
 	        )
-	      ),
-	      React.createElement(MusicPlayer, { src: "https://p.scdn.co/mp3-preview/e881786aca1a5b3c8df35d94562cd90b329cb774" + ".mp3" })
+	      )
 	    );
 	  }
 	

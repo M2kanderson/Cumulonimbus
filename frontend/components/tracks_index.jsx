@@ -1,15 +1,19 @@
 const React = require('react');
 const TrackActions = require('../actions/track_actions');
 const TracksStore = require('../stores/tracks_store');
+const PlayerStore = require('../stores/player_store');
 const TrackIndexItem = require('./track_index_item');
+const MusicPlayer = require('./music_player');
 
 const TracksIndex = React.createClass({
   getInitialState(){
-    return ({tracks: []});
+    return ({tracks: [],
+            currTrack: null});
   },
 
   componentDidMount(){
     this.trackListener = TracksStore.addListener(this._onChange);
+    this.playerListener = PlayerStore.addListener(this._onPlayerChange);
     TrackActions.fetchAllTracks();
     this.likeHeart = new Image(5, 5);
     this.likeHeart.src = ("https://s32.postimg.org/vmugd76md/Heart_Filled_128.png");
@@ -17,6 +21,10 @@ const TracksIndex = React.createClass({
 
   _onChange(){
     this.setState({tracks: TracksStore.allTracks()});
+  },
+
+  _onPlayerChange(){
+    this.setState({currTrack: PlayerStore.loadedSong()});
   },
 
   render(){
@@ -28,6 +36,13 @@ const TracksIndex = React.createClass({
       const RowIndex = Math.floor(i / 4);
       rows[RowIndex].push(this.state.tracks[i]);
     }
+    let url;
+    if(this.state.currTrack){
+      url = this.state.currTrack.audio_url +".mp3";
+    }
+    else {
+      url = "";
+    }
 
     return (
       <div id="tracks-index">
@@ -38,13 +53,14 @@ const TracksIndex = React.createClass({
             );
           })}
         </ul>
-
+        {this.state.currTrack ? <MusicPlayer src={url} /> : ""}
       </div>
   );
   },
 
   componentWillUnmount(){
     this.trackListener.remove();
+    this.playerListener.remove();
   }
 });
 
