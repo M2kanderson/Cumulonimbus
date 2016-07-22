@@ -60,7 +60,7 @@
 	var SignupForm = __webpack_require__(294);
 	var LoginForm = __webpack_require__(237);
 	var TracksIndex = __webpack_require__(298);
-	var Index = __webpack_require__(304);
+	var Index = __webpack_require__(305);
 	
 	var SessionActions = __webpack_require__(259);
 	
@@ -36899,7 +36899,7 @@
 	'use strict';
 	
 	var Dispatcher = __webpack_require__(260);
-	var PlayerConstants = __webpack_require__(305);
+	var PlayerConstants = __webpack_require__(304);
 	
 	module.exports = {
 	  toggleTrack: function toggleTrack(track) {
@@ -36912,6 +36912,16 @@
 
 /***/ },
 /* 304 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	module.exports = {
+	  TOGGLE_TRACK: "TOGGLE_TRACK"
+	};
+
+/***/ },
+/* 305 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -36948,16 +36958,6 @@
 	module.exports = Index;
 
 /***/ },
-/* 305 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	module.exports = {
-	  TOGGLE_TRACK: "TOGGLE_TRACK"
-	};
-
-/***/ },
 /* 306 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -36965,7 +36965,7 @@
 	
 	var Dispatcher = __webpack_require__(260);
 	var Store = __webpack_require__(269).Store;
-	var PlayerConstants = __webpack_require__(305);
+	var PlayerConstants = __webpack_require__(304);
 	
 	var PlayerStore = new Store(Dispatcher);
 	
@@ -36984,13 +36984,14 @@
 	PlayerStore.playLoadedSong = function () {
 	  if (_loadedSong) {
 	    _loadedSong.play();
-	    setTimeout(this.clearSong, 30000);
+	    this.timeout = setTimeout(this.clearSong, 30000);
 	  }
 	};
 	
 	PlayerStore.clearSong = function () {
 	  _loadedSong = null;
 	  _trackUrl = null;
+	  clearTimeout(this.timeout);
 	};
 	
 	PlayerStore.pauseSong = function () {

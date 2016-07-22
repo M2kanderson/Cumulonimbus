@@ -19,13 +19,14 @@ PlayerStore.loadSong = function(track){
 PlayerStore.playLoadedSong = function(){
   if (_loadedSong){
     _loadedSong.play();
-    setTimeout(this.clearSong, 30000);
+    this.timeout = setTimeout(this.clearSong, 30000);
   }
 };
 
 PlayerStore.clearSong = function(){
   _loadedSong = null;
   _trackUrl = null;
+  clearTimeout(this.timeout);
 };
 
 PlayerStore.pauseSong = function(){
