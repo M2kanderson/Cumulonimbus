@@ -33,7 +33,9 @@ let getCurrentUser = function(cb){
     url: "/auth/is_signed_in.json"
   })
   .done(function(data){
-    SessionActions.receiveUser(data.user);
+    if (data.signed_in) {
+      SessionActions.receiveUser(data.user);
+    }
     cb();
   }.bind(this));
 };

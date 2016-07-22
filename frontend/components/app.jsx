@@ -1,4 +1,4 @@
-var React = require('react');
+const React = require('react');
 const Header = require('./header');
 const Footer = require('./footer');
 const Body = require('./body');

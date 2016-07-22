@@ -53,7 +53,7 @@ SessionStore.currentUser = function(){
 };
 
 SessionStore.isUserLoggedIn = function(){
-  if (_currentUser === undefined) {
+  if (_currentUser === undefined || Object.keys(_currentUser).length === 0) {
     return false;
   } else {
     return !!_currentUser.id;
