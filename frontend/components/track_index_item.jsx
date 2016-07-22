@@ -16,7 +16,7 @@ const TrackIndexItem = React.createClass({
     // this.setState({currentUser: SessionStore.currentUser});
   },
   _isLiked: function(){
-    let likeText = "Like";
+    let likeText = <img src="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-ios7-heart-128.png" width="20" height="20"/>;
     let currentUser = this.state.currentUser;
     if(currentUser.liked_tracks){
       let currentUserLikes = currentUser.liked_tracks;
@@ -31,7 +31,7 @@ const TrackIndexItem = React.createClass({
   toggleLike(){
     let data = {track_id : this.props.track.id};
 
-    if(this._isLiked() === "Like"){
+    if(this._isLiked() === <img src="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-ios7-heart-128.png" width="20" height="20"/>){
       LikeActions.createLike(data);
     } else{
       LikeActions.deleteLike(data);
@@ -51,13 +51,13 @@ const TrackIndexItem = React.createClass({
           <span className="track-image-overlay" id={`overlay-${this.props.track.id}`}></span>
         </div>
         <div className="track-text">
-          <p>{text}</p>
+          {text}
         </div>
         <div className="likes">
           Number of Likes: {this.props.track.like_count}
         </div>
-        <button onClick={this.toggleLike}>{this._isLiked()}</button>
-    </li>);
+        <button className="like-button" onClick={this.toggleLike}>{this._isLiked()}</button>
+      </li>);
   },
 
   _toggleTrack(){

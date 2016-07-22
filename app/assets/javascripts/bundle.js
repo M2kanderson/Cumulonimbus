@@ -36669,6 +36669,8 @@
 	    this.trackListener = TracksStore.addListener(this._onChange);
 	    this.playerListener = PlayerStore.addListener(this._onPlayerChange);
 	    TrackActions.fetchAllTracks();
+	    this.likeHeart = new Image(5, 5);
+	    this.likeHeart.src = "https://s32.postimg.org/vmugd76md/Heart_Filled_128.png";
 	  },
 	  _onChange: function _onChange() {
 	    this.setState({ tracks: TracksStore.allTracks() });
@@ -36808,7 +36810,7 @@
 	  },
 	
 	  _isLiked: function _isLiked() {
-	    var likeText = "Like";
+	    var likeText = React.createElement('img', { src: 'https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-ios7-heart-128.png', width: '20', height: '20' });
 	    var currentUser = this.state.currentUser;
 	    if (currentUser.liked_tracks) {
 	      var currentUserLikes = currentUser.liked_tracks;
@@ -36823,7 +36825,7 @@
 	  toggleLike: function toggleLike() {
 	    var data = { track_id: this.props.track.id };
 	
-	    if (this._isLiked() === "Like") {
+	    if (this._isLiked() === React.createElement('img', { src: 'https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-ios7-heart-128.png', width: '20', height: '20' })) {
 	      LikeActions.createLike(data);
 	    } else {
 	      LikeActions.deleteLike(data);
@@ -36847,11 +36849,7 @@
 	      React.createElement(
 	        'div',
 	        { className: 'track-text' },
-	        React.createElement(
-	          'p',
-	          null,
-	          text
-	        )
+	        text
 	      ),
 	      React.createElement(
 	        'div',
@@ -36861,7 +36859,7 @@
 	      ),
 	      React.createElement(
 	        'button',
-	        { onClick: this.toggleLike },
+	        { className: 'like-button', onClick: this.toggleLike },
 	        this._isLiked()
 	      )
 	    );

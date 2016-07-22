@@ -15,6 +15,8 @@ const TracksIndex = React.createClass({
     this.trackListener = TracksStore.addListener(this._onChange);
     this.playerListener = PlayerStore.addListener(this._onPlayerChange);
     TrackActions.fetchAllTracks();
+    this.likeHeart = new Image(5, 5);
+    this.likeHeart.src = ("https://s32.postimg.org/vmugd76md/Heart_Filled_128.png");
   },
 
   _onChange(){

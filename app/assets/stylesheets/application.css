@@ -242,21 +242,42 @@ footer{
   justify-content: space-around;
 }
 
-.track-index-row {
-  display: flex;
-  width: 100%;
-  justify-content: space-between;
-  padding: 0 10px 0 10px;
-}
-
 .track-image:hover{
   cursor: pointer;
 }
 
+.track-index-item{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
 .track-text {
-  width: 225px;
   margin: 8px 0 8px 0;
   text-align: center;
+  width: 225px;
+  font-family: 'Lato', sans-serif;
+}
+
+.likes {
+  font-family: 'Lato', sans-serif;
+}
+
+.like-button{
+  background-color: #ff4000;
+  color: white;
+  font-family: 'Lato', sans-serif;
+  border: 0;
+
+  /*padding: 0px 20px;*/
+  /*margin: 3px;*/
+  min-width: 50px;
+  display: block;
+  /*text-align: center;*/
+  border-radius: 3px;
+  height: 32px;
+  outline: none;
 }
 
 /* FORMS */
