@@ -1,7 +1,5 @@
 const LOCAL_URL = 'http://localhost:3000';
 
-seed(100, LOCAL_URL);
-
 function randomLetters (n) {
   let letters = "";
   for (let i = 0; i < n; i++) {
@@ -12,7 +10,7 @@ function randomLetters (n) {
 }
 
 function randomTrack (callBack) {
-  $.ajax({
+  jQuery.ajax({
     url: 'https://api.spotify.com/v1/search',
     data: {q: randomLetters(2), type: 'track', limit: 1},
     success: function (response) {
@@ -23,12 +21,13 @@ function randomTrack (callBack) {
 
 function extractTrack (track) {
   return {title: track.name,
+          artist: track.artist,
           audio_url: track.preview_url,
           image_url: track.album.images[1].url};
 }
 
 function postTrack (track, url) {
-  $.ajax({
+  jQuery.ajax({
     url: `${url}/api/tracks/anonymous`,
     method: 'POST',
     dataType: 'JSON',
@@ -46,19 +45,25 @@ function seed (numTrack, url) {
   let images = [];
   let tracks = [];
   let titles = [];
+  let artists = [];
   let k = numTrack;
   for (let i = 0; i < numTrack; i++) {
     randomTrack(function (track) {
       images.push(track.album.images[1].url);
       tracks.push(track.preview_url);
       titles.push(track.name);
+      artists.push(track.artists[0].name);
       k--;
       console.log(k);
       if (k <= 0) {
         console.log(images);
         console.log(tracks);
         console.log(titles);
+        console.log(artists);
       }
     });
   }
 }
+
+
+seed(100, LOCAL_URL);

@@ -60,7 +60,7 @@
 	var SignupForm = __webpack_require__(288);
 	var LoginForm = __webpack_require__(237);
 	var TracksIndex = __webpack_require__(300);
-	var Index = __webpack_require__(306);
+	var Index = __webpack_require__(337);
 	
 	var SessionActions = __webpack_require__(259);
 	
@@ -36745,7 +36745,7 @@
 	var TracksStore = __webpack_require__(301);
 	var PlayerStore = __webpack_require__(298);
 	var TrackIndexItem = __webpack_require__(302);
-	var MusicPlayer = __webpack_require__(307);
+	var MusicPlayer = __webpack_require__(306);
 	
 	var TracksIndex = React.createClass({
 	  displayName: 'TracksIndex',
@@ -37055,47 +37055,9 @@
 	'use strict';
 	
 	var React = __webpack_require__(1);
-	var MusicPlayer = __webpack_require__(307);
 	
-	var Index = React.createClass({
-	  displayName: 'Index',
-	
-	
-	  render: function render() {
-	    return React.createElement(
-	      'div',
-	      { className: 'index' },
-	      React.createElement(
-	        'div',
-	        { className: 'index-photo' },
-	        React.createElement(
-	          'h1',
-	          { className: 'index-header' },
-	          'Cumulonimbus'
-	        ),
-	        React.createElement(
-	          'p',
-	          { className: 'index-desc' },
-	          'Great music. Anywhere. Any time.'
-	        )
-	      )
-	    );
-	  }
-	
-	});
-	
-	module.exports = Index;
-
-/***/ },
-/* 307 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var React = __webpack_require__(1);
-	
-	var withMediaPlayer = __webpack_require__(309).withMediaPlayer;
-	var controls = __webpack_require__(309).controls;
+	var withMediaPlayer = __webpack_require__(307).withMediaPlayer;
+	var controls = __webpack_require__(307).controls;
 	var PlayPause = controls.PlayPause;
 	var CurrentTime = controls.CurrentTime;
 	var Progress = controls.Progress;
@@ -37105,7 +37067,7 @@
 	var Volume = controls.Volume;
 	var Fullscreen = controls.Fullscreen;
 	
-	var PlayPauseButton = __webpack_require__(308);
+	var PlayPauseButton = __webpack_require__(336);
 	
 	var MusicPlayer = React.createClass({
 	  displayName: 'MusicPlayer',
@@ -37146,56 +37108,7 @@
 	module.exports = withMediaPlayer(MusicPlayer);
 
 /***/ },
-/* 308 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var React = __webpack_require__(1);
-	var withMediaProps = __webpack_require__(309).withMediaProps;
-	
-	var PlayPauseButton = React.createClass({
-	  displayName: 'PlayPauseButton',
-	
-	  getInitialState: function getInitialState() {
-	    return {
-	      className: "media-control media-control--play-pause play"
-	    };
-	  },
-	
-	  shouldComponentUpdate: function shouldComponentUpdate(_ref) {
-	    var media = _ref.media;
-	
-	    return this.props.media.isPlaying !== media.isPlaying;
-	  },
-	  _handlePlayPause: function _handlePlayPause() {
-	    if (!this.props.media.isPlaying) {
-	      this.setState({ className: "media-control media-control--play-pause pause" });
-	    } else {
-	      this.setState({ className: "media-control media-control--play-pause play" });
-	    }
-	    this.props.media.playPause();
-	  },
-	  render: function render() {
-	    var _props = this.props;
-	    var className = _props.className;
-	    var style = _props.style;
-	    var media = _props.media;
-	
-	    console.log(style);
-	    return React.createElement('button', {
-	      type: 'button',
-	      className: this.state.className,
-	      style: style,
-	      onClick: this._handlePlayPause
-	    });
-	  }
-	});
-	
-	module.exports = withMediaProps(PlayPauseButton);
-
-/***/ },
-/* 309 */
+/* 307 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37205,27 +37118,27 @@
 	});
 	exports.utils = exports.controls = exports.withKeyboardControls = exports.withMediaProps = exports.withMediaPlayer = exports.Media = undefined;
 	
-	var _Media2 = __webpack_require__(310);
+	var _Media2 = __webpack_require__(308);
 	
 	var _Media3 = _interopRequireDefault(_Media2);
 	
-	var _withMediaPlayer2 = __webpack_require__(324);
+	var _withMediaPlayer2 = __webpack_require__(322);
 	
 	var _withMediaPlayer3 = _interopRequireDefault(_withMediaPlayer2);
 	
-	var _withMediaProps2 = __webpack_require__(325);
+	var _withMediaProps2 = __webpack_require__(323);
 	
 	var _withMediaProps3 = _interopRequireDefault(_withMediaProps2);
 	
-	var _withKeyboardControls2 = __webpack_require__(326);
+	var _withKeyboardControls2 = __webpack_require__(324);
 	
 	var _withKeyboardControls3 = _interopRequireDefault(_withKeyboardControls2);
 	
-	var _exports = __webpack_require__(327);
+	var _exports = __webpack_require__(325);
 	
 	var _controls = _interopRequireWildcard(_exports);
 	
-	var _exports2 = __webpack_require__(337);
+	var _exports2 = __webpack_require__(335);
 	
 	var _utils = _interopRequireWildcard(_exports2);
 	
@@ -37241,7 +37154,7 @@
 	exports.utils = _utils;
 
 /***/ },
-/* 310 */
+/* 308 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37262,23 +37175,23 @@
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
-	var _contextTypes = __webpack_require__(311);
+	var _contextTypes = __webpack_require__(309);
 	
 	var _contextTypes2 = _interopRequireDefault(_contextTypes);
 	
-	var _getVendor2 = __webpack_require__(312);
+	var _getVendor2 = __webpack_require__(310);
 	
 	var _getVendor3 = _interopRequireDefault(_getVendor2);
 	
-	var _requestFullscreen = __webpack_require__(321);
+	var _requestFullscreen = __webpack_require__(319);
 	
 	var _requestFullscreen2 = _interopRequireDefault(_requestFullscreen);
 	
-	var _exitFullscreen = __webpack_require__(322);
+	var _exitFullscreen = __webpack_require__(320);
 	
 	var _exitFullscreen2 = _interopRequireDefault(_exitFullscreen);
 	
-	var _fullscreenChange = __webpack_require__(323);
+	var _fullscreenChange = __webpack_require__(321);
 	
 	var _fullscreenChange2 = _interopRequireDefault(_fullscreenChange);
 	
@@ -37519,7 +37432,7 @@
 	exports.default = Media;
 
 /***/ },
-/* 311 */
+/* 309 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37554,7 +37467,7 @@
 	};
 
 /***/ },
-/* 312 */
+/* 310 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37564,15 +37477,15 @@
 	});
 	exports.default = getVendor;
 	
-	var _Youtube = __webpack_require__(313);
+	var _Youtube = __webpack_require__(311);
 	
 	var _Youtube2 = _interopRequireDefault(_Youtube);
 	
-	var _Vimeo = __webpack_require__(318);
+	var _Vimeo = __webpack_require__(316);
 	
 	var _Vimeo2 = _interopRequireDefault(_Vimeo);
 	
-	var _HTML = __webpack_require__(320);
+	var _HTML = __webpack_require__(318);
 	
 	var _HTML2 = _interopRequireDefault(_HTML);
 	
@@ -37597,7 +37510,7 @@
 	}
 
 /***/ },
-/* 313 */
+/* 311 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37612,15 +37525,15 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _youtubeApiLoader = __webpack_require__(314);
+	var _youtubeApiLoader = __webpack_require__(312);
 	
 	var _youtubeApiLoader2 = _interopRequireDefault(_youtubeApiLoader);
 	
-	var _getYoutubeId = __webpack_require__(316);
+	var _getYoutubeId = __webpack_require__(314);
 	
 	var _getYoutubeId2 = _interopRequireDefault(_getYoutubeId);
 	
-	var _vendorPropTypes = __webpack_require__(317);
+	var _vendorPropTypes = __webpack_require__(315);
 	
 	var _vendorPropTypes2 = _interopRequireDefault(_vendorPropTypes);
 	
@@ -37827,7 +37740,7 @@
 	exports.default = Youtube;
 
 /***/ },
-/* 314 */
+/* 312 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37836,7 +37749,7 @@
 	  value: true
 	});
 	
-	var _loadApi = __webpack_require__(315);
+	var _loadApi = __webpack_require__(313);
 	
 	var _loadApi2 = _interopRequireDefault(_loadApi);
 	
@@ -37876,7 +37789,7 @@
 	};
 
 /***/ },
-/* 315 */
+/* 313 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -37906,7 +37819,7 @@
 	}
 
 /***/ },
-/* 316 */
+/* 314 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -37927,7 +37840,7 @@
 	}
 
 /***/ },
-/* 317 */
+/* 315 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37948,7 +37861,7 @@
 	};
 
 /***/ },
-/* 318 */
+/* 316 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37963,11 +37876,11 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _getVimeoId = __webpack_require__(319);
+	var _getVimeoId = __webpack_require__(317);
 	
 	var _getVimeoId2 = _interopRequireDefault(_getVimeoId);
 	
-	var _vendorPropTypes = __webpack_require__(317);
+	var _vendorPropTypes = __webpack_require__(315);
 	
 	var _vendorPropTypes2 = _interopRequireDefault(_vendorPropTypes);
 	
@@ -38134,7 +38047,7 @@
 	exports.default = Vimeo;
 
 /***/ },
-/* 319 */
+/* 317 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -38156,7 +38069,7 @@
 	}
 
 /***/ },
-/* 320 */
+/* 318 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38171,7 +38084,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _vendorPropTypes = __webpack_require__(317);
+	var _vendorPropTypes = __webpack_require__(315);
 	
 	var _vendorPropTypes2 = _interopRequireDefault(_vendorPropTypes);
 	
@@ -38298,7 +38211,7 @@
 	exports.default = HTML5;
 
 /***/ },
-/* 321 */
+/* 319 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -38315,7 +38228,7 @@
 	}();
 
 /***/ },
-/* 322 */
+/* 320 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -38332,7 +38245,7 @@
 	}();
 
 /***/ },
-/* 323 */
+/* 321 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -38349,7 +38262,7 @@
 	}
 
 /***/ },
-/* 324 */
+/* 322 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38368,7 +38281,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _Media = __webpack_require__(310);
+	var _Media = __webpack_require__(308);
 	
 	var _Media2 = _interopRequireDefault(_Media);
 	
@@ -38417,7 +38330,7 @@
 	}
 
 /***/ },
-/* 325 */
+/* 323 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38436,7 +38349,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _contextTypes = __webpack_require__(311);
+	var _contextTypes = __webpack_require__(309);
 	
 	var _contextTypes2 = _interopRequireDefault(_contextTypes);
 	
@@ -38472,7 +38385,7 @@
 	}
 
 /***/ },
-/* 326 */
+/* 324 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38491,7 +38404,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _withMediaProps = __webpack_require__(325);
+	var _withMediaProps = __webpack_require__(323);
 	
 	var _withMediaProps2 = _interopRequireDefault(_withMediaProps);
 	
@@ -38638,7 +38551,7 @@
 	}
 
 /***/ },
-/* 327 */
+/* 325 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38648,35 +38561,35 @@
 	});
 	exports.Fullscreen = exports.Volume = exports.MuteUnmute = exports.Duration = exports.SeekBar = exports.Progress = exports.CurrentTime = exports.PlayPause = undefined;
 	
-	var _PlayPause2 = __webpack_require__(328);
+	var _PlayPause2 = __webpack_require__(326);
 	
 	var _PlayPause3 = _interopRequireDefault(_PlayPause2);
 	
-	var _CurrentTime2 = __webpack_require__(329);
+	var _CurrentTime2 = __webpack_require__(327);
 	
 	var _CurrentTime3 = _interopRequireDefault(_CurrentTime2);
 	
-	var _Progress2 = __webpack_require__(331);
+	var _Progress2 = __webpack_require__(329);
 	
 	var _Progress3 = _interopRequireDefault(_Progress2);
 	
-	var _SeekBar2 = __webpack_require__(332);
+	var _SeekBar2 = __webpack_require__(330);
 	
 	var _SeekBar3 = _interopRequireDefault(_SeekBar2);
 	
-	var _Duration2 = __webpack_require__(333);
+	var _Duration2 = __webpack_require__(331);
 	
 	var _Duration3 = _interopRequireDefault(_Duration2);
 	
-	var _MuteUnmute2 = __webpack_require__(334);
+	var _MuteUnmute2 = __webpack_require__(332);
 	
 	var _MuteUnmute3 = _interopRequireDefault(_MuteUnmute2);
 	
-	var _Volume2 = __webpack_require__(335);
+	var _Volume2 = __webpack_require__(333);
 	
 	var _Volume3 = _interopRequireDefault(_Volume2);
 	
-	var _Fullscreen2 = __webpack_require__(336);
+	var _Fullscreen2 = __webpack_require__(334);
 	
 	var _Fullscreen3 = _interopRequireDefault(_Fullscreen2);
 	
@@ -38692,7 +38605,7 @@
 	exports.Fullscreen = _Fullscreen3.default;
 
 /***/ },
-/* 328 */
+/* 326 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38707,7 +38620,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _withMediaProps = __webpack_require__(325);
+	var _withMediaProps = __webpack_require__(323);
 	
 	var _withMediaProps2 = _interopRequireDefault(_withMediaProps);
 	
@@ -38772,7 +38685,7 @@
 	exports.default = (0, _withMediaProps2.default)(PlayPause);
 
 /***/ },
-/* 329 */
+/* 327 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38787,11 +38700,11 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _withMediaProps = __webpack_require__(325);
+	var _withMediaProps = __webpack_require__(323);
 	
 	var _withMediaProps2 = _interopRequireDefault(_withMediaProps);
 	
-	var _formatTime = __webpack_require__(330);
+	var _formatTime = __webpack_require__(328);
 	
 	var _formatTime2 = _interopRequireDefault(_formatTime);
 	
@@ -38841,7 +38754,7 @@
 	exports.default = (0, _withMediaProps2.default)(CurrentTime);
 
 /***/ },
-/* 330 */
+/* 328 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -38867,7 +38780,7 @@
 	}
 
 /***/ },
-/* 331 */
+/* 329 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38882,7 +38795,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _withMediaProps = __webpack_require__(325);
+	var _withMediaProps = __webpack_require__(323);
 	
 	var _withMediaProps2 = _interopRequireDefault(_withMediaProps);
 	
@@ -38933,7 +38846,7 @@
 	exports.default = (0, _withMediaProps2.default)(Progress);
 
 /***/ },
-/* 332 */
+/* 330 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38950,7 +38863,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _withMediaProps = __webpack_require__(325);
+	var _withMediaProps = __webpack_require__(323);
 	
 	var _withMediaProps2 = _interopRequireDefault(_withMediaProps);
 	
@@ -39039,7 +38952,7 @@
 	exports.default = (0, _withMediaProps2.default)(SeekBar);
 
 /***/ },
-/* 333 */
+/* 331 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -39054,11 +38967,11 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _withMediaProps = __webpack_require__(325);
+	var _withMediaProps = __webpack_require__(323);
 	
 	var _withMediaProps2 = _interopRequireDefault(_withMediaProps);
 	
-	var _formatTime = __webpack_require__(330);
+	var _formatTime = __webpack_require__(328);
 	
 	var _formatTime2 = _interopRequireDefault(_formatTime);
 	
@@ -39108,7 +39021,7 @@
 	exports.default = (0, _withMediaProps2.default)(Duration);
 
 /***/ },
-/* 334 */
+/* 332 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -39123,7 +39036,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _withMediaProps = __webpack_require__(325);
+	var _withMediaProps = __webpack_require__(323);
 	
 	var _withMediaProps2 = _interopRequireDefault(_withMediaProps);
 	
@@ -39188,7 +39101,7 @@
 	exports.default = (0, _withMediaProps2.default)(MuteUnmute);
 
 /***/ },
-/* 335 */
+/* 333 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -39205,7 +39118,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _withMediaProps = __webpack_require__(325);
+	var _withMediaProps = __webpack_require__(323);
 	
 	var _withMediaProps2 = _interopRequireDefault(_withMediaProps);
 	
@@ -39285,7 +39198,7 @@
 	exports.default = (0, _withMediaProps2.default)(Volume);
 
 /***/ },
-/* 336 */
+/* 334 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -39300,7 +39213,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _withMediaProps = __webpack_require__(325);
+	var _withMediaProps = __webpack_require__(323);
 	
 	var _withMediaProps2 = _interopRequireDefault(_withMediaProps);
 	
@@ -39365,7 +39278,7 @@
 	exports.default = (0, _withMediaProps2.default)(Fullscreen);
 
 /***/ },
-/* 337 */
+/* 335 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -39375,13 +39288,100 @@
 	});
 	exports.formatTime = undefined;
 	
-	var _formatTime2 = __webpack_require__(330);
+	var _formatTime2 = __webpack_require__(328);
 	
 	var _formatTime3 = _interopRequireDefault(_formatTime2);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	exports.formatTime = _formatTime3.default;
+
+/***/ },
+/* 336 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1);
+	var withMediaProps = __webpack_require__(307).withMediaProps;
+	
+	var PlayPauseButton = React.createClass({
+	  displayName: 'PlayPauseButton',
+	
+	  getInitialState: function getInitialState() {
+	    return {
+	      className: "media-control media-control--play-pause play"
+	    };
+	  },
+	
+	  shouldComponentUpdate: function shouldComponentUpdate(_ref) {
+	    var media = _ref.media;
+	
+	    return this.props.media.isPlaying !== media.isPlaying;
+	  },
+	  _handlePlayPause: function _handlePlayPause() {
+	    if (!this.props.media.isPlaying) {
+	      this.setState({ className: "media-control media-control--play-pause pause" });
+	    } else {
+	      this.setState({ className: "media-control media-control--play-pause play" });
+	    }
+	    this.props.media.playPause();
+	  },
+	  render: function render() {
+	    var _props = this.props;
+	    var className = _props.className;
+	    var style = _props.style;
+	    var media = _props.media;
+	
+	    console.log(style);
+	    return React.createElement('button', {
+	      type: 'button',
+	      className: this.state.className,
+	      style: style,
+	      onClick: this._handlePlayPause
+	    });
+	  }
+	});
+	
+	module.exports = withMediaProps(PlayPauseButton);
+
+/***/ },
+/* 337 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1);
+	var MusicPlayer = __webpack_require__(306);
+	
+	var Index = React.createClass({
+	  displayName: 'Index',
+	
+	
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      { className: 'index' },
+	      React.createElement(
+	        'div',
+	        { className: 'index-photo' },
+	        React.createElement(
+	          'h1',
+	          { className: 'index-header' },
+	          'Cumulonimbus'
+	        ),
+	        React.createElement(
+	          'p',
+	          { className: 'index-desc' },
+	          'Great music. Anywhere. Any time.'
+	        )
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = Index;
 
 /***/ }
 /******/ ]);
