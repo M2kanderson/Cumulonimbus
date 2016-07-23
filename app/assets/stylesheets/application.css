@@ -65,6 +65,7 @@
   align-items: center;
   position: fixed;
   top: 0;
+  z-index: 1;
 }
 
 /*body*/
@@ -218,6 +219,9 @@ footer{
     /*background-color: #272626;*/
     width: 100%;
   }
+  #logo:hover{
+    cursor: pointer;
+  }
   .header-right{
     width: 100%;
     margin-left: 100px;
@@ -233,7 +237,7 @@ footer{
   justify-content: center;
   width: 80%;
   flex-direction: column;
-  padding-top: 30px;
+  margin-top: 30px;
 }
 
 .tracks{
@@ -242,8 +246,22 @@ footer{
   justify-content: space-around;
 }
 
+.track-image{
+  -webkit-transition: opacity 0.25s ease;
+  -moz-transition: opacity 0.25s ease;
+  -o-transition: opacity 0.25s ease;
+  -ms-transition: opacity 0.25s ease;
+  transition: opacity 0.25s ease;
+}
+
 .track-image:hover{
   cursor: pointer;
+  opacity: 0.5;
+  -webkit-transition: opacity 0.25s ease;
+  -moz-transition: opacity 0.25s ease;
+  -o-transition: opacity 0.25s ease;
+  -ms-transition: opacity 0.25s ease;
+  transition: opacity 0.25s ease;
 }
 
 .track-index-item{
@@ -251,7 +269,7 @@ footer{
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 5px;
+  margin: 0 5px 5px 5px;
 }
 
 .track-container{
@@ -292,11 +310,21 @@ footer{
   height: 32px;
   outline: none;
   align-self: center;
+  -webkit-transition: border 0.3s ease;
+  -moz-transition: border 0.3s ease;
+  -o-transition: border 0.3s ease;
+  -ms-transition: border 0.3s ease;
+  transition: border 0.3s ease;
 }
 
 .like-button:hover{
   cursor: pointer;
   border: 1px solid black;
+  -webkit-transition: border 0.3s ease;
+  -moz-transition: border 0.3s ease;
+  -o-transition: border 0.3s ease;
+  -ms-transition: border 0.3s ease;
+  transition: border 0.3s ease;
 }
 
 .like-heart{
