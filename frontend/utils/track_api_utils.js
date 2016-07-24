@@ -12,6 +12,18 @@ module.exports = {
       }
     });
   },
+  fetchTrack(id, success, failure){
+    $.ajax({
+      url: `api/tracks/${id}`,
+      method: 'GET',
+      success: (response) => {
+        success(response);
+      },
+      error: (response) => {
+        failure(response);
+      }
+    });
+  },
   fetchFilteredTracks(query, cb, failureCb){
     $.ajax({
       method: 'GET',

@@ -13,6 +13,7 @@
 
 class Track < ActiveRecord::Base
   has_many :likes
+  has_many :comments
   has_many :user_likes,
     through: :likes,
     source: :user

@@ -13,7 +13,7 @@ const TracksIndex = React.createClass({
 
   componentDidMount(){
     this.trackListener = TracksStore.addListener(this._onChange);
-    this.playerListener = PlayerStore.addListener(this._onPlayerChange);
+    // this.playerListener = PlayerStore.addListener(this._onPlayerChange);
     TrackActions.fetchAllTracks();
   },
 
@@ -51,16 +51,14 @@ const TracksIndex = React.createClass({
             );
           })}
         </ul>
-        <div className= "music-player-container">
-          {this.state.currTrack ? <MusicPlayer track={this.state.currTrack} src={url} /> : ""}
-        </div>
+
       </div>
   );
   },
 
   componentWillUnmount(){
     this.trackListener.remove();
-    this.playerListener.remove();
+    // this.playerListener.remove();
   }
 });
 

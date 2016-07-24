@@ -1,4 +1,6 @@
 const React = require('react');
+const ReactRouter = require('react-router');
+const hashHistory = ReactRouter.hashHistory;
 const SessionStore = require('../stores/session_store');
 const LikeActions = require('../actions/like_actions');
 const PlayerActions = require('../actions/player_actions');
@@ -37,6 +39,9 @@ const TrackIndexItem = React.createClass({
       LikeActions.deleteLike(data);
     }
   },
+  _showTrack(){
+    hashHistory.push(`/tracks/${this.props.track.id}`);
+  },
   render(){
     let text = this.props.track.title;
     if (this.props.track.artist) {
@@ -48,7 +53,7 @@ const TrackIndexItem = React.createClass({
       <li className="track-index-item">
         <div className="track-container">
           <div className="track-image">
-            <img onClick={this._toggleTrack} src={this.props.track.image_url} width="225" height="225"/>
+            <img onClick={this._showTrack} src={this.props.track.image_url} width="225" height="225"/>
             <span className="track-image-overlay" id={`overlay-${this.props.track.id}`}></span>
           </div>
           <div className="track-item-data">
@@ -72,9 +77,9 @@ const TrackIndexItem = React.createClass({
             </div>
 
             <div className="comment-container">
-              <div className="comment-button">
+              <div className="comment-counter">
                 <i className="fa fa-comments" aria-hidden="true"></i>
-                <div className="comment-count">{0}</div>
+                <div className="comment-count">{this.props.track.comments.length}</div>
               </div>
             </div>
 

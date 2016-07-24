@@ -29,6 +29,7 @@ class User < ActiveRecord::Base
 
   has_many :authorizations, :dependent => :destroy
   has_many :likes
+  has_many :comments
   has_many :liked_tracks,
     through: :likes,
     source: :track

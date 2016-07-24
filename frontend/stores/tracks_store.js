@@ -22,6 +22,14 @@ TrackStore.setTracks = function(tracks){
   });
 };
 
+TrackStore.setTrack = function(track){
+  _tracks[track.id] = track;
+};
+
+TrackStore.find = function(id){
+  return _tracks[id];
+};
+
 TrackStore.addLike = function(trackId, userId){
   let track = _tracks[trackId];
   track.user_likes.push(parseInt(userId));
@@ -38,8 +46,12 @@ TrackStore.removeLike = function(trackId, userId){
 
 TrackStore.__onDispatch = function(payload){
   switch (payload.actionType) {
-    case TrackConstants.FETCH_TRACKS:
+    case TrackConstants.TRACKS_RECEIVED:
       this.setTracks(payload.tracks);
+      this.__emitChange();
+      break;
+    case TrackConstants.TRACK_RECEIVED:
+      this.setTrack(payload.track);
       this.__emitChange();
       break;
     case LikeConstants.LIKE_RECEIVED:

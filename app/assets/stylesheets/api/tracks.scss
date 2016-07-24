@@ -188,6 +188,10 @@ body {
   margin-left: 6px;
 }
 
+input[type="range"]:focus{
+  box-shadow: none;
+}
+
 input[type="range"] {
   // reset inputs to a plain state
   @include -range__reset(webkit, moz, ms);
@@ -205,6 +209,7 @@ input[type="range"] {
   padding: 0 12px;
   margin: 0;
   background-color: transparent;
+  box-shadow: none;
 
   &:hover,
   &:active {
@@ -359,4 +364,11 @@ input[type="range"] {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+//track item show
+
+.track-item-show{
+  width: 100%;
+  display: flex;
 }
