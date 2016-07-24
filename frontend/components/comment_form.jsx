@@ -24,26 +24,13 @@ const CommentForm = React.createClass({
     this.setState({body:""});
     ReactDOM.findDOMNode(this.refs.commentInput).value = "";
   },
-  onFocus(){
-    this.setState({commentButton: true});
-  },
-  onBlur(e){
-    this.setState({commentButton: false});
-  },
   render: function() {
     return (
       <div className="comments-form">
-        <form className="comment-form-field">
-          <textarea ref="commentInput"
+        <form className="comment-form-field" onSubmit={this.createComment}>
+          <input ref="commentInput"
                     onChange={this.updateBody}
-                    onFocus={this.onFocus}
-                    onBlur={this.onBlur}
-                    placeholder="Add a comment"></textarea>
-          <input className="comment-button"
-                    type="submit"
-                    value="Comment"
-                    onMouseDown={this.createComment}></input>
-          <div className="comment-arrow"></div>
+                    placeholder="Add a comment"></input>
         </form>
       </div>
     );

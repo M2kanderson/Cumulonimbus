@@ -27,20 +27,17 @@ const TrackComments = React.createClass({
     CommentActions.fetchTrackComments(nextProps.trackId);
   },
   comments(){
-    return this.state.comments.map((comment)=>{
+    return this.state.comments.reverse().map((comment)=>{
       return(<CommentShow key={comment.id} comment={comment}/>);
     });
   },
   render: function() {
-    let commentForm = SessionStore.isUserLoggedIn() ?
-        <CommentForm trackId={this.props.trackId}/> : "";
     return (
       <div className="comments-container">
         <h1 className="comment-header">Comments</h1>
         <ul className="comments">
           {this.comments()}
         </ul>
-        {commentForm}
 
       </div>
     );

@@ -39994,6 +39994,9 @@
 	var TrackActions = __webpack_require__(291);
 	var TrackStore = __webpack_require__(299);
 	var Comments = __webpack_require__(614);
+	var CommentForm = __webpack_require__(620);
+	var LikeActions = __webpack_require__(301);
+	var SessionStore = __webpack_require__(268);
 	
 	var TrackItemShow = React.createClass({
 	  displayName: 'TrackItemShow',
@@ -40002,43 +40005,128 @@
 	    TrackActions.fetchTrack(this.props.params.trackId);
 	    var potentialTrack = TrackStore.find(parseInt(this.props.params.trackId));
 	    return {
-	      track: potentialTrack ? potentialTrack : {}
+	      track: potentialTrack ? potentialTrack : {},
+	      currentUser: SessionStore.currentUser()
 	    };
 	  },
 	  componentDidMount: function componentDidMount() {
 	    // let potentialTrack = TrackStore.find(parseInt(this.props.params.trackId));
 	    // this.setState({track: potentialTrack ? potentialTrack : {}});
+	    // this.userListener = SessionStore.addListener(this._userChanged);
+	    this.trackListener = TrackStore.addListener(this._trackChanged);
+	  },
+	  _trackChanged: function _trackChanged() {
+	    var potentialTrack = TrackStore.find(parseInt(this.props.params.trackId));
+	    this.setState({ track: potentialTrack ? potentialTrack : {} });
+	  },
+	  _userChanged: function _userChanged() {
+	    this.setState({ currentUser: SessionStore.currentUser() });
 	  },
 	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
 	    var potentialTrack = TrackStore.find(parseInt(nextProps.params.trackId));
 	    this.setState({ track: potentialTrack ? potentialTrack : {} });
 	  },
+	  componentWillUnmount: function componentWillUnmount() {
+	    // this.userListener.remove();
+	    this.trackListener.remover();
+	  },
+	
+	  _isLiked: function _isLiked() {
+	    var likeText = "Like";
+	    var currentUser = this.state.currentUser;
+	    var currentUserLikes = currentUser.liked_tracks;
+	    if (currentUserLikes) {
+	      if (currentUserLikes.indexOf(this.state.track.id) !== -1) {
+	        likeText = "Unlike";
+	      }
+	    }
+	    return likeText;
+	  },
+	  toggleLike: function toggleLike() {
+	    var data = { track_id: this.state.track.id };
+	
+	    if (this._isLiked() === "Like") {
+	      LikeActions.createLike(data);
+	    } else {
+	      LikeActions.deleteLike(data);
+	    }
+	  },
 	
 	  render: function render() {
+	    var commentForm = SessionStore.isUserLoggedIn() ? React.createElement(CommentForm, { trackId: this.props.params.trackId }) : "";
 	    return React.createElement(
 	      'div',
 	      { className: 'track-item-show' },
 	      React.createElement(
-	        'p',
-	        { className: 'track-name' },
-	        'Title: ',
+	        'div',
+	        { className: 'track-item-show-player' },
 	        React.createElement(
-	          'span',
-	          null,
-	          this.state.track.title
+	          'div',
+	          { className: 'track-item-show-player-left' },
+	          React.createElement(
+	            'div',
+	            { className: 'track-item-show-player-play' },
+	            React.createElement('i', { className: 'fa fa-play fa-4x', 'aria-hidden': 'true' })
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'track-item-show-player-info' },
+	            React.createElement(
+	              'p',
+	              { className: 'track-item-show-artist' },
+	              this.state.track.artist
+	            ),
+	            React.createElement(
+	              'p',
+	              { className: 'track-item-show-title' },
+	              this.state.track.title
+	            )
+	          )
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'track-item-show-player-right' },
+	          React.createElement('img', { className: 'track-item-show-cover', src: this.state.track.image_url })
 	        )
 	      ),
+	      commentForm,
 	      React.createElement(
-	        'p',
-	        { className: 'artist-name' },
-	        'Artist: ',
+	        'div',
+	        { className: 'track-item-show-data' },
 	        React.createElement(
-	          'span',
-	          null,
-	          this.state.track.artist
+	          'div',
+	          { className: 'like-container' },
+	          React.createElement(
+	            'button',
+	            { className: 'like-button', onClick: this.toggleLike },
+	            this._isLiked() === "Like" ? React.createElement('i', { className: 'fa fa-heart', 'aria-hidden': 'true' }) : React.createElement('i', { className: 'fa fa-heart red', 'aria-hidden': 'true' })
+	          )
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'track-item-show-stats' },
+	          React.createElement(
+	            'div',
+	            { className: 'like-counter' },
+	            React.createElement('i', { className: 'fa fa-heart', 'aria-hidden': 'true' }),
+	            React.createElement(
+	              'div',
+	              { className: 'likes' },
+	              this.state.track.like_count
+	            )
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'play-counter' },
+	            React.createElement('i', { className: 'fa fa-play', 'aria-hidden': 'true' }),
+	            React.createElement(
+	              'div',
+	              { className: 'play-count' },
+	              0
+	            )
+	          )
 	        )
 	      ),
-	      React.createElement('img', { className: 'track-cover', src: this.state.track.image_url }),
 	      React.createElement(Comments, { trackId: this.state.track.id })
 	    );
 	  }
@@ -40082,13 +40170,12 @@
 	    CommentActions.fetchTrackComments(nextProps.trackId);
 	  },
 	  comments: function comments() {
-	    return this.state.comments.map(function (comment) {
+	    return this.state.comments.reverse().map(function (comment) {
 	      return React.createElement(CommentShow, { key: comment.id, comment: comment });
 	    });
 	  },
 	
 	  render: function render() {
-	    var commentForm = SessionStore.isUserLoggedIn() ? React.createElement(CommentForm, { trackId: this.props.trackId }) : "";
 	    return React.createElement(
 	      'div',
 	      { className: 'comments-container' },
@@ -40101,8 +40188,7 @@
 	        'ul',
 	        { className: 'comments' },
 	        this.comments()
-	      ),
-	      commentForm
+	      )
 	    );
 	  }
 	
@@ -40424,12 +40510,6 @@
 	    this.setState({ body: "" });
 	    ReactDOM.findDOMNode(this.refs.commentInput).value = "";
 	  },
-	  onFocus: function onFocus() {
-	    this.setState({ commentButton: true });
-	  },
-	  onBlur: function onBlur(e) {
-	    this.setState({ commentButton: false });
-	  },
 	
 	  render: function render() {
 	    return React.createElement(
@@ -40437,17 +40517,10 @@
 	      { className: 'comments-form' },
 	      React.createElement(
 	        'form',
-	        { className: 'comment-form-field' },
-	        React.createElement('textarea', { ref: 'commentInput',
+	        { className: 'comment-form-field', onSubmit: this.createComment },
+	        React.createElement('input', { ref: 'commentInput',
 	          onChange: this.updateBody,
-	          onFocus: this.onFocus,
-	          onBlur: this.onBlur,
-	          placeholder: 'Add a comment' }),
-	        React.createElement('input', { className: 'comment-button',
-	          type: 'submit',
-	          value: 'Comment',
-	          onMouseDown: this.createComment }),
-	        React.createElement('div', { className: 'comment-arrow' })
+	          placeholder: 'Add a comment' })
 	      )
 	    );
 	  }

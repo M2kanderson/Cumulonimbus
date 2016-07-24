@@ -172,19 +172,18 @@
 }
 
 .comment-form-field{
-  margin: 0 9px 0 61px;
+  margin: 0 9px 0 30px;
   position: relative;
   display: block;
   font-size: 100%;
 }
 
-.comment-form-field textarea{
+.comment-form-field input{
   position: relative;
   top: -1px;
-  padding: 10px;
+  padding: 0px 10px 0px 10px;
   font-size: 14px;
   font-weight: 400;
-  height: 80px;
   width: 98.2%;
   line-height: 18px;
   margin-bottom: 5px;
