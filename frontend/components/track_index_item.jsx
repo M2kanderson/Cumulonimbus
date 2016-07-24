@@ -51,18 +51,38 @@ const TrackIndexItem = React.createClass({
             <img onClick={this._toggleTrack} src={this.props.track.image_url} width="225" height="225"/>
             <span className="track-image-overlay" id={`overlay-${this.props.track.id}`}></span>
           </div>
+          <div className="track-item-data">
+            <div className="track-item-data-left">
+              <div className="like-container">
+                <button className="like-button" onClick={this.toggleLike}>
+                  {this._isLiked() === "Like" ?
+                    <i className="fa fa-heart" aria-hidden="true"></i> :
+                    <i className="fa fa-heart red" aria-hidden="true"></i>}
+                  <div className="likes">
+                    {this.props.track.like_count}
+                  </div>
+                </button>
+              </div>
+              <div className="play-container">
+                <button className="play-button" onClick={this._toggleTrack}>
+                  <i className="fa fa-play" aria-hidden="true"></i>
+                  <div className="play-count">{0}</div>
+                </button>
+              </div>
+            </div>
+
+            <div className="comment-container">
+              <div className="comment-button">
+                <i className="fa fa-comments" aria-hidden="true"></i>
+                <div className="comment-count">{0}</div>
+              </div>
+            </div>
+
+          </div>
+
           <div className="track-text">
             {text}
           </div>
-        </div>
-
-        <div className="like-container">
-          <div className="likes">
-            Number of Likes: {this.props.track.like_count}
-          </div>
-          <button className="like-button" onClick={this.toggleLike}>
-            {this._isLiked() === "Like" ? <img className="like-heart" src="http://res.cloudinary.com/dpyncrw04/image/upload/v1469220374/white-heart-md_qmrgxn.png" width="17" height="15"/> : "Unlike"}
-            </button>
         </div>
       </li>);
   },
