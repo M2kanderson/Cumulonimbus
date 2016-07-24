@@ -26856,6 +26856,7 @@
 	var SessionActions = __webpack_require__(259);
 	var Searchbar = __webpack_require__(288);
 	var hashHistory = __webpack_require__(172).hashHistory;
+	var SessionStore = __webpack_require__(268);
 	
 	var Header = React.createClass({
 	  displayName: 'Header',
@@ -26901,6 +26902,37 @@
 	
 	    this.setState({ signup: false });
 	  },
+	  buttons: function buttons() {
+	    if (SessionStore.isUserLoggedIn()) {
+	      return React.createElement(
+	        'section',
+	        { className: 'header-buttons' },
+	        React.createElement(
+	          'button',
+	          { className: 'button',
+	            onClick: this.signOut },
+	          ' Log Out'
+	        )
+	      );
+	    } else {
+	      return React.createElement(
+	        'section',
+	        { className: 'header-buttons' },
+	        React.createElement(
+	          'button',
+	          { className: 'button',
+	            onClick: this.openLogin },
+	          ' Sign In'
+	        ),
+	        React.createElement(
+	          'button',
+	          { className: 'button',
+	            onClick: this.signUp },
+	          ' Sign Up'
+	        )
+	      );
+	    }
+	  },
 	
 	  render: function render() {
 	    return React.createElement(
@@ -26914,26 +26946,7 @@
 	      React.createElement(
 	        'div',
 	        { className: 'header-right' },
-	        React.createElement(
-	          'section',
-	          { className: 'header-buttons' },
-	          React.createElement(Searchbar, null),
-	          React.createElement(
-	            'button',
-	            { className: 'button', onClick: this.openLogin },
-	            ' Sign In'
-	          ),
-	          React.createElement(
-	            'button',
-	            { className: 'button', onClick: this.signUp },
-	            ' Sign Up'
-	          ),
-	          React.createElement(
-	            'button',
-	            { className: 'button', onClick: this.signOut },
-	            ' Log Out'
-	          )
-	        )
+	        this.buttons()
 	      ),
 	      React.createElement(LoginForm, { modalOpen: this.state.login, closeForm: this.closeLogin }),
 	      React.createElement(SignupForm, { modalOpen: this.state.signup, closeForm: this.closeSignup })
@@ -39427,6 +39440,7 @@
 	var React = __webpack_require__(1);
 	var withMediaProps = __webpack_require__(306).withMediaProps;
 	var PlayerStore = __webpack_require__(336);
+	var PlayerActions = __webpack_require__(303);
 	
 	var PlayPauseButton = React.createClass({
 	  displayName: 'PlayPauseButton',
@@ -39444,10 +39458,13 @@
 	  _onPlayerChange: function _onPlayerChange() {
 	    var _this = this;
 	
-	    PlayerStore.pauseSong();
 	    setTimeout(function () {
-	      _this.setState({ className: "media-control media-control--play-pause pause" });
-	      _this.props.media.play();
+	      if (!_this.props.media.isPlaying) {
+	        _this.setState({ className: "media-control media-control--play-pause pause" });
+	      } else {
+	        _this.setState({ className: "media-control media-control--play-pause play" });
+	      }
+	      _this.props.media.playPause();
 	    }, 0);
 	  },
 	  componentWillUnmount: function componentWillUnmount() {
@@ -39459,12 +39476,13 @@
 	    return this.props.media.isPlaying !== media.isPlaying;
 	  },
 	  _handlePlayPause: function _handlePlayPause() {
-	    if (!this.props.media.isPlaying) {
-	      this.setState({ className: "media-control media-control--play-pause pause" });
-	    } else {
-	      this.setState({ className: "media-control media-control--play-pause play" });
-	    }
-	    this.props.media.playPause();
+	    PlayerActions.toggleTrack(PlayerStore.loadedSong());
+	    // if(!this.props.media.isPlaying){
+	    //   this.setState({className:"media-control media-control--play-pause pause"});
+	    // }else {
+	    //   this.setState({className:"media-control media-control--play-pause play"});
+	    // }
+	    // this.props.media.playPause();
 	  },
 	  render: function render() {
 	    var _props = this.props;
@@ -39506,15 +39524,13 @@
 	
 	var _loadedSong = null;
 	var _trackUrl = null;
+	var _playing = false;
 	
-	PlayerStore.loadSong = function (track) {
-	  if (_loadedSong) {
-	    this.pauseSong();
-	  }
-	  // const song = new Audio(track.audio_url);
+	function _loadSong(track) {
+	  _playing = true;
 	  _trackUrl = track.audio_url;
 	  _loadedSong = track;
-	};
+	}
 	
 	PlayerStore.playLoadedSong = function () {
 	  if (_loadedSong) {
@@ -39532,22 +39548,19 @@
 	  // clearTimeout(this.timeout);
 	};
 	
-	PlayerStore.pauseSong = function () {
-	  if (_loadedSong) {
-	    // _loadedSong.pause();
-	    this.clearSong();
-	  }
-	};
+	function _toggleSongPlay() {
+	  _playing = !_playing;
+	}
 	
 	PlayerStore.__onDispatch = function (payload) {
 	  switch (payload.actionType) {
 	    case PlayerConstants.TOGGLE_TRACK:
 	      if (payload.track.audio_url === _trackUrl) {
-	        this.pauseSong();
+	        _toggleSongPlay();
 	        this.__emitChange();
 	        break;
 	      } else {
-	        this.loadSong(payload.track);
+	        _loadSong(payload.track);
 	        // this.playLoadedSong();
 	        this.__emitChange();
 	        break;
@@ -39557,6 +39570,10 @@
 	
 	PlayerStore.loadedSong = function () {
 	  return _loadedSong;
+	};
+	
+	PlayerStore.songIsPlaying = function (trackId) {
+	  return _loadedSong && _loadedSong.id === parseInt(trackId) && _playing;
 	};
 	
 	module.exports = PlayerStore;
@@ -39997,6 +40014,8 @@
 	var CommentForm = __webpack_require__(620);
 	var LikeActions = __webpack_require__(301);
 	var SessionStore = __webpack_require__(268);
+	var PlayerActions = __webpack_require__(303);
+	var PlayerStore = __webpack_require__(336);
 	
 	var TrackItemShow = React.createClass({
 	  displayName: 'TrackItemShow',
@@ -40006,14 +40025,16 @@
 	    var potentialTrack = TrackStore.find(parseInt(this.props.params.trackId));
 	    return {
 	      track: potentialTrack ? potentialTrack : {},
-	      currentUser: SessionStore.currentUser()
+	      currentUser: SessionStore.currentUser(),
+	      trackPlaying: PlayerStore.songIsPlaying(this.props.params.trackId)
 	    };
 	  },
 	  componentDidMount: function componentDidMount() {
-	    // let potentialTrack = TrackStore.find(parseInt(this.props.params.trackId));
-	    // this.setState({track: potentialTrack ? potentialTrack : {}});
-	    // this.userListener = SessionStore.addListener(this._userChanged);
 	    this.trackListener = TrackStore.addListener(this._trackChanged);
+	    this.playerListener = PlayerStore.addListener(this._onPlayerChange);
+	  },
+	  _onPlayerChange: function _onPlayerChange() {
+	    this.setState({ trackPlaying: PlayerStore.songIsPlaying(this.props.params.trackId) });
 	  },
 	  _trackChanged: function _trackChanged() {
 	    var potentialTrack = TrackStore.find(parseInt(this.props.params.trackId));
@@ -40028,7 +40049,8 @@
 	  },
 	  componentWillUnmount: function componentWillUnmount() {
 	    // this.userListener.remove();
-	    this.trackListener.remover();
+	    this.trackListener.remove();
+	    this.playerListener.remove();
 	  },
 	
 	  _isLiked: function _isLiked() {
@@ -40051,9 +40073,13 @@
 	      LikeActions.deleteLike(data);
 	    }
 	  },
+	  _toggleTrack: function _toggleTrack() {
+	    PlayerActions.toggleTrack(this.state.track);
+	  },
 	
 	  render: function render() {
 	    var commentForm = SessionStore.isUserLoggedIn() ? React.createElement(CommentForm, { trackId: this.props.params.trackId }) : "";
+	    var playClass = this.state.trackPlaying ? "fa fa-pause fa-4x" : "fa fa-play fa-4x";
 	    return React.createElement(
 	      'div',
 	      { className: 'track-item-show' },
@@ -40065,8 +40091,9 @@
 	          { className: 'track-item-show-player-left' },
 	          React.createElement(
 	            'div',
-	            { className: 'track-item-show-player-play' },
-	            React.createElement('i', { className: 'fa fa-play fa-4x', 'aria-hidden': 'true' })
+	            { className: 'track-item-show-player-play',
+	              onClick: this._toggleTrack },
+	            React.createElement('i', { className: playClass, 'aria-hidden': 'true' })
 	          ),
 	          React.createElement(
 	            'div',
@@ -40086,7 +40113,8 @@
 	        React.createElement(
 	          'div',
 	          { className: 'track-item-show-player-right' },
-	          React.createElement('img', { className: 'track-item-show-cover', src: this.state.track.image_url })
+	          React.createElement('img', { className: 'track-item-show-cover',
+	            src: this.state.track.image_url })
 	        )
 	      ),
 	      commentForm,
@@ -40167,10 +40195,14 @@
 	    this.commentListener.remove();
 	  },
 	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
-	    CommentActions.fetchTrackComments(nextProps.trackId);
+	    if (this.props.trackId !== nextProps.trackId) {
+	      CommentActions.fetchTrackComments(nextProps.trackId);
+	    }
 	  },
 	  comments: function comments() {
-	    return this.state.comments.reverse().map(function (comment) {
+	    var comments = this.state.comments.slice(0);
+	
+	    return comments.reverse().map(function (comment) {
 	      return React.createElement(CommentShow, { key: comment.id, comment: comment });
 	    });
 	  },

@@ -24,10 +24,14 @@ const TrackComments = React.createClass({
     this.commentListener.remove();
   },
   componentWillReceiveProps(nextProps){
-    CommentActions.fetchTrackComments(nextProps.trackId);
+    if(this.props.trackId !== nextProps.trackId){
+      CommentActions.fetchTrackComments(nextProps.trackId);
+    }
   },
   comments(){
-    return this.state.comments.reverse().map((comment)=>{
+    let comments = this.state.comments.slice(0);
+
+    return comments.reverse().map((comment)=>{
       return(<CommentShow key={comment.id} comment={comment}/>);
     });
   },

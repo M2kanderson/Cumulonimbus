@@ -5,6 +5,8 @@ const Comments = require('./comments');
 const CommentForm = require('./comment_form');
 const LikeActions = require('../actions/like_actions');
 const SessionStore = require('../stores/session_store');
+const PlayerActions = require('../actions/player_actions');
+const PlayerStore = require('../stores/player_store');
 
 var TrackItemShow = React.createClass({
   getInitialState: function() {
@@ -12,14 +14,16 @@ var TrackItemShow = React.createClass({
     let potentialTrack = TrackStore.find(parseInt(this.props.params.trackId));
     return {
       track: potentialTrack ? potentialTrack : {},
-      currentUser: SessionStore.currentUser()
+      currentUser: SessionStore.currentUser(),
+      trackPlaying: PlayerStore.songIsPlaying(this.props.params.trackId)
     };
   },
   componentDidMount: function(){
-    // let potentialTrack = TrackStore.find(parseInt(this.props.params.trackId));
-    // this.setState({track: potentialTrack ? potentialTrack : {}});
-    // this.userListener = SessionStore.addListener(this._userChanged);
     this.trackListener = TrackStore.addListener(this._trackChanged);
+    this.playerListener = PlayerStore.addListener(this._onPlayerChange);
+  },
+  _onPlayerChange(){
+    this.setState({trackPlaying: PlayerStore.songIsPlaying(this.props.params.trackId)});
   },
   _trackChanged(){
     let potentialTrack = TrackStore.find(parseInt(this.props.params.trackId));
@@ -34,7 +38,8 @@ var TrackItemShow = React.createClass({
   },
   componentWillUnmount(){
     // this.userListener.remove();
-    this.trackListener.remover();
+    this.trackListener.remove();
+    this.playerListener.remove();
   },
   _isLiked: function(){
     let likeText = "Like";
@@ -56,24 +61,33 @@ var TrackItemShow = React.createClass({
       LikeActions.deleteLike(data);
     }
   },
+  _toggleTrack(){
+    PlayerActions.toggleTrack(this.state.track);
+  },
   render: function() {
     let commentForm = SessionStore.isUserLoggedIn() ?
         <CommentForm trackId={this.props.params.trackId}/> : "";
+    let playClass = this.state.trackPlaying ?
+        "fa fa-pause fa-4x": "fa fa-play fa-4x";
     return (
       <div className="track-item-show">
         <div className="track-item-show-player">
           <div className="track-item-show-player-left">
-            <div className="track-item-show-player-play">
-              <i className="fa fa-play fa-4x" aria-hidden="true"></i>
+            <div className="track-item-show-player-play"
+                 onClick={this._toggleTrack}>
+              <i className={playClass} aria-hidden="true"></i>
             </div>
             <div className="track-item-show-player-info">
-              <p className="track-item-show-artist">{this.state.track.artist}</p>
-              <p className="track-item-show-title">{this.state.track.title}</p>
+              <p className="track-item-show-artist">
+                  {this.state.track.artist}</p>
+              <p className="track-item-show-title">
+                  {this.state.track.title}</p>
             </div>
           </div>
 
           <div className="track-item-show-player-right">
-            <img className="track-item-show-cover" src={this.state.track.image_url}></img>
+            <img className="track-item-show-cover"
+                 src={this.state.track.image_url}></img>
           </div>
 
         </div>
