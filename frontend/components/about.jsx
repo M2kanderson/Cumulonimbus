@@ -31,7 +31,9 @@ var About = React.createClass({
           </ul>
         </section>
         <section className="about-section">
-          <img src="http://res.cloudinary.com/dpyncrw04/image/upload/v1469466659/Mark_Mullan_optx8p.jpg"></img>
+          <div className="about-image-container">
+            <img src="http://res.cloudinary.com/dpyncrw04/image/upload/c_scale,h_250/v1469466659/Mark_Mullan_optx8p.jpg"></img>
+          </div>
           <ul>
             <li>Mark Mullan</li>
             <li>A little bit about myself – Embedded Systems Recruiter turned Software Engineer,
