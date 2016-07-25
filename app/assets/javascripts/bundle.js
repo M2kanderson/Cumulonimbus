@@ -29548,7 +29548,14 @@
 	      },
 	
 	      success: function success(response) {
-	        cb(response);
+	        $.ajax({
+	          method: "GET",
+	          url: "/auth/is_signed_in.json"
+	        }).done(function (data) {
+	          if (data.signed_in) {
+	            cb(data.user);
+	          }
+	        });
 	      },
 	
 	      error: function error(response) {
@@ -39844,6 +39851,7 @@
 	var SessionStore = __webpack_require__(268);
 	var PlayerActions = __webpack_require__(331);
 	var PlayerStore = __webpack_require__(298);
+	var ReactTooltip = __webpack_require__(349);
 	
 	var TrackItemShow = React.createClass({
 	  displayName: 'TrackItemShow',
@@ -39963,7 +39971,7 @@
 	          { className: 'track-item-show-stats' },
 	          React.createElement(
 	            'div',
-	            { className: 'like-counter' },
+	            { className: 'like-counter', 'data-tip': "Likes: " + this.state.track.like_count },
 	            React.createElement('i', { className: 'fa fa-heart', 'aria-hidden': 'true' }),
 	            React.createElement(
 	              'div',
@@ -39973,7 +39981,7 @@
 	          ),
 	          React.createElement(
 	            'div',
-	            { className: 'play-counter' },
+	            { className: 'play-counter', 'data-tip': "Plays: " + 0 },
 	            React.createElement('i', { className: 'fa fa-play', 'aria-hidden': 'true' }),
 	            React.createElement(
 	              'div',
@@ -39983,7 +39991,8 @@
 	          )
 	        )
 	      ),
-	      React.createElement(Comments, { trackId: this.state.track.id })
+	      React.createElement(Comments, { trackId: this.state.track.id }),
+	      React.createElement(ReactTooltip, { type: 'dark', effect: 'solid', place: 'bottom' })
 	    );
 	  }
 	
@@ -40047,7 +40056,11 @@
 	      React.createElement(
 	        'ul',
 	        { className: 'comments' },
-	        this.comments()
+	        this.comments().length > 0 ? this.comments() : React.createElement(
+	          'p',
+	          { className: 'no-comment' },
+	          'Be the first to comment!'
+	        )
 	      )
 	    );
 	  }
@@ -41656,7 +41669,11 @@
 	      React.createElement(
 	        "section",
 	        { className: "about-section" },
-	        React.createElement("img", { src: "http://res.cloudinary.com/dpyncrw04/image/upload/v1469466659/Mark_Mullan_optx8p.jpg" }),
+	        React.createElement(
+	          "div",
+	          { className: "about-image-container" },
+	          React.createElement("img", { src: "http://res.cloudinary.com/dpyncrw04/image/upload/c_scale,h_250/v1469466659/Mark_Mullan_optx8p.jpg" })
+	        ),
 	        React.createElement(
 	          "ul",
 	          null,
