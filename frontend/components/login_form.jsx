@@ -16,7 +16,7 @@ const LoginForm = React.createClass({
   },
 
   componentWillMount() {
-      Modal.setAppElement('body');
+    Modal.setAppElement('body');
    },
 
   componentDidMount(){
@@ -118,14 +118,13 @@ const LoginForm = React.createClass({
     this.closeModal();
   },
 
-  openModal: function() {
+  openModal() {
     this.setState({modalIsOpen: true});
   },
 
-  closeModal: function() {
+  closeModal() {
     this.props.closeForm();
     this.setState({modalIsOpen: false});
-    // hashHistory.push('/');
   },
 
   demoLogin(e) {

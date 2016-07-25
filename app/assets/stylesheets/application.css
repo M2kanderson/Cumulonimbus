@@ -603,5 +603,6 @@ figcaption:hover {
 }
 
 .track-item-show-title{
-  /*flex-grow: 2;*/
+  overflow: hidden;
+  /*flex-shrink: 1;*/
 }

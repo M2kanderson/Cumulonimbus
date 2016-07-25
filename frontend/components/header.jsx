@@ -51,14 +51,14 @@ var Header = React.createClass({
   buttons(){
     if(SessionStore.isUserLoggedIn()){
       return (<section className="header-buttons">
-      <Searchbar />
+      <Searchbar myFunc={this.openLogin}/>
                 <button className="button"
                 onClick={this.signOut}> Log Out</button>
               </section>);
 
     } else {
       return (<section className="header-buttons">
-      <Searchbar />
+      <Searchbar myFunc={this.openLogin}/>
       <button className="button"
               onClick={this.openLogin}> Sign In</button>
       <button className="button"

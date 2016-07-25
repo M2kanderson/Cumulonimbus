@@ -1,26 +1,41 @@
 const React = require('react');
 const ReactRouter = require('react-router');
 const hashHistory = ReactRouter.hashHistory;
-
+const SessionStore = require('../stores/session_store');
+const LoginForm = require('./login_form');
 
 
 const Searchbar = React.createClass({
   getInitialState: function() {
     return {
-      query: ""
+      query: "",
+      login: false
     };
   },
   updateQuery(e){
     this.setState({query:e.target.value});
   },
+  openLogin(){
+    this.props.myFunc();
+  },
+  _ensureLoggedIn(nextState, replace){
+    if(!SessionStore.isUserLoggedIn())
+    {
+      this.openLogin();
+      return false;
+    }
+    return true;
+  },
   search(e){
-    e.preventDefault();
-    let search = this.state.query;
-    hashHistory.push({
-      pathname: "tracks/filtered",
-      query: {search:search}
-    });
-    this.setState({query:""});
+    if (this._ensureLoggedIn()){
+      e.preventDefault();
+      let search = this.state.query;
+      hashHistory.push({
+        pathname: "tracks/filtered",
+        query: {search:search}
+      });
+      this.setState({query:""});
+    }
   },
   trySearch(e){
     if(e.keyCode === 13)

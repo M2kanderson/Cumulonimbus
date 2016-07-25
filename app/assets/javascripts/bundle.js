@@ -64,13 +64,14 @@
 	var TracksFiltered = __webpack_require__(339);
 	var TrackItemShow = __webpack_require__(340);
 	var About = __webpack_require__(359);
+	var Header = __webpack_require__(236);
 	
 	var SessionActions = __webpack_require__(259);
 	var SessionStore = __webpack_require__(268);
 	
 	function _ensureLoggedIn(nextState, replace) {
 	  if (!SessionStore.isUserLoggedIn()) {
-	    replace('/');
+	    Header.openLogin();
 	  }
 	}
 	
@@ -26923,7 +26924,7 @@
 	      return React.createElement(
 	        'section',
 	        { className: 'header-buttons' },
-	        React.createElement(Searchbar, null),
+	        React.createElement(Searchbar, { myFunc: this.openLogin }),
 	        React.createElement(
 	          'button',
 	          { className: 'button',
@@ -26935,7 +26936,7 @@
 	      return React.createElement(
 	        'section',
 	        { className: 'header-buttons' },
-	        React.createElement(Searchbar, null),
+	        React.createElement(Searchbar, { myFunc: this.openLogin }),
 	        React.createElement(
 	          'button',
 	          { className: 'button',
@@ -27142,18 +27143,13 @@
 	  _onChange: function _onChange() {
 	    this.closeModal();
 	  },
-	
-	
 	  openModal: function openModal() {
 	    this.setState({ modalIsOpen: true });
 	  },
-	
 	  closeModal: function closeModal() {
 	    this.props.closeForm();
 	    this.setState({ modalIsOpen: false });
-	    // hashHistory.push('/');
 	  },
-	
 	  demoLogin: function demoLogin(e) {
 	    e.preventDefault();
 	    SessionActions.login({
@@ -36595,26 +36591,41 @@
 	var React = __webpack_require__(1);
 	var ReactRouter = __webpack_require__(172);
 	var hashHistory = ReactRouter.hashHistory;
+	var SessionStore = __webpack_require__(268);
+	var LoginForm = __webpack_require__(237);
 	
 	var Searchbar = React.createClass({
 	  displayName: 'Searchbar',
 	
 	  getInitialState: function getInitialState() {
 	    return {
-	      query: ""
+	      query: "",
+	      login: false
 	    };
 	  },
 	  updateQuery: function updateQuery(e) {
 	    this.setState({ query: e.target.value });
 	  },
+	  openLogin: function openLogin() {
+	    this.props.myFunc();
+	  },
+	  _ensureLoggedIn: function _ensureLoggedIn(nextState, replace) {
+	    if (!SessionStore.isUserLoggedIn()) {
+	      this.openLogin();
+	      return false;
+	    }
+	    return true;
+	  },
 	  search: function search(e) {
-	    e.preventDefault();
-	    var search = this.state.query;
-	    hashHistory.push({
-	      pathname: "tracks/filtered",
-	      query: { search: search }
-	    });
-	    this.setState({ query: "" });
+	    if (this._ensureLoggedIn()) {
+	      e.preventDefault();
+	      var search = this.state.query;
+	      hashHistory.push({
+	        pathname: "tracks/filtered",
+	        query: { search: search }
+	      });
+	      this.setState({ query: "" });
+	    }
 	  },
 	  trySearch: function trySearch(e) {
 	    if (e.keyCode === 13) {
@@ -41682,7 +41693,7 @@
 	                React.createElement(
 	                  "a",
 	                  { href: "https://www.linkedin.com/in/markrmullan" },
-	                  React.createElement("i", { "class": "fa fa-linkedin", "aria-hidden": "true" })
+	                  React.createElement("i", { className: "fa fa-linkedin-square fa-2x liicon", "aria-hidden": "true" })
 	                )
 	              ),
 	              React.createElement(
