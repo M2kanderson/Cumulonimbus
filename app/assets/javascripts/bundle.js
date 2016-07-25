@@ -41682,6 +41682,16 @@
 	              React.createElement(
 	                "li",
 	                null,
+	                "LinkedIn: ",
+	                React.createElement(
+	                  "a",
+	                  { href: "https://www.linkedin.com/in/markrmullan" },
+	                  React.createElement("i", { "class": "fa fa-linkedin", "aria-hidden": "true" })
+	                )
+	              ),
+	              React.createElement(
+	                "li",
+	                null,
 	                "Personal Website: "
 	              )
 	            )

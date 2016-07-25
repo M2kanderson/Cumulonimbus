@@ -48,6 +48,11 @@ var About = React.createClass({
                   <i className="fa fa-github fa-2x" aria-hidden="true"></i>
                 </a>
                 </li>
+                <li>
+                  LinkedIn: <a href="https://www.linkedin.com/in/markrmullan">
+                  <i class="fa fa-linkedin" aria-hidden="true"></i>
+                  </a>
+                </li>
                 <li>Personal Website: </li>
               </ul>
             </li>
