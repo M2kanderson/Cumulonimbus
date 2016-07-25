@@ -580,4 +580,10 @@ figcaption:hover {
 
 .track-item-show-player{
   display: flex;
+  flex-wrap: wrap;
+  align-content: stretch;
+}
+
+.track-item-show-title{
+  /*flex-grow: 2;*/
 }
