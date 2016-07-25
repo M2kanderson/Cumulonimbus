@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160722173635) do
+ActiveRecord::Schema.define(version: 20160724030808) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,6 +28,17 @@ ActiveRecord::Schema.define(version: 20160722173635) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "comments", force: :cascade do |t|
+    t.integer  "user_id",    null: false
+    t.integer  "track_id",   null: false
+    t.text     "body",       null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "comments", ["track_id"], name: "index_comments_on_track_id", using: :btree
+  add_index "comments", ["user_id"], name: "index_comments_on_user_id", using: :btree
+
   create_table "likes", force: :cascade do |t|
     t.integer  "user_id",    null: false
     t.integer  "track_id",   null: false
@@ -40,13 +51,14 @@ ActiveRecord::Schema.define(version: 20160722173635) do
   add_index "likes", ["user_id"], name: "index_likes_on_user_id", using: :btree
 
   create_table "tracks", force: :cascade do |t|
-    t.string   "title",      null: false
-    t.string   "image_url",  null: false
-    t.string   "audio_url",  null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer  "like_count", null: false
+    t.string   "title",          null: false
+    t.string   "image_url",      null: false
+    t.string   "audio_url",      null: false
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+    t.integer  "like_count",     null: false
     t.string   "artist"
+    t.integer  "comments_count"
   end
 
   create_table "users", force: :cascade do |t|
@@ -65,6 +77,7 @@ ActiveRecord::Schema.define(version: 20160722173635) do
     t.string   "name"
     t.string   "provider"
     t.string   "uid"
+    t.string   "username"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree

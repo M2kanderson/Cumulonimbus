@@ -8,4 +8,22 @@ class Api::TracksController < ApplicationController
     end
     render :index
   end
+
+  def show
+    @track = Track.find_by_id(params[:id])
+  end
+
+  def create
+    @track = Track.new(track_params)
+    if(@track.save)
+      render :show
+    else
+      render json: @track.errors, status: 422
+    end
+  end
+
+  def track_params
+    params.require(:track).permit(:title, :image_url, :audio_url, :artist, :comments_count)
+  end
+
 end

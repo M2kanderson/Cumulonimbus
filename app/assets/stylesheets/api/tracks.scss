@@ -188,6 +188,10 @@ body {
   margin-left: 6px;
 }
 
+input[type="range"]:focus{
+  box-shadow: none;
+}
+
 input[type="range"] {
   // reset inputs to a plain state
   @include -range__reset(webkit, moz, ms);
@@ -205,6 +209,7 @@ input[type="range"] {
   padding: 0 12px;
   margin: 0;
   background-color: transparent;
+  box-shadow: none;
 
   &:hover,
   &:active {
@@ -336,7 +341,7 @@ input[type="range"] {
   outline: none;
 }
 
-.mute{
+.unmute{
   background: url('http://res.cloudinary.com/pulsr/image/upload/c_scale,h_20/v1469203206/Cumulonimbus/mute-128.png');
   background-repeat: no-repeat;
   margin-left: 25px;
@@ -344,7 +349,7 @@ input[type="range"] {
 }
 
 
-.unmute{
+.mute{
   background: url('http://res.cloudinary.com/pulsr/image/upload/c_scale,h_30/v1469203455/Cumulonimbus/media-volume-2.png');
   background-repeat: no-repeat;
 
@@ -358,5 +363,96 @@ input[type="range"] {
   height: 30px;
   display: flex;
   justify-content: center;
+  align-items: center;
+}
+
+//track item show
+
+.track-item-show{
+  font-family: 'Lato', sans-serif;
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  background: white;
+}
+
+.track-item-show-player{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background: linear-gradient(135deg, rgb(96, 94, 92) 0%, rgb(26, 25, 25) 100%);
+  width: 100%;
+  height: 400px;
+}
+
+.track-item-show-player-info{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-left: 30px;
+}
+
+.track-item-show-title{
+  font-size: 24px;
+  background: black;
+  color: white;
+  display: inline-block;
+  padding: 3px 5px 3px 5px;
+}
+
+.track-item-show-artist{
+  font-size: 20px;
+  background: black;
+  color: white;
+  display: inline-block;
+  padding: 3px 5px 3px 5px;
+}
+
+.track-item-show-player-right{
+  display: flex;
+  align-items: center;
+}
+
+.track-item-show-player-left{
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+.track-item-show-player-play{
+  background-color: #f50;
+  height: 100px;
+  width: 100px;
+  display: flex;
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  margin-left: 20px;
+  cursor: pointer;
+}
+
+.track-item-show-cover{
+  width: 300px;
+  height: 300px;
+  margin-right: 20px;
+}
+
+.track-item-show-data{
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px 10px 20px;
+  margin-left: 10px;
+}
+
+.track-item-show-stats{
+  display: flex;
+}
+
+.like-counter, .play-counter{
+  margin-left: 10px;
+  color: gray;
+  display: flex;
   align-items: center;
 }

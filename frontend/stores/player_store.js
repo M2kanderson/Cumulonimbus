@@ -15,15 +15,14 @@ const PlayerStore = new Store(Dispatcher);
 
 let _loadedSong = null;
 let _trackUrl = null;
+let _playing = false;
 
-PlayerStore.loadSong = function(track){
-  if (_loadedSong){
-    this.pauseSong();
-  }
-  // const song = new Audio(track.audio_url);
+
+function _loadSong(track){
+  _playing = true;
   _trackUrl = track.audio_url;
   _loadedSong = track;
-};
+}
 
 PlayerStore.playLoadedSong = function(){
   if (_loadedSong){
@@ -41,22 +40,19 @@ PlayerStore.clearSong = function(){
   // clearTimeout(this.timeout);
 };
 
-PlayerStore.pauseSong = function(){
-  if (_loadedSong) {
-    // _loadedSong.pause();
-    this.clearSong();
-  }
-};
+function _toggleSongPlay(){
+  _playing = !_playing;
+}
 
 PlayerStore.__onDispatch = function(payload){
   switch (payload.actionType) {
     case PlayerConstants.TOGGLE_TRACK:
       if (payload.track.audio_url === _trackUrl) {
-        this.pauseSong();
+        _toggleSongPlay();
         this.__emitChange();
         break;
       } else {
-        this.loadSong(payload.track);
+        _loadSong(payload.track);
         // this.playLoadedSong();
         this.__emitChange();
         break;
@@ -66,6 +62,10 @@ PlayerStore.__onDispatch = function(payload){
 
 PlayerStore.loadedSong = function(){
   return _loadedSong;
+};
+
+PlayerStore.songIsPlaying = function(trackId){
+  return _loadedSong && _loadedSong.id === parseInt(trackId) && _playing;
 };
 
 

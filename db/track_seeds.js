@@ -33,10 +33,8 @@ function postTrack (track, url) {
     dataType: 'JSON',
     data: {track: extractTrack(track)},
     success (newTrack) {
-      console.log("success");
     },
     error (errors) {
-      console.log(errors);
     }
   });
 }

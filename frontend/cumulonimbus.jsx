@@ -14,6 +14,7 @@ const LoginForm = require('./components/login_form');
 const TracksIndex = require('./components/tracks_index');
 const Index = require('./components/index');
 const TracksFiltered = require('./components/tracks_filtered');
+const TrackItemShow = require('./components/track_item_show');
 
 const SessionActions = require('./actions/session_actions');
 
@@ -25,6 +26,7 @@ const appRouter = (
       <Route path="/users/login" component={LoginForm}/>
       <Route path="tracks/all" component={TracksIndex}/>
       <Route path="tracks/filtered" component={TracksFiltered}/>
+      <Route path="tracks/:trackId" component={TrackItemShow}/>
     </Route>
   </Router>
 );

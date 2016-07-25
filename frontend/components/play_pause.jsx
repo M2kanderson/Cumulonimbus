@@ -1,6 +1,7 @@
 var React = require('react');
 const withMediaProps = require('react-media-player').withMediaProps;
 const PlayerStore = require('../stores/player_store');
+const PlayerActions = require('../actions/player_actions');
 
 var PlayPauseButton = React.createClass({
   getInitialState: function() {
@@ -14,10 +15,13 @@ var PlayPauseButton = React.createClass({
     this.setState({className:"media-control media-control--play-pause pause"});
   },
   _onPlayerChange(){
-    PlayerStore.pauseSong();
     setTimeout(() =>{
-      this.setState({className:"media-control media-control--play-pause pause"});
-      this.props.media.play();
+      if(!this.props.media.isPlaying){
+        this.setState({className:"media-control media-control--play-pause pause"});
+      }else {
+        this.setState({className:"media-control media-control--play-pause play"});
+      }
+      this.props.media.playPause();
     }, 0);
 
   },
@@ -30,12 +34,13 @@ var PlayPauseButton = React.createClass({
   },
 
   _handlePlayPause(){
-    if(!this.props.media.isPlaying){
-      this.setState({className:"media-control media-control--play-pause pause"});
-    }else {
-      this.setState({className:"media-control media-control--play-pause play"});
-    }
-    this.props.media.playPause();
+    PlayerActions.toggleTrack(PlayerStore.loadedSong());
+    // if(!this.props.media.isPlaying){
+    //   this.setState({className:"media-control media-control--play-pause pause"});
+    // }else {
+    //   this.setState({className:"media-control media-control--play-pause play"});
+    // }
+    // this.props.media.playPause();
   },
 
   render() {

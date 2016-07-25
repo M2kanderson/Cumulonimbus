@@ -4,6 +4,7 @@ const SignupForm = require('./signup_form');
 const SessionActions = require('../actions/session_actions');
 const Searchbar = require('./searchbar');
 const hashHistory = require('react-router').hashHistory;
+const SessionStore = require('../stores/session_store');
 
 var Header = React.createClass({
   getInitialState: function() {
@@ -47,6 +48,23 @@ var Header = React.createClass({
 
     this.setState({signup: false});
   },
+  buttons(){
+    if(SessionStore.isUserLoggedIn()){
+      return (<section className="header-buttons">
+                <button className="button"
+                onClick={this.signOut}> Log Out</button>
+              </section>);
+
+    } else {
+      return (<section className="header-buttons">
+      <button className="button"
+              onClick={this.openLogin}> Sign In</button>
+      <button className="button"
+              onClick={this.signUp}> Sign Up</button>
+            </section>);
+
+    }
+  },
   render: function() {
     return (
       <div className="header">
@@ -54,12 +72,7 @@ var Header = React.createClass({
           <img id="logo" onClick={this.redirectHome} src="http://res.cloudinary.com/pulsr/image/upload/c_crop,y_0/v1468955200/Cumulonimbus/Cumulonimbus-logo.png"/>
         </div>
         <div className="header-right">
-          <section className="header-buttons">
-            <Searchbar />
-            <button className="button" onClick={this.openLogin}> Sign In</button>
-            <button className="button" onClick={this.signUp}> Sign Up</button>
-            <button className="button" onClick={this.signOut}> Log Out</button>
-          </section>
+          {this.buttons()}
         </div>
         <LoginForm modalOpen={this.state.login} closeForm={this.closeLogin}/>
         <SignupForm modalOpen={this.state.signup} closeForm={this.closeSignup}/>

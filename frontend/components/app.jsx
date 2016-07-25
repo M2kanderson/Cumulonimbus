@@ -7,11 +7,13 @@ const SessionStore = require('../stores/session_store');
 const SessionConstants = require('../constants/session_constants');
 const TrackActions = require('../actions/track_actions');
 const PlayerStore = require('../stores/player_store');
+const MusicPlayer = require('./music_player');
 
 var App = React.createClass({
   // Devise with React
   getInitialState() {
-    return { signedIn: null };
+    return { signedIn: null,
+             currTrack: null};
   },
 
   // Devise with React
@@ -24,9 +26,33 @@ var App = React.createClass({
     //   SessionActions.receiveUser(data.user);
     //   this.setState({ signedIn: data.signed_in });
     // }.bind(this));
+
+    this.playerListener = PlayerStore.addListener(this._onPlayerChange);
+  },
+
+  _onPlayerChange(){
+    this.setState({currTrack: PlayerStore.loadedSong()});
+  },
+  componentWillUnmount(){
+    this.playerListener.remove();
+  },
+  setDuration(e){
+    this.setState({trackDuration: e});
+  },
+  checkTime(currTime){
+    if(currTime === this.state.trackDuration){
+      console.log("hit it");
+    }
   },
 
   render: function() {
+    let url;
+    if(this.state.currTrack){
+      url = this.state.currTrack.audio_url +".mp3";
+    }
+    else {
+      url = "";
+    }
     return (
       <div className="app">
         <Header />
@@ -34,7 +60,13 @@ var App = React.createClass({
           {this.props.children}
         </div>
         <Footer />
-
+          <div className= "music-player-container">
+            {this.state.currTrack ?
+              <MusicPlayer onDuration={this.setDuration}
+                           onTimeUpdate={this.checkTime}
+                           track={this.state.currTrack}
+                           src={url} /> : ""}
+          </div>
       </div>
     );
   }
