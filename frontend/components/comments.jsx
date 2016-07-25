@@ -40,7 +40,8 @@ const TrackComments = React.createClass({
       <div className="comments-container">
         <h1 className="comment-header">Comments</h1>
         <ul className="comments">
-          {this.comments()}
+          {this.comments().length > 0 ? this.comments() :
+                  <p className="no-comment">Be the first to comment!</p>}
         </ul>
 
       </div>

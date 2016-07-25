@@ -7,6 +7,7 @@ const LikeActions = require('../actions/like_actions');
 const SessionStore = require('../stores/session_store');
 const PlayerActions = require('../actions/player_actions');
 const PlayerStore = require('../stores/player_store');
+var ReactTooltip = require("react-tooltip");
 
 var TrackItemShow = React.createClass({
   getInitialState: function() {
@@ -101,13 +102,13 @@ var TrackItemShow = React.createClass({
             </button>
           </div>
           <div className="track-item-show-stats">
-            <div className="like-counter">
+            <div className="like-counter" data-tip={"Likes: " +this.state.track.like_count}>
               <i className="fa fa-heart" aria-hidden="true"></i>
               <div className="likes">
                 {this.state.track.like_count}
               </div>
             </div>
-            <div className="play-counter">
+            <div className="play-counter" data-tip={"Plays: " +0}>
               <i className="fa fa-play" aria-hidden="true"></i>
               <div className="play-count">{0}</div>
             </div>
@@ -116,6 +117,7 @@ var TrackItemShow = React.createClass({
         </div>
 
         <Comments trackId={this.state.track.id}></Comments>
+        <ReactTooltip type="dark" effect="solid" place="bottom"/>
       </div>
     );
   }

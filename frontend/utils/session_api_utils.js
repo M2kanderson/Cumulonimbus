@@ -26,7 +26,15 @@ module.exports = {
         },
 
         success: (response) => {
-          cb(response);
+          $.ajax({
+            method: "GET",
+            url: "/auth/is_signed_in.json"
+          })
+          .done(function(data){
+            if (data.signed_in) {
+              cb(data.user);
+            }
+          });
         },
 
         error(response) {

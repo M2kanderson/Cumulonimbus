@@ -48,6 +48,7 @@
 }
 
 .comments-container{
+  border-top: 1px solid #cfd6d9;
   display: block;
   color: #212124;
   font-size: 100%;
@@ -63,10 +64,14 @@
   // -webkit-padding-start: 40px;
 }
 
+.no-comment{
+  margin-left: 50px;
+}
+
 .comment-header{
-  border-top: 1px solid #cfd6d9;
   padding-top: 20px;
   font-size: 20px;
+  margin-left: 50px;
 }
 .comment, .comment-editing{
   padding: 0px 0 5px 60px;
