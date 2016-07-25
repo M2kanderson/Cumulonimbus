@@ -576,3 +576,8 @@ figcaption:hover {
   opacity: 1;
   position: absolute;
 }*/
+
+
+.track-item-show-player{
+  display: flex;
+}

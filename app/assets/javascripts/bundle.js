@@ -26813,9 +26813,12 @@
 	    if (currTime === this.state.trackDuration) {
 	      console.log("hit it");
 	    }
+	    this.incrementPlayCount(currTime);
 	  },
-	  incrementPlayCount: function incrementPlayCount() {
-	    console.log("incrementing the play count");
+	  incrementPlayCount: function incrementPlayCount(currTime) {
+	    if (currTime < 1) {
+	      console.log("incrementing the play count");
+	    }
 	  },
 	
 	
@@ -41628,7 +41631,7 @@
 	      React.createElement(
 	        "section",
 	        { className: "about-section" },
-	        React.createElement("img", { src: "http://res.cloudinary.com/pulsr/image/upload/c_scale,h_250/v1469465643/Cumulonimbus/AAEAAQAAAAAAAAXfAAAAJDZmNjRkMGVhLTQxYmMtNGQ4MS05MGU2LTM0ZDg4NTYyYjRjOQ.jpg" }),
+	        React.createElement("img", { src: "http://res.cloudinary.com/dpyncrw04/image/upload/v1469466659/Mark_Mullan_optx8p.jpg" }),
 	        React.createElement(
 	          "ul",
 	          null,
@@ -41640,7 +41643,7 @@
 	          React.createElement(
 	            "li",
 	            null,
-	            "I'm a software developer with a background in Civil Engineering and a passion for solving complex engineering problems. I am looking for an opportunity to pursue this passion! I have experience with React, Ruby on Rails, PostgreSQL, JavaScript, jQuery, and C++."
+	            "A little bit about myself – Embedded Systems Recruiter turned Software Engineer, inspired to make a career change by the work of the people who I would recruit. Although my strengths are in React.js, JavaScript, and Ruby on Rails, recruiting embedded engineering has given me a deep level of respect for resource-constrained programming."
 	          ),
 	          React.createElement(
 	            "li",
@@ -41654,7 +41657,7 @@
 	                "Github: ",
 	                React.createElement(
 	                  "a",
-	                  { href: "https://github.com/M2kanderson" },
+	                  { href: "https://github.com/markrmullan" },
 	                  React.createElement("i", { className: "fa fa-github fa-2x", "aria-hidden": "true" })
 	                )
 	              ),

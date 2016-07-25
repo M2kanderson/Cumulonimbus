@@ -43,9 +43,12 @@ var App = React.createClass({
     if(currTime === this.state.trackDuration){
       console.log("hit it");
     }
+    this.incrementPlayCount(currTime);
   },
-  incrementPlayCount(){
-    console.log("incrementing the play count");
+  incrementPlayCount(currTime){
+    if (currTime < 1){
+      console.log("incrementing the play count");
+    }
   },
 
   render: function() {
