@@ -37041,7 +37041,7 @@
 	        React.createElement(
 	          'div',
 	          { className: 'track-image-container' },
-	          React.createElement('img', { className: 'track-image', onClick: this._toggleTrack, src: this.props.track.image_url, width: '225', height: '225' })
+	          React.createElement('img', { className: 'track-image', id: "track-" + this.props.track.id, onClick: this._toggleTrack, src: this.props.track.image_url, width: '225', height: '225' })
 	        ),
 	        React.createElement(
 	          'div',
@@ -37101,6 +37101,19 @@
 	      )
 	    );
 	  },
+	
+	
+	  // play button overlay on hover of track image. still buggy. 7/24
+	
+	  // _toggleOpacity(){
+	  //   document.getElementById("track-" + this.props.track.id).className += "play-button-hover";
+	
+	  //   <figcaption>
+	  //     <img src="http://res.cloudinary.com/dpyncrw04/image/upload/v1469222798/playpause_phaebu.png" onMouseOver={this._toggleOpacity} onClick={this._toggleTrack} width="40" height="40"/>
+	  //   </figcaption>
+	  // <span className="track-image-overlay" id={`overlay-${this.props.track.id}`}></span>
+	  // },
+	
 	  _toggleTrack: function _toggleTrack() {
 	    PlayerActions.toggleTrack(this.props.track);
 	    // if(!this.state.trackPlaying){
