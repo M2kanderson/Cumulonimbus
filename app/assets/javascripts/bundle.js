@@ -39521,7 +39521,7 @@
 	        React.createElement(
 	          'div',
 	          { className: 'track-image-container' },
-	          React.createElement('img', { className: 'track-image', id: "track-" + this.props.track.id, onClick: this._toggleTrack, src: this.props.track.image_url, width: '225', height: '225' })
+	          React.createElement('img', { className: 'track-image', id: "track-" + this.props.track.id, onClick: this._showTrack, src: this.props.track.image_url, width: '225', height: '225' })
 	        ),
 	        React.createElement(
 	          'div',

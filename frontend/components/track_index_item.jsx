@@ -54,7 +54,7 @@ const TrackIndexItem = React.createClass({
       <li className="track-index-item">
         <div className="track-container">
           <div className="track-image-container">
-            <img className="track-image" id={"track-" + this.props.track.id} onClick={this._toggleTrack} src={this.props.track.image_url} width="225" height="225"/>
+            <img className="track-image" id={"track-" + this.props.track.id} onClick={this._showTrack} src={this.props.track.image_url} width="225" height="225"/>
 
           </div>
           <div className="track-item-data">
