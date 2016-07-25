@@ -54,10 +54,7 @@ const TrackIndexItem = React.createClass({
         <div className="track-container">
           <div className="track-image-container">
             <img className="track-image" onClick={this._toggleTrack} src={this.props.track.image_url} width="225" height="225"/>
-            <figcaption>
-              <img src="http://res.cloudinary.com/dpyncrw04/image/upload/v1469222798/playpause_phaebu.png"/>
-            </figcaption>
-            <span className="track-image-overlay" id={`overlay-${this.props.track.id}`}></span>
+
           </div>
           <div className="track-item-data">
             <div className="track-item-data-left">

@@ -37041,13 +37041,7 @@
 	        React.createElement(
 	          'div',
 	          { className: 'track-image-container' },
-	          React.createElement('img', { className: 'track-image', onClick: this._toggleTrack, src: this.props.track.image_url, width: '225', height: '225' }),
-	          React.createElement(
-	            'figcaption',
-	            null,
-	            React.createElement('img', { src: 'http://res.cloudinary.com/dpyncrw04/image/upload/v1469222798/playpause_phaebu.png' })
-	          ),
-	          React.createElement('span', { className: 'track-image-overlay', id: 'overlay-' + this.props.track.id })
+	          React.createElement('img', { className: 'track-image', onClick: this._toggleTrack, src: this.props.track.image_url, width: '225', height: '225' })
 	        ),
 	        React.createElement(
 	          'div',
