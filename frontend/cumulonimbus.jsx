@@ -15,6 +15,7 @@ const TracksIndex = require('./components/tracks_index');
 const Index = require('./components/index');
 const TracksFiltered = require('./components/tracks_filtered');
 const TrackItemShow = require('./components/track_item_show');
+const About = require('./components/about');
 
 const SessionActions = require('./actions/session_actions');
 const SessionStore = require('./stores/session_store');
@@ -35,6 +36,7 @@ const appRouter = (
       <Route path="tracks/all" component={TracksIndex} onEnter={_ensureLoggedIn}/>
       <Route path="tracks/filtered" component={TracksFiltered} onEnter={_ensureLoggedIn}/>
       <Route path="tracks/:trackId" component={TrackItemShow} onEnter={_ensureLoggedIn}/>
+      <Route path="/about" component={About}></Route>
     </Route>
   </Router>
 );
