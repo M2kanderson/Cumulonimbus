@@ -107,8 +107,26 @@
 /*footer*/
 
 footer{
+  font-family: 'Lato' sans-serif;
+  font-weight: bold;
   height: 75px;
   background-color: #a4a4a6;
+  display: flex;
+  align-items: center;
+}
+
+.footer-content{
+  display: flex;
+}
+
+.footer-nav-list{
+  display: flex;
+  margin-left: 100px;
+}
+
+.footer-nav-list a{
+  color: #006dac;
+  text-decoration: none;
 }
 
 /*buttons*/
