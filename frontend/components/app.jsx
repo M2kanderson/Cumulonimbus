@@ -43,6 +43,12 @@ var App = React.createClass({
     if(currTime === this.state.trackDuration){
       console.log("hit it");
     }
+    this.incrementPlayCount(currTime);
+  },
+  incrementPlayCount(currTime){
+    if (currTime < 1){
+      console.log("incrementing the play count");
+    }
   },
 
   render: function() {
@@ -64,6 +70,7 @@ var App = React.createClass({
             {this.state.currTrack ?
               <MusicPlayer onDuration={this.setDuration}
                            onTimeUpdate={this.checkTime}
+                           onPlay={this.incrementPlayCount}
                            track={this.state.currTrack}
                            src={url} /> : ""}
           </div>
