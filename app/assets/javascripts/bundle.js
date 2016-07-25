@@ -26812,6 +26812,9 @@
 	      console.log("hit it");
 	    }
 	  },
+	  incrementPlayCount: function incrementPlayCount() {
+	    console.log("incrementing the play count");
+	  },
 	
 	
 	  render: function render() {
@@ -26836,6 +26839,7 @@
 	        { className: 'music-player-container' },
 	        this.state.currTrack ? React.createElement(MusicPlayer, { onDuration: this.setDuration,
 	          onTimeUpdate: this.checkTime,
+	          onPlay: this.incrementPlayCount,
 	          track: this.state.currTrack,
 	          src: url }) : ""
 	      )

@@ -16,6 +16,9 @@
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #  name                   :string
+#  provider               :string
+#  uid                    :string
+#  username               :string
 #
 
 class User < ActiveRecord::Base
