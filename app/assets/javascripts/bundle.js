@@ -36652,25 +36652,39 @@
 /* 293 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 	
 	var React = __webpack_require__(1);
+	var ReactRouter = __webpack_require__(172);
+	var Link = ReactRouter.Link;
 	
 	var Footer = React.createClass({
-	  displayName: "Footer",
+	  displayName: 'Footer',
 	
 	
 	  render: function render() {
 	    return React.createElement(
-	      "div",
-	      { className: "footer" },
+	      'div',
+	      { className: 'footer' },
 	      React.createElement(
-	        "footer",
+	        'footer',
 	        null,
 	        React.createElement(
-	          "p",
-	          null,
-	          "About"
+	          'section',
+	          { className: 'footer-content' },
+	          React.createElement(
+	            'ul',
+	            { className: 'footer-nav-list' },
+	            React.createElement(
+	              'li',
+	              null,
+	              React.createElement(
+	                Link,
+	                { to: '/about/' },
+	                'About'
+	              )
+	            )
+	          )
 	        )
 	      )
 	    );
