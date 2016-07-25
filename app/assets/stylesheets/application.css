@@ -108,7 +108,7 @@
 
 footer{
   height: 75px;
-  background-color: purple;
+  background-color: #a4a4a6;
 }
 
 /*buttons*/
@@ -502,7 +502,47 @@ h2{
   border-radius: 3px;
 }
 
+/*about*/
+.about{
+  font-family: 'Lato', sans-serif;
+  width: 100%;
+  height: 100vh;
+}
 
+.about-section{
+  margin-left: 50px;
+  display: flex;
+  margin-bottom: 50px;
+}
+
+.about-section>ul{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  max-width: 500px;
+  margin-left: 20px;
+}
+
+.about-links a{
+  color: black;
+}
+
+.about-links li{
+  margin-bottom: 10px;
+}
+
+.about-header{
+  margin-top: 70px;
+  margin-left: 50px;
+  margin-bottom: 30px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: bold;
+  font-size: 24px;
+}
+
+.about-image-container{
+  min-width: 250px;
+}
 
 
 
