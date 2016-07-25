@@ -9,10 +9,22 @@
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
   <!-- <link rel="stylesheet" href="app/assets/stylesheets/fontawesome/css/font-awesome.min.css"> -->
   <link rel="stylesheet" href="https://npmcdn.com/react-select/dist/react-select.css">
+  <!-- <script src="https://apis.google.com/js/client:platform.js?onload=start" async defer></script>
+  <script>
+    function start() {
+      gapi.load('auth2', function() {
+        auth2 = gapi.auth2.init({
+          client_id: '103867363030-iq1ait30ssbtobrqhcmugffnjgvsok9d.apps.googleusercontent.com',
+          // Scopes to request in addition to 'profile' and 'email'
+          //scope: 'additional_scope'
+        });
+      });
+    }
+  </script> -->
   <%= csrf_meta_tags %>
 </head>
 <body>
-  <p class="notice"><%= notice %></p>
+  <!-- <p class="notice"><%= notice %></p>
   <p class="alert"><%= alert %></p>
 
   <script>
@@ -35,25 +47,8 @@
       return;
     });
   }
-  </script>
+  </script> -->
 
-  <script>
-  window.fbAsyncInit = function() {
-    FB.init({
-      appId      : '1790155654560761',
-      xfbml      : true,
-      version    : 'v2.7'
-    });
-  };
-
-  (function(d, s, id){
-     var js, fjs = d.getElementsByTagName(s)[0];
-     if (d.getElementById(id)) {return;}
-     js = d.createElement(s); js.id = id;
-     js.src = "//connect.facebook.net/en_US/sdk.js";
-     fjs.parentNode.insertBefore(js, fjs);
-   }(document, 'script', 'facebook-jssdk'));
-</script>
 
 <%= yield %>
 

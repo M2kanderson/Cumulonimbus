@@ -26,11 +26,11 @@ var Header = React.createClass({
     this.setState({login: false});
   },
   signOut(e){
-    window.FB.getLoginStatus((resp) => {
-      if(resp.status === "connected"){
-        window.FB.logout();
-      }
-    });
+    // window.FB.getLoginStatus((resp) => {
+    //   if(resp.status === "connected"){
+    //     window.FB.logout();
+    //   }
+    // });
     SessionActions.logout();
     e.preventDefault();
   },
@@ -51,12 +51,14 @@ var Header = React.createClass({
   buttons(){
     if(SessionStore.isUserLoggedIn()){
       return (<section className="header-buttons">
+      <Searchbar />
                 <button className="button"
                 onClick={this.signOut}> Log Out</button>
               </section>);
 
     } else {
       return (<section className="header-buttons">
+      <Searchbar />
       <button className="button"
               onClick={this.openLogin}> Sign In</button>
       <button className="button"

@@ -57,14 +57,21 @@
 	
 	//components
 	var App = __webpack_require__(235);
-	var SignupForm = __webpack_require__(294);
+	var SignupForm = __webpack_require__(288);
 	var LoginForm = __webpack_require__(237);
-	var TracksIndex = __webpack_require__(298);
-	var Index = __webpack_require__(304);
+	var TracksIndex = __webpack_require__(333);
+	var Index = __webpack_require__(338);
 	var TracksFiltered = __webpack_require__(339);
-	var TrackItemShow = __webpack_require__(613);
+	var TrackItemShow = __webpack_require__(340);
 	
 	var SessionActions = __webpack_require__(259);
+	var SessionStore = __webpack_require__(268);
+	
+	function _ensureLoggedIn(nextState, replace) {
+	  if (!SessionStore.isUserLoggedIn()) {
+	    replace('/');
+	  }
+	}
 	
 	var appRouter = React.createElement(
 	  Router,
@@ -75,9 +82,9 @@
 	    React.createElement(IndexRoute, { component: Index }),
 	    React.createElement(Route, { path: '/users/signup', component: SignupForm }),
 	    React.createElement(Route, { path: '/users/login', component: LoginForm }),
-	    React.createElement(Route, { path: 'tracks/all', component: TracksIndex }),
-	    React.createElement(Route, { path: 'tracks/filtered', component: TracksFiltered }),
-	    React.createElement(Route, { path: 'tracks/:trackId', component: TrackItemShow })
+	    React.createElement(Route, { path: 'tracks/all', component: TracksIndex, onEnter: _ensureLoggedIn }),
+	    React.createElement(Route, { path: 'tracks/filtered', component: TracksFiltered, onEnter: _ensureLoggedIn }),
+	    React.createElement(Route, { path: 'tracks/:trackId', component: TrackItemShow, onEnter: _ensureLoggedIn })
 	  )
 	);
 	
@@ -26759,14 +26766,14 @@
 	
 	var React = __webpack_require__(1);
 	var Header = __webpack_require__(236);
-	var Footer = __webpack_require__(289);
-	var Body = __webpack_require__(290);
+	var Footer = __webpack_require__(293);
+	var Body = __webpack_require__(294);
 	var SessionActions = __webpack_require__(259);
 	var SessionStore = __webpack_require__(268);
 	var SessionConstants = __webpack_require__(265);
-	var TrackActions = __webpack_require__(291);
-	var PlayerStore = __webpack_require__(336);
-	var MusicPlayer = __webpack_require__(305);
+	var TrackActions = __webpack_require__(295);
+	var PlayerStore = __webpack_require__(298);
+	var MusicPlayer = __webpack_require__(300);
 	
 	var App = React.createClass({
 	  displayName: 'App',
@@ -26852,9 +26859,9 @@
 	
 	var React = __webpack_require__(1);
 	var LoginForm = __webpack_require__(237);
-	var SignupForm = __webpack_require__(294);
+	var SignupForm = __webpack_require__(288);
 	var SessionActions = __webpack_require__(259);
-	var Searchbar = __webpack_require__(288);
+	var Searchbar = __webpack_require__(292);
 	var hashHistory = __webpack_require__(172).hashHistory;
 	var SessionStore = __webpack_require__(268);
 	
@@ -26880,11 +26887,11 @@
 	    this.setState({ login: false });
 	  },
 	  signOut: function signOut(e) {
-	    window.FB.getLoginStatus(function (resp) {
-	      if (resp.status === "connected") {
-	        window.FB.logout();
-	      }
-	    });
+	    // window.FB.getLoginStatus((resp) => {
+	    //   if(resp.status === "connected"){
+	    //     window.FB.logout();
+	    //   }
+	    // });
 	    SessionActions.logout();
 	    e.preventDefault();
 	  },
@@ -26907,6 +26914,7 @@
 	      return React.createElement(
 	        'section',
 	        { className: 'header-buttons' },
+	        React.createElement(Searchbar, null),
 	        React.createElement(
 	          'button',
 	          { className: 'button',
@@ -26918,6 +26926,7 @@
 	      return React.createElement(
 	        'section',
 	        { className: 'header-buttons' },
+	        React.createElement(Searchbar, null),
 	        React.createElement(
 	          'button',
 	          { className: 'button',
@@ -27103,11 +27112,6 @@
 	            'Log in Google'
 	          )
 	        ),
-	        React.createElement(_reactFacebookLogin2.default, { appId: '1790155654560761',
-	          autoLoad: true, fields: 'name,email,picture',
-	          callback: this.responseFacebook,
-	          cssClass: 'facebook-button',
-	          icon: 'fa-facebook' }),
 	        React.createElement('br', null)
 	      )
 	    );
@@ -27119,7 +27123,6 @@
 	    this.setState({ password: e.target.value });
 	  },
 	  handleSubmit: function handleSubmit(e) {
-	    console.log("handling submit");
 	    e.preventDefault();
 	    var userData = {
 	      email: this.state.email,
@@ -29548,58 +29551,106 @@
 	      }
 	    });
 	  },
+	
+	  // googleLogin(cb,failure){
+	  //   $.ajax({
+	  //     type:"GET",
+	  //     url:"users/auth/google_oauth2/",
+	  //     success: (data) =>{
+	  //       console.log(data);
+	  //     },
+	  //     failure: (data) =>{
+	  //       console.log(data);
+	  //     }
+	  //   });
+	  // },
+	
 	  googleLogin: function googleLogin(cb, failure) {
 	    window.gapi.auth.authorize({
-	      immediate: false,
+	      immediate: true,
 	      response_type: 'code',
 	      cookie_policy: 'single_host_origin',
 	      client_id: '103867363030-iq1ait30ssbtobrqhcmugffnjgvsok9d.apps.googleusercontent.com',
 	      scope: 'email profile'
 	    }, function (response) {
-	      if (response) {
-	        if (response && !response.error) {
-	          $.ajax({
-	            type: 'POST',
-	            url: "users/auth/google_oauth2/callback",
-	            data: response,
-	            success: function success(data) {
-	              console.log(data);
-	            }
-	          });
-	        } else {
-	          console.log("something else happened");
-	        }
+	      if (response && !response.error) {
+	        $.ajax({
+	          type: 'POST',
+	          url: "users/auth/google_oauth2/callback",
+	          data: response,
+	          success: function success(data) {
+	            console.log(response);
+	            console.log("success");
+	            console.log(data);
+	          },
+	          error: function error(data) {
+	            console.log("error");
+	            console.log(data);
+	          }
+	        });
+	      } else {
+	        console.log("something else happened");
+	        console.log(response);
 	      }
 	    });
 	  },
 	  facebookLogin: function facebookLogin(cb) {
-	    window.FB.getLoginStatus(function (response) {
-	      // console.log(response);
-	      if (!response.authResponse) {
-	        window.FB.login(function (resp) {
-	          $.ajax({
-	            method: "GET",
-	            url: "/users/auth/facebook/callback",
-	            dataType: "json",
-	            // data: {
-	            //   app_id: "1790155654560761",
-	            //   signed_request: resp.authResponse.signedRequest,
-	            //   authenticity_token: this.getMetaContent("csrf-token")
-	            // },
-	
-	            success: function success(res) {
-	              console.log(res);
-	              cb(res);
-	            },
-	
-	            error: function error() {
-	              console.log("error in SessionApiUtil#facebookLogin");
-	            }
-	          });
-	        }, { scope: 'email' });
+	    $.ajax({
+	      method: "POST",
+	      url: "/users/auth/facebook",
+	      data: { authenticity_token: this.getMetaContent("csrf-token"),
+	        app_id: 1790155654560761 },
+	      success: function success(res) {
+	        console.log(res);
+	        cb(res);
 	      }
 	    });
 	  },
+	
+	
+	  // facebookLogin(cb){
+	  //   debugger
+	  //   window.fbAsyncInit = function() {
+	  //           // init the FB JS SDK
+	  //           FB.init({
+	  //               appId      : '1790155654560761', // App ID from the App Dashboard
+	  //               channelUrl : '//localhost:3000/channel.html', // Channel File for x-domain communication
+	  //               status     : true, // check the login status upon init?
+	  //               cookie     : true, // set sessions cookies to allow your server to access the session?
+	  //               xfbml      : true  // parse XFBML tags on this page?
+	  //           });
+	  //
+	  //           // Additional initialization code such as adding Event Listeners goes here
+	  //
+	  //       };
+	  //       debugger
+	  //       (function(d, debug){
+	  //           var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+	  //           if (d.getElementById(id)) {return;}
+	  //           js = d.createElement('script'); js.id = id; js.async = true;
+	  //           js.src = "//connect.facebook.net/en_US/all" + (debug ? "/debug" : "") + ".js";
+	  //           ref.parentNode.insertBefore(js, ref);
+	  //       }(document, /*debug*/ false));
+	  //       debugger
+	  //       $(function() {
+	  //           $('#facebook-connect').click(function(e) {
+	  //               e.preventDefault();
+	  //
+	  //               FB.login(function(response) {
+	  //                 debugger
+	  //                   if (response.authResponse) {
+	  //                       // since we have cookies enabled, this request will allow omniauth to parse
+	  //                       // out the auth code from the signed request in the fbsr_XXX cookie
+	  //                       $.getJSON('<%=user_omniauth_callback_path(:facebook)%>', function(data) {
+	  //                           // 'data' contains a 'user' object with 'email' and 'name' in it.
+	  //                           console.log(data);
+	  //                       });
+	  //                   }
+	  //               }, { scope: 'name, email' });
+	  //           });
+	  //       });
+	  // },
+	
 	  logout: function logout(cb, failure) {
 	    $.ajax({
 	      method: "DELETE",
@@ -29613,7 +29664,7 @@
 	      },
 	
 	      error: function error(response) {
-	        failure(JSON.parse(response.responseText).error);
+	        failure(response.responseText);
 	      }
 	    });
 	  }
@@ -36258,225 +36309,7 @@
 	'use strict';
 	
 	var React = __webpack_require__(1);
-	var ReactRouter = __webpack_require__(172);
-	var hashHistory = ReactRouter.hashHistory;
-	
-	var Searchbar = React.createClass({
-	  displayName: 'Searchbar',
-	
-	  getInitialState: function getInitialState() {
-	    return {
-	      query: ""
-	    };
-	  },
-	  updateQuery: function updateQuery(e) {
-	    this.setState({ query: e.target.value });
-	  },
-	  search: function search(e) {
-	    e.preventDefault();
-	    var search = this.state.query;
-	    hashHistory.push({
-	      pathname: "tracks/filtered",
-	      query: { search: search }
-	    });
-	    this.setState({ query: "" });
-	  },
-	  trySearch: function trySearch(e) {
-	    if (e.keyCode === 13) {
-	      this.search(e);
-	    }
-	  },
-	
-	  render: function render() {
-	    return React.createElement(
-	      'div',
-	      { className: 'searchbar' },
-	      React.createElement(
-	        'div',
-	        { className: 'search-icon' },
-	        React.createElement('input', { type: 'button', onClick: this.search,
-	          className: 'search-icon-img' })
-	      ),
-	      React.createElement(
-	        'div',
-	        { className: 'search-field' },
-	        React.createElement('input', { type: 'text',
-	          onChange: this.updateQuery,
-	          onKeyUp: this.trySearch,
-	          value: this.state.query,
-	          placeholder: 'Song title or artist e.g. Michael Jackson' })
-	      )
-	    );
-	  }
-	
-	});
-	
-	module.exports = Searchbar;
-
-/***/ },
-/* 289 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var React = __webpack_require__(1);
-	
-	var Footer = React.createClass({
-	  displayName: "Footer",
-	
-	
-	  render: function render() {
-	    return React.createElement(
-	      "div",
-	      { className: "footer" },
-	      React.createElement(
-	        "footer",
-	        null,
-	        React.createElement(
-	          "p",
-	          null,
-	          "This is the footer"
-	        )
-	      )
-	    );
-	  }
-	
-	});
-	
-	module.exports = Footer;
-
-/***/ },
-/* 290 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var React = __webpack_require__(1);
-	
-	var Body = React.createClass({
-	  displayName: "Body",
-	
-	
-	  render: function render() {
-	    return React.createElement(
-	      "div",
-	      { className: "body" },
-	      React.createElement(
-	        "p",
-	        null,
-	        " This is the body"
-	      )
-	    );
-	  }
-	
-	});
-	
-	module.exports = Body;
-
-/***/ },
-/* 291 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var TrackApiUtils = __webpack_require__(292);
-	var ErrorActions = __webpack_require__(266);
-	var Dispatcher = __webpack_require__(260);
-	var TrackConstants = __webpack_require__(293);
-	
-	var TrackActions = {
-	  fetchAllTracks: function fetchAllTracks() {
-	    TrackApiUtils.fetchTracks(this.receiveTracks, ErrorActions.setErrors);
-	  },
-	  fetchTrack: function fetchTrack(id) {
-	    TrackApiUtils.fetchTrack(id, this.receiveTrack, ErrorActions.setErrors);
-	  },
-	  fetchFilteredTracks: function fetchFilteredTracks(query) {
-	    TrackApiUtils.fetchFilteredTracks(query, this.receiveTracks, ErrorActions.setErrors);
-	  },
-	  receiveTracks: function receiveTracks(tracks) {
-	    Dispatcher.dispatch({
-	      actionType: TrackConstants.TRACKS_RECEIVED,
-	      tracks: tracks
-	    });
-	  },
-	  receiveTrack: function receiveTrack(track) {
-	    Dispatcher.dispatch({
-	      actionType: TrackConstants.TRACK_RECEIVED,
-	      track: track
-	    });
-	  }
-	};
-	
-	module.exports = TrackActions;
-
-/***/ },
-/* 292 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	module.exports = {
-	  fetchTracks: function fetchTracks(cb, failureCb) {
-	    $.ajax({
-	      method: 'GET',
-	      url: '/api/tracks',
-	      success: function success(response) {
-	        cb(response);
-	      },
-	
-	      error: function error(response) {
-	        failureCb(response);
-	      }
-	    });
-	  },
-	  fetchTrack: function fetchTrack(id, _success, failure) {
-	    $.ajax({
-	      url: 'api/tracks/' + id,
-	      method: 'GET',
-	      success: function success(response) {
-	        _success(response);
-	      },
-	      error: function error(response) {
-	        failure(response);
-	      }
-	    });
-	  },
-	  fetchFilteredTracks: function fetchFilteredTracks(query, cb, failureCb) {
-	    $.ajax({
-	      method: 'GET',
-	      url: '/api/tracks',
-	      data: { query: query },
-	      success: function success(response) {
-	        cb(response);
-	      },
-	
-	      error: function error(response) {
-	        failureCb(response);
-	      }
-	    });
-	  }
-	};
-
-/***/ },
-/* 293 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	module.exports = {
-	  TRACKS_RECEIVED: "TRACKS_RECEIVED",
-	  TRACK_RECEIVED: "TRACK_RECEIVED"
-	};
-
-/***/ },
-/* 294 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var React = __webpack_require__(1);
-	var UserActions = __webpack_require__(295);
+	var UserActions = __webpack_require__(289);
 	var Modal = __webpack_require__(239);
 	var Link = __webpack_require__(172).Link;
 	var hashHistory = __webpack_require__(172).hashHistory;
@@ -36596,16 +36429,16 @@
 	module.exports = SignupForm;
 
 /***/ },
-/* 295 */
+/* 289 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var UserApiUtil = __webpack_require__(296);
+	var UserApiUtil = __webpack_require__(290);
 	var AppDispatcher = __webpack_require__(260);
 	var ErrorActions = __webpack_require__(266);
 	
-	var UserConstants = __webpack_require__(297);
+	var UserConstants = __webpack_require__(291);
 	
 	var UserActions = {
 	  fetchAllUsers: function fetchAllUsers() {
@@ -36646,7 +36479,7 @@
 	module.exports = UserActions;
 
 /***/ },
-/* 296 */
+/* 290 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -36731,7 +36564,7 @@
 	module.exports = UserApiUtil;
 
 /***/ },
-/* 297 */
+/* 291 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -36745,146 +36578,309 @@
 	module.exports = UserConstants;
 
 /***/ },
-/* 298 */
+/* 292 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1);
-	var TrackActions = __webpack_require__(291);
-	var TracksStore = __webpack_require__(299);
-	var PlayerStore = __webpack_require__(336);
-	var TrackIndexItem = __webpack_require__(300);
-	var MusicPlayer = __webpack_require__(305);
+	var ReactRouter = __webpack_require__(172);
+	var hashHistory = ReactRouter.hashHistory;
 	
-	var TracksIndex = React.createClass({
-	  displayName: 'TracksIndex',
+	var Searchbar = React.createClass({
+	  displayName: 'Searchbar',
+	
 	  getInitialState: function getInitialState() {
-	    return { tracks: [],
-	      currTrack: null };
+	    return {
+	      query: ""
+	    };
 	  },
-	  componentDidMount: function componentDidMount() {
-	    this.trackListener = TracksStore.addListener(this._onChange);
-	    // this.playerListener = PlayerStore.addListener(this._onPlayerChange);
-	    TrackActions.fetchAllTracks();
+	  updateQuery: function updateQuery(e) {
+	    this.setState({ query: e.target.value });
 	  },
-	  _onChange: function _onChange() {
-	    this.setState({ tracks: TracksStore.allTracks() });
+	  search: function search(e) {
+	    e.preventDefault();
+	    var search = this.state.query;
+	    hashHistory.push({
+	      pathname: "tracks/filtered",
+	      query: { search: search }
+	    });
+	    this.setState({ query: "" });
 	  },
-	  _onPlayerChange: function _onPlayerChange() {
-	    this.setState({ currTrack: PlayerStore.loadedSong() });
-	  },
-	  render: function render() {
-	    var numTracks = this.state.tracks.length;
-	    var numRows = Math.ceil(numTracks / 4);
-	    var rows = [];
-	    for (var i = 0; i < numRows; i++) {
-	      rows.push([]);
+	  trySearch: function trySearch(e) {
+	    if (e.keyCode === 13) {
+	      this.search(e);
 	    }
-	    for (var _i = 0; _i < numTracks; _i++) {
-	      var RowIndex = Math.floor(_i / 4);
-	      rows[RowIndex].push(this.state.tracks[_i]);
-	    }
-	    var url = void 0;
-	    if (this.state.currTrack) {
-	      url = this.state.currTrack.audio_url + ".mp3";
-	    } else {
-	      url = "";
-	    }
+	  },
 	
+	  render: function render() {
 	    return React.createElement(
 	      'div',
-	      { id: 'tracks-index' },
+	      { className: 'searchbar' },
 	      React.createElement(
-	        'ul',
-	        { className: 'tracks' },
-	        this.state.tracks.map(function (track) {
-	          return React.createElement(TrackIndexItem, { key: track.id, track: track });
-	        })
+	        'div',
+	        { className: 'search-icon' },
+	        React.createElement('input', { type: 'button', onClick: this.search,
+	          className: 'search-icon-img' })
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'search-field' },
+	        React.createElement('input', { type: 'text',
+	          onChange: this.updateQuery,
+	          onKeyUp: this.trySearch,
+	          value: this.state.query,
+	          placeholder: 'Song title or artist e.g. Michael Jackson' })
 	      )
 	    );
-	  },
-	  componentWillUnmount: function componentWillUnmount() {
-	    this.trackListener.remove();
-	    // this.playerListener.remove();
 	  }
+	
 	});
 	
-	module.exports = TracksIndex;
+	module.exports = Searchbar;
 
 /***/ },
-/* 299 */
+/* 293 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var React = __webpack_require__(1);
+	
+	var Footer = React.createClass({
+	  displayName: "Footer",
+	
+	
+	  render: function render() {
+	    return React.createElement(
+	      "div",
+	      { className: "footer" },
+	      React.createElement(
+	        "footer",
+	        null,
+	        React.createElement(
+	          "p",
+	          null,
+	          "This is the footer"
+	        )
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = Footer;
+
+/***/ },
+/* 294 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var React = __webpack_require__(1);
+	
+	var Body = React.createClass({
+	  displayName: "Body",
+	
+	
+	  render: function render() {
+	    return React.createElement(
+	      "div",
+	      { className: "body" },
+	      React.createElement(
+	        "p",
+	        null,
+	        " This is the body"
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = Body;
+
+/***/ },
+/* 295 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var TrackApiUtils = __webpack_require__(296);
+	var ErrorActions = __webpack_require__(266);
+	var Dispatcher = __webpack_require__(260);
+	var TrackConstants = __webpack_require__(297);
+	
+	var TrackActions = {
+	  fetchAllTracks: function fetchAllTracks() {
+	    TrackApiUtils.fetchTracks(this.receiveTracks, ErrorActions.setErrors);
+	  },
+	  fetchTrack: function fetchTrack(id) {
+	    TrackApiUtils.fetchTrack(id, this.receiveTrack, ErrorActions.setErrors);
+	  },
+	  fetchFilteredTracks: function fetchFilteredTracks(query) {
+	    TrackApiUtils.fetchFilteredTracks(query, this.receiveTracks, ErrorActions.setErrors);
+	  },
+	  receiveTracks: function receiveTracks(tracks) {
+	    Dispatcher.dispatch({
+	      actionType: TrackConstants.TRACKS_RECEIVED,
+	      tracks: tracks
+	    });
+	  },
+	  receiveTrack: function receiveTrack(track) {
+	    Dispatcher.dispatch({
+	      actionType: TrackConstants.TRACK_RECEIVED,
+	      track: track
+	    });
+	  }
+	};
+	
+	module.exports = TrackActions;
+
+/***/ },
+/* 296 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	module.exports = {
+	  fetchTracks: function fetchTracks(cb, failureCb) {
+	    $.ajax({
+	      method: 'GET',
+	      url: '/api/tracks',
+	      success: function success(response) {
+	        cb(response);
+	      },
+	
+	      error: function error(response) {
+	        failureCb(response);
+	      }
+	    });
+	  },
+	  fetchTrack: function fetchTrack(id, _success, failure) {
+	    $.ajax({
+	      url: 'api/tracks/' + id,
+	      method: 'GET',
+	      success: function success(response) {
+	        _success(response);
+	      },
+	      error: function error(response) {
+	        failure(response);
+	      }
+	    });
+	  },
+	  fetchFilteredTracks: function fetchFilteredTracks(query, cb, failureCb) {
+	    $.ajax({
+	      method: 'GET',
+	      url: '/api/tracks',
+	      data: { query: query },
+	      success: function success(response) {
+	        cb(response);
+	      },
+	
+	      error: function error(response) {
+	        failureCb(response);
+	      }
+	    });
+	  }
+	};
+
+/***/ },
+/* 297 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	module.exports = {
+	  TRACKS_RECEIVED: "TRACKS_RECEIVED",
+	  TRACK_RECEIVED: "TRACK_RECEIVED"
+	};
+
+/***/ },
+/* 298 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var Dispatcher = __webpack_require__(260);
 	var Store = __webpack_require__(269).Store;
-	var TrackConstants = __webpack_require__(293);
-	var LikeConstants = __webpack_require__(286);
+	var PlayerConstants = __webpack_require__(299);
 	
-	var TrackStore = new Store(Dispatcher);
+	var PlayerStore = new Store(Dispatcher);
 	
-	var _tracks = {};
+	// HOW TO USE THE PLAYER STORE:
+	// To play a song, first PlayerStore.loadSong(track). There should be a track.audio_url
+	// property which that function will read from.
 	
-	TrackStore.allTracks = function () {
-	  var tracksArr = [];
-	  Object.keys(_tracks).forEach(function (key) {
-	    tracksArr.push(_tracks[key]);
-	  });
-	  return tracksArr;
-	};
+	// This loads the song without playing it, like you might load a vinyl into a record player.
+	// To actually play the song, call PlayerStore.playLoadedSong()
 	
-	TrackStore.setTracks = function (tracks) {
-	  _tracks = {};
-	  tracks.forEach(function (track) {
-	    _tracks[track.id] = track;
-	  });
-	};
+	// To pause a song, call PlayerStore.pauseSong();
 	
-	TrackStore.setTrack = function (track) {
-	  _tracks[track.id] = track;
-	};
+	var _loadedSong = null;
+	var _trackUrl = null;
+	var _playing = false;
 	
-	TrackStore.find = function (id) {
-	  return _tracks[id];
-	};
+	function _loadSong(track) {
+	  _playing = true;
+	  _trackUrl = track.audio_url;
+	  _loadedSong = track;
+	}
 	
-	TrackStore.addLike = function (trackId, userId) {
-	  var track = _tracks[trackId];
-	  track.user_likes.push(parseInt(userId));
-	  track.like_count += 1;
-	};
-	
-	TrackStore.removeLike = function (trackId, userId) {
-	  var track = _tracks[trackId];
-	  var userIdx = track.user_likes.indexOf(parseInt(userId));
-	  track.like_count -= 1;
-	  track.user_likes.splice(userIdx, 1);
-	};
-	
-	TrackStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case TrackConstants.TRACKS_RECEIVED:
-	      this.setTracks(payload.tracks);
-	      this.__emitChange();
-	      break;
-	    case TrackConstants.TRACK_RECEIVED:
-	      this.setTrack(payload.track);
-	      this.__emitChange();
-	      break;
-	    case LikeConstants.LIKE_RECEIVED:
-	      TrackStore.addLike(payload.like.track_id, payload.like.user_id);
-	      this.__emitChange();
-	      break;
-	    case LikeConstants.LIKE_REMOVED:
-	      TrackStore.removeLike(payload.like.track_id, payload.like.user_id);
-	      this.__emitChange();
-	      break;
+	PlayerStore.playLoadedSong = function () {
+	  if (_loadedSong) {
+	    _loadedSong.play();
+	    // Dismount the song 30 seconds after it begins playing. 30 seconds is constants
+	    // because every song listed is a 30 sec preview. Normally, this would be variable
+	    // based on the full song length
+	    // this.timeout = setTimeout(this.clearSong, 30000);
 	  }
 	};
 	
-	module.exports = TrackStore;
+	PlayerStore.clearSong = function () {
+	  _loadedSong = null;
+	  _trackUrl = null;
+	  // clearTimeout(this.timeout);
+	};
+	
+	function _toggleSongPlay() {
+	  _playing = !_playing;
+	}
+	
+	PlayerStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case PlayerConstants.TOGGLE_TRACK:
+	      if (payload.track.audio_url === _trackUrl) {
+	        _toggleSongPlay();
+	        this.__emitChange();
+	        break;
+	      } else {
+	        _loadSong(payload.track);
+	        // this.playLoadedSong();
+	        this.__emitChange();
+	        break;
+	      }
+	  }
+	};
+	
+	PlayerStore.loadedSong = function () {
+	  return _loadedSong;
+	};
+	
+	PlayerStore.songIsPlaying = function (trackId) {
+	  return _loadedSong && _loadedSong.id === parseInt(trackId) && _playing;
+	};
+	
+	module.exports = PlayerStore;
+
+/***/ },
+/* 299 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	module.exports = {
+	  TOGGLE_TRACK: "TOGGLE_TRACK"
+	};
 
 /***/ },
 /* 300 */
@@ -36893,276 +36889,9 @@
 	'use strict';
 	
 	var React = __webpack_require__(1);
-	var ReactRouter = __webpack_require__(172);
-	var hashHistory = ReactRouter.hashHistory;
-	var SessionStore = __webpack_require__(268);
-	var LikeActions = __webpack_require__(301);
-	var PlayerActions = __webpack_require__(303);
 	
-	var TrackIndexItem = React.createClass({
-	  displayName: 'TrackIndexItem',
-	
-	  getInitialState: function getInitialState() {
-	    return {
-	      currentUser: SessionStore.currentUser()
-	    };
-	  },
-	  componentDidMount: function componentDidMount() {
-	    this.userListener = SessionStore.addListener(this._userChanged);
-	  },
-	  _userChanged: function _userChanged() {
-	    // this.setState({currentUser: SessionStore.currentUser});
-	  },
-	
-	  _isLiked: function _isLiked() {
-	    var likeText = "Like";
-	    var currentUser = this.state.currentUser;
-	    if (currentUser.liked_tracks) {
-	      var currentUserLikes = currentUser.liked_tracks;
-	
-	      if (currentUserLikes.indexOf(this.props.track.id) !== -1) {
-	        likeText = "Unlike";
-	      }
-	    }
-	    return likeText;
-	  },
-	
-	  toggleLike: function toggleLike() {
-	    var data = { track_id: this.props.track.id };
-	
-	    if (this._isLiked() === "Like") {
-	      LikeActions.createLike(data);
-	    } else {
-	      LikeActions.deleteLike(data);
-	    }
-	  },
-	  _showTrack: function _showTrack() {
-	    hashHistory.push('/tracks/' + this.props.track.id);
-	  },
-	  render: function render() {
-	    var text = this.props.track.title;
-	    if (this.props.track.artist) {
-	      text += ' - ' + this.props.track.artist;
-	    }
-	
-	    return React.createElement(
-	      'li',
-	      { className: 'track-index-item' },
-	      React.createElement(
-	        'div',
-	        { className: 'track-container' },
-	        React.createElement(
-	          'div',
-	          { className: 'track-image' },
-	          React.createElement('img', { onClick: this._showTrack, src: this.props.track.image_url, width: '225', height: '225' }),
-	          React.createElement('span', { className: 'track-image-overlay', id: 'overlay-' + this.props.track.id })
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'track-item-data' },
-	          React.createElement(
-	            'div',
-	            { className: 'track-item-data-left' },
-	            React.createElement(
-	              'div',
-	              { className: 'like-container' },
-	              React.createElement(
-	                'button',
-	                { className: 'like-button', onClick: this.toggleLike },
-	                this._isLiked() === "Like" ? React.createElement('i', { className: 'fa fa-heart', 'aria-hidden': 'true' }) : React.createElement('i', { className: 'fa fa-heart red', 'aria-hidden': 'true' }),
-	                React.createElement(
-	                  'div',
-	                  { className: 'likes' },
-	                  this.props.track.like_count
-	                )
-	              )
-	            ),
-	            React.createElement(
-	              'div',
-	              { className: 'play-container' },
-	              React.createElement(
-	                'button',
-	                { className: 'play-button', onClick: this._toggleTrack },
-	                React.createElement('i', { className: 'fa fa-play', 'aria-hidden': 'true' }),
-	                React.createElement(
-	                  'div',
-	                  { className: 'play-count' },
-	                  0
-	                )
-	              )
-	            )
-	          ),
-	          React.createElement(
-	            'div',
-	            { className: 'comment-container' },
-	            React.createElement(
-	              'div',
-	              { className: 'comment-counter' },
-	              React.createElement('i', { className: 'fa fa-comments', 'aria-hidden': 'true' }),
-	              React.createElement(
-	                'div',
-	                { className: 'comment-count' },
-	                this.props.track.comments.length
-	              )
-	            )
-	          )
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'track-text' },
-	          text
-	        )
-	      )
-	    );
-	  },
-	  _toggleTrack: function _toggleTrack() {
-	    PlayerActions.toggleTrack(this.props.track);
-	    // if(!this.state.trackPlaying){
-	    //   if(!this.player){
-	    //     this.player = PlayerActions.playTrack(this.props.track);
-	    //   }
-	    //   else{
-	    //     this.player.play();
-	    //   }
-	    //   this.setState({trackPlaying: true});
-	    // }
-	    // else{
-	    //   PlayerActions.pauseTrack(this.player);
-	    //   this.setState({trackPlaying: false});
-	    // }
-	  }
-	});
-	
-	module.exports = TrackIndexItem;
-
-/***/ },
-/* 301 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var LikeApiUtil = __webpack_require__(302);
-	var LikeConstants = __webpack_require__(286);
-	var AppDispatcher = __webpack_require__(260);
-	
-	var LikeActions = {
-	  createLike: function createLike(data) {
-	    LikeApiUtil.createLike(data, this.receiveLike);
-	  },
-	
-	  deleteLike: function deleteLike(data) {
-	    LikeApiUtil.deleteLike(data, this.removeLike);
-	  },
-	
-	  receiveLike: function receiveLike(like) {
-	    AppDispatcher.dispatch({
-	      actionType: LikeConstants.LIKE_RECEIVED,
-	      like: like
-	    });
-	  },
-	  removeLike: function removeLike(like) {
-	    AppDispatcher.dispatch({
-	      actionType: LikeConstants.LIKE_REMOVED,
-	      like: like
-	    });
-	  }
-	};
-	
-	module.exports = LikeActions;
-
-/***/ },
-/* 302 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	var LikeApiUtil = {
-	  createLike: function createLike(data, success) {
-	    $.ajax({
-	      url: 'api/likes',
-	      type: 'POST',
-	      data: { like: data },
-	      success: success
-	    });
-	  },
-	  deleteLike: function deleteLike(data, success) {
-	    $.ajax({
-	      url: 'api/likes/1',
-	      type: 'DELETE',
-	      data: { like: data },
-	      success: success
-	    });
-	  }
-	};
-	
-	module.exports = LikeApiUtil;
-
-/***/ },
-/* 303 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var Dispatcher = __webpack_require__(260);
-	var PlayerConstants = __webpack_require__(337);
-	
-	module.exports = {
-	  toggleTrack: function toggleTrack(track) {
-	    Dispatcher.dispatch({
-	      actionType: PlayerConstants.TOGGLE_TRACK,
-	      track: track
-	    });
-	  }
-	};
-
-/***/ },
-/* 304 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var React = __webpack_require__(1);
-	var MusicPlayer = __webpack_require__(305);
-	
-	var Index = React.createClass({
-	  displayName: 'Index',
-	
-	
-	  render: function render() {
-	    return React.createElement(
-	      'div',
-	      { className: 'index' },
-	      React.createElement(
-	        'div',
-	        { className: 'index-photo' },
-	        React.createElement(
-	          'h1',
-	          { className: 'index-header' },
-	          'Cumulonimbus'
-	        ),
-	        React.createElement(
-	          'p',
-	          { className: 'index-desc' },
-	          'Great music. Anywhere. Any time.'
-	        )
-	      )
-	    );
-	  }
-	
-	});
-	
-	module.exports = Index;
-
-/***/ },
-/* 305 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var React = __webpack_require__(1);
-	
-	var withMediaPlayer = __webpack_require__(306).withMediaPlayer;
-	var controls = __webpack_require__(306).controls;
+	var withMediaPlayer = __webpack_require__(301).withMediaPlayer;
+	var controls = __webpack_require__(301).controls;
 	var PlayPause = controls.PlayPause;
 	var CurrentTime = controls.CurrentTime;
 	var Progress = controls.Progress;
@@ -37172,8 +36901,8 @@
 	var Volume = controls.Volume;
 	var Fullscreen = controls.Fullscreen;
 	
-	var PlayPauseButton = __webpack_require__(335);
-	var MuteUnmuteButton = __webpack_require__(338);
+	var PlayPauseButton = __webpack_require__(330);
+	var MuteUnmuteButton = __webpack_require__(332);
 	
 	var MusicPlayer = React.createClass({
 	  displayName: 'MusicPlayer',
@@ -37243,7 +36972,7 @@
 	module.exports = withMediaPlayer(MusicPlayer);
 
 /***/ },
-/* 306 */
+/* 301 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37253,27 +36982,27 @@
 	});
 	exports.utils = exports.controls = exports.withKeyboardControls = exports.withMediaProps = exports.withMediaPlayer = exports.Media = undefined;
 	
-	var _Media2 = __webpack_require__(307);
+	var _Media2 = __webpack_require__(302);
 	
 	var _Media3 = _interopRequireDefault(_Media2);
 	
-	var _withMediaPlayer2 = __webpack_require__(321);
+	var _withMediaPlayer2 = __webpack_require__(316);
 	
 	var _withMediaPlayer3 = _interopRequireDefault(_withMediaPlayer2);
 	
-	var _withMediaProps2 = __webpack_require__(322);
+	var _withMediaProps2 = __webpack_require__(317);
 	
 	var _withMediaProps3 = _interopRequireDefault(_withMediaProps2);
 	
-	var _withKeyboardControls2 = __webpack_require__(323);
+	var _withKeyboardControls2 = __webpack_require__(318);
 	
 	var _withKeyboardControls3 = _interopRequireDefault(_withKeyboardControls2);
 	
-	var _exports = __webpack_require__(324);
+	var _exports = __webpack_require__(319);
 	
 	var _controls = _interopRequireWildcard(_exports);
 	
-	var _exports2 = __webpack_require__(334);
+	var _exports2 = __webpack_require__(329);
 	
 	var _utils = _interopRequireWildcard(_exports2);
 	
@@ -37289,7 +37018,7 @@
 	exports.utils = _utils;
 
 /***/ },
-/* 307 */
+/* 302 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37310,23 +37039,23 @@
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
-	var _contextTypes = __webpack_require__(308);
+	var _contextTypes = __webpack_require__(303);
 	
 	var _contextTypes2 = _interopRequireDefault(_contextTypes);
 	
-	var _getVendor2 = __webpack_require__(309);
+	var _getVendor2 = __webpack_require__(304);
 	
 	var _getVendor3 = _interopRequireDefault(_getVendor2);
 	
-	var _requestFullscreen = __webpack_require__(318);
+	var _requestFullscreen = __webpack_require__(313);
 	
 	var _requestFullscreen2 = _interopRequireDefault(_requestFullscreen);
 	
-	var _exitFullscreen = __webpack_require__(319);
+	var _exitFullscreen = __webpack_require__(314);
 	
 	var _exitFullscreen2 = _interopRequireDefault(_exitFullscreen);
 	
-	var _fullscreenChange = __webpack_require__(320);
+	var _fullscreenChange = __webpack_require__(315);
 	
 	var _fullscreenChange2 = _interopRequireDefault(_fullscreenChange);
 	
@@ -37567,7 +37296,7 @@
 	exports.default = Media;
 
 /***/ },
-/* 308 */
+/* 303 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37602,7 +37331,7 @@
 	};
 
 /***/ },
-/* 309 */
+/* 304 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37612,15 +37341,15 @@
 	});
 	exports.default = getVendor;
 	
-	var _Youtube = __webpack_require__(310);
+	var _Youtube = __webpack_require__(305);
 	
 	var _Youtube2 = _interopRequireDefault(_Youtube);
 	
-	var _Vimeo = __webpack_require__(315);
+	var _Vimeo = __webpack_require__(310);
 	
 	var _Vimeo2 = _interopRequireDefault(_Vimeo);
 	
-	var _HTML = __webpack_require__(317);
+	var _HTML = __webpack_require__(312);
 	
 	var _HTML2 = _interopRequireDefault(_HTML);
 	
@@ -37645,7 +37374,7 @@
 	}
 
 /***/ },
-/* 310 */
+/* 305 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37660,15 +37389,15 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _youtubeApiLoader = __webpack_require__(311);
+	var _youtubeApiLoader = __webpack_require__(306);
 	
 	var _youtubeApiLoader2 = _interopRequireDefault(_youtubeApiLoader);
 	
-	var _getYoutubeId = __webpack_require__(313);
+	var _getYoutubeId = __webpack_require__(308);
 	
 	var _getYoutubeId2 = _interopRequireDefault(_getYoutubeId);
 	
-	var _vendorPropTypes = __webpack_require__(314);
+	var _vendorPropTypes = __webpack_require__(309);
 	
 	var _vendorPropTypes2 = _interopRequireDefault(_vendorPropTypes);
 	
@@ -37875,7 +37604,7 @@
 	exports.default = Youtube;
 
 /***/ },
-/* 311 */
+/* 306 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37884,7 +37613,7 @@
 	  value: true
 	});
 	
-	var _loadApi = __webpack_require__(312);
+	var _loadApi = __webpack_require__(307);
 	
 	var _loadApi2 = _interopRequireDefault(_loadApi);
 	
@@ -37924,7 +37653,7 @@
 	};
 
 /***/ },
-/* 312 */
+/* 307 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -37954,7 +37683,7 @@
 	}
 
 /***/ },
-/* 313 */
+/* 308 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -37975,7 +37704,7 @@
 	}
 
 /***/ },
-/* 314 */
+/* 309 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37996,7 +37725,7 @@
 	};
 
 /***/ },
-/* 315 */
+/* 310 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38011,11 +37740,11 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _getVimeoId = __webpack_require__(316);
+	var _getVimeoId = __webpack_require__(311);
 	
 	var _getVimeoId2 = _interopRequireDefault(_getVimeoId);
 	
-	var _vendorPropTypes = __webpack_require__(314);
+	var _vendorPropTypes = __webpack_require__(309);
 	
 	var _vendorPropTypes2 = _interopRequireDefault(_vendorPropTypes);
 	
@@ -38182,7 +37911,7 @@
 	exports.default = Vimeo;
 
 /***/ },
-/* 316 */
+/* 311 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -38204,7 +37933,7 @@
 	}
 
 /***/ },
-/* 317 */
+/* 312 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38219,7 +37948,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _vendorPropTypes = __webpack_require__(314);
+	var _vendorPropTypes = __webpack_require__(309);
 	
 	var _vendorPropTypes2 = _interopRequireDefault(_vendorPropTypes);
 	
@@ -38346,7 +38075,7 @@
 	exports.default = HTML5;
 
 /***/ },
-/* 318 */
+/* 313 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -38363,7 +38092,7 @@
 	}();
 
 /***/ },
-/* 319 */
+/* 314 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -38380,7 +38109,7 @@
 	}();
 
 /***/ },
-/* 320 */
+/* 315 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -38397,7 +38126,7 @@
 	}
 
 /***/ },
-/* 321 */
+/* 316 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38416,7 +38145,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _Media = __webpack_require__(307);
+	var _Media = __webpack_require__(302);
 	
 	var _Media2 = _interopRequireDefault(_Media);
 	
@@ -38465,7 +38194,7 @@
 	}
 
 /***/ },
-/* 322 */
+/* 317 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38484,7 +38213,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _contextTypes = __webpack_require__(308);
+	var _contextTypes = __webpack_require__(303);
 	
 	var _contextTypes2 = _interopRequireDefault(_contextTypes);
 	
@@ -38520,7 +38249,7 @@
 	}
 
 /***/ },
-/* 323 */
+/* 318 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38539,7 +38268,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _withMediaProps = __webpack_require__(322);
+	var _withMediaProps = __webpack_require__(317);
 	
 	var _withMediaProps2 = _interopRequireDefault(_withMediaProps);
 	
@@ -38686,7 +38415,7 @@
 	}
 
 /***/ },
-/* 324 */
+/* 319 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38696,35 +38425,35 @@
 	});
 	exports.Fullscreen = exports.Volume = exports.MuteUnmute = exports.Duration = exports.SeekBar = exports.Progress = exports.CurrentTime = exports.PlayPause = undefined;
 	
-	var _PlayPause2 = __webpack_require__(325);
+	var _PlayPause2 = __webpack_require__(320);
 	
 	var _PlayPause3 = _interopRequireDefault(_PlayPause2);
 	
-	var _CurrentTime2 = __webpack_require__(326);
+	var _CurrentTime2 = __webpack_require__(321);
 	
 	var _CurrentTime3 = _interopRequireDefault(_CurrentTime2);
 	
-	var _Progress2 = __webpack_require__(328);
+	var _Progress2 = __webpack_require__(323);
 	
 	var _Progress3 = _interopRequireDefault(_Progress2);
 	
-	var _SeekBar2 = __webpack_require__(329);
+	var _SeekBar2 = __webpack_require__(324);
 	
 	var _SeekBar3 = _interopRequireDefault(_SeekBar2);
 	
-	var _Duration2 = __webpack_require__(330);
+	var _Duration2 = __webpack_require__(325);
 	
 	var _Duration3 = _interopRequireDefault(_Duration2);
 	
-	var _MuteUnmute2 = __webpack_require__(331);
+	var _MuteUnmute2 = __webpack_require__(326);
 	
 	var _MuteUnmute3 = _interopRequireDefault(_MuteUnmute2);
 	
-	var _Volume2 = __webpack_require__(332);
+	var _Volume2 = __webpack_require__(327);
 	
 	var _Volume3 = _interopRequireDefault(_Volume2);
 	
-	var _Fullscreen2 = __webpack_require__(333);
+	var _Fullscreen2 = __webpack_require__(328);
 	
 	var _Fullscreen3 = _interopRequireDefault(_Fullscreen2);
 	
@@ -38740,7 +38469,7 @@
 	exports.Fullscreen = _Fullscreen3.default;
 
 /***/ },
-/* 325 */
+/* 320 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38755,7 +38484,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _withMediaProps = __webpack_require__(322);
+	var _withMediaProps = __webpack_require__(317);
 	
 	var _withMediaProps2 = _interopRequireDefault(_withMediaProps);
 	
@@ -38820,7 +38549,7 @@
 	exports.default = (0, _withMediaProps2.default)(PlayPause);
 
 /***/ },
-/* 326 */
+/* 321 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38835,11 +38564,11 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _withMediaProps = __webpack_require__(322);
+	var _withMediaProps = __webpack_require__(317);
 	
 	var _withMediaProps2 = _interopRequireDefault(_withMediaProps);
 	
-	var _formatTime = __webpack_require__(327);
+	var _formatTime = __webpack_require__(322);
 	
 	var _formatTime2 = _interopRequireDefault(_formatTime);
 	
@@ -38889,7 +38618,7 @@
 	exports.default = (0, _withMediaProps2.default)(CurrentTime);
 
 /***/ },
-/* 327 */
+/* 322 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -38915,7 +38644,7 @@
 	}
 
 /***/ },
-/* 328 */
+/* 323 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38930,7 +38659,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _withMediaProps = __webpack_require__(322);
+	var _withMediaProps = __webpack_require__(317);
 	
 	var _withMediaProps2 = _interopRequireDefault(_withMediaProps);
 	
@@ -38981,7 +38710,7 @@
 	exports.default = (0, _withMediaProps2.default)(Progress);
 
 /***/ },
-/* 329 */
+/* 324 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38998,7 +38727,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _withMediaProps = __webpack_require__(322);
+	var _withMediaProps = __webpack_require__(317);
 	
 	var _withMediaProps2 = _interopRequireDefault(_withMediaProps);
 	
@@ -39087,7 +38816,7 @@
 	exports.default = (0, _withMediaProps2.default)(SeekBar);
 
 /***/ },
-/* 330 */
+/* 325 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -39102,11 +38831,11 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _withMediaProps = __webpack_require__(322);
+	var _withMediaProps = __webpack_require__(317);
 	
 	var _withMediaProps2 = _interopRequireDefault(_withMediaProps);
 	
-	var _formatTime = __webpack_require__(327);
+	var _formatTime = __webpack_require__(322);
 	
 	var _formatTime2 = _interopRequireDefault(_formatTime);
 	
@@ -39156,7 +38885,7 @@
 	exports.default = (0, _withMediaProps2.default)(Duration);
 
 /***/ },
-/* 331 */
+/* 326 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -39171,7 +38900,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _withMediaProps = __webpack_require__(322);
+	var _withMediaProps = __webpack_require__(317);
 	
 	var _withMediaProps2 = _interopRequireDefault(_withMediaProps);
 	
@@ -39236,7 +38965,7 @@
 	exports.default = (0, _withMediaProps2.default)(MuteUnmute);
 
 /***/ },
-/* 332 */
+/* 327 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -39253,7 +38982,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _withMediaProps = __webpack_require__(322);
+	var _withMediaProps = __webpack_require__(317);
 	
 	var _withMediaProps2 = _interopRequireDefault(_withMediaProps);
 	
@@ -39333,7 +39062,7 @@
 	exports.default = (0, _withMediaProps2.default)(Volume);
 
 /***/ },
-/* 333 */
+/* 328 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -39348,7 +39077,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _withMediaProps = __webpack_require__(322);
+	var _withMediaProps = __webpack_require__(317);
 	
 	var _withMediaProps2 = _interopRequireDefault(_withMediaProps);
 	
@@ -39413,7 +39142,7 @@
 	exports.default = (0, _withMediaProps2.default)(Fullscreen);
 
 /***/ },
-/* 334 */
+/* 329 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -39423,7 +39152,7 @@
 	});
 	exports.formatTime = undefined;
 	
-	var _formatTime2 = __webpack_require__(327);
+	var _formatTime2 = __webpack_require__(322);
 	
 	var _formatTime3 = _interopRequireDefault(_formatTime2);
 	
@@ -39432,15 +39161,15 @@
 	exports.formatTime = _formatTime3.default;
 
 /***/ },
-/* 335 */
+/* 330 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1);
-	var withMediaProps = __webpack_require__(306).withMediaProps;
-	var PlayerStore = __webpack_require__(336);
-	var PlayerActions = __webpack_require__(303);
+	var withMediaProps = __webpack_require__(301).withMediaProps;
+	var PlayerStore = __webpack_require__(298);
+	var PlayerActions = __webpack_require__(331);
 	
 	var PlayPauseButton = React.createClass({
 	  displayName: 'PlayPauseButton',
@@ -39502,101 +39231,32 @@
 	module.exports = withMediaProps(PlayPauseButton);
 
 /***/ },
-/* 336 */
+/* 331 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var Dispatcher = __webpack_require__(260);
-	var Store = __webpack_require__(269).Store;
-	var PlayerConstants = __webpack_require__(337);
-	
-	var PlayerStore = new Store(Dispatcher);
-	
-	// HOW TO USE THE PLAYER STORE:
-	// To play a song, first PlayerStore.loadSong(track). There should be a track.audio_url
-	// property which that function will read from.
-	
-	// This loads the song without playing it, like you might load a vinyl into a record player.
-	// To actually play the song, call PlayerStore.playLoadedSong()
-	
-	// To pause a song, call PlayerStore.pauseSong();
-	
-	var _loadedSong = null;
-	var _trackUrl = null;
-	var _playing = false;
-	
-	function _loadSong(track) {
-	  _playing = true;
-	  _trackUrl = track.audio_url;
-	  _loadedSong = track;
-	}
-	
-	PlayerStore.playLoadedSong = function () {
-	  if (_loadedSong) {
-	    _loadedSong.play();
-	    // Dismount the song 30 seconds after it begins playing. 30 seconds is constants
-	    // because every song listed is a 30 sec preview. Normally, this would be variable
-	    // based on the full song length
-	    // this.timeout = setTimeout(this.clearSong, 30000);
-	  }
-	};
-	
-	PlayerStore.clearSong = function () {
-	  _loadedSong = null;
-	  _trackUrl = null;
-	  // clearTimeout(this.timeout);
-	};
-	
-	function _toggleSongPlay() {
-	  _playing = !_playing;
-	}
-	
-	PlayerStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case PlayerConstants.TOGGLE_TRACK:
-	      if (payload.track.audio_url === _trackUrl) {
-	        _toggleSongPlay();
-	        this.__emitChange();
-	        break;
-	      } else {
-	        _loadSong(payload.track);
-	        // this.playLoadedSong();
-	        this.__emitChange();
-	        break;
-	      }
-	  }
-	};
-	
-	PlayerStore.loadedSong = function () {
-	  return _loadedSong;
-	};
-	
-	PlayerStore.songIsPlaying = function (trackId) {
-	  return _loadedSong && _loadedSong.id === parseInt(trackId) && _playing;
-	};
-	
-	module.exports = PlayerStore;
-
-/***/ },
-/* 337 */
-/***/ function(module, exports) {
-
-	"use strict";
+	var PlayerConstants = __webpack_require__(299);
 	
 	module.exports = {
-	  TOGGLE_TRACK: "TOGGLE_TRACK"
+	  toggleTrack: function toggleTrack(track) {
+	    Dispatcher.dispatch({
+	      actionType: PlayerConstants.TOGGLE_TRACK,
+	      track: track
+	    });
+	  }
 	};
 
 /***/ },
-/* 338 */
+/* 332 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1);
-	var withMediaProps = __webpack_require__(306).withMediaProps;
-	var PlayerStore = __webpack_require__(336);
+	var withMediaProps = __webpack_require__(301).withMediaProps;
+	var PlayerStore = __webpack_require__(298);
 	
 	var MuteUnmuteButton = React.createClass({
 	  displayName: 'MuteUnmuteButton',
@@ -39651,17 +39311,412 @@
 	module.exports = withMediaProps(MuteUnmuteButton);
 
 /***/ },
+/* 333 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1);
+	var TrackActions = __webpack_require__(295);
+	var TracksStore = __webpack_require__(334);
+	var PlayerStore = __webpack_require__(298);
+	var TrackIndexItem = __webpack_require__(335);
+	var MusicPlayer = __webpack_require__(300);
+	
+	var TracksIndex = React.createClass({
+	  displayName: 'TracksIndex',
+	  getInitialState: function getInitialState() {
+	    return { tracks: [],
+	      currTrack: null };
+	  },
+	  componentDidMount: function componentDidMount() {
+	    this.trackListener = TracksStore.addListener(this._onChange);
+	    // this.playerListener = PlayerStore.addListener(this._onPlayerChange);
+	    TrackActions.fetchAllTracks();
+	  },
+	  _onChange: function _onChange() {
+	    this.setState({ tracks: TracksStore.allTracks() });
+	  },
+	  _onPlayerChange: function _onPlayerChange() {
+	    this.setState({ currTrack: PlayerStore.loadedSong() });
+	  },
+	  render: function render() {
+	    var numTracks = this.state.tracks.length;
+	    var numRows = Math.ceil(numTracks / 4);
+	    var rows = [];
+	    for (var i = 0; i < numRows; i++) {
+	      rows.push([]);
+	    }
+	    for (var _i = 0; _i < numTracks; _i++) {
+	      var RowIndex = Math.floor(_i / 4);
+	      rows[RowIndex].push(this.state.tracks[_i]);
+	    }
+	    var url = void 0;
+	    if (this.state.currTrack) {
+	      url = this.state.currTrack.audio_url + ".mp3";
+	    } else {
+	      url = "";
+	    }
+	
+	    return React.createElement(
+	      'div',
+	      { id: 'tracks-index' },
+	      React.createElement(
+	        'ul',
+	        { className: 'tracks' },
+	        this.state.tracks.map(function (track) {
+	          return React.createElement(TrackIndexItem, { key: track.id, track: track });
+	        })
+	      )
+	    );
+	  },
+	  componentWillUnmount: function componentWillUnmount() {
+	    this.trackListener.remove();
+	    // this.playerListener.remove();
+	  }
+	});
+	
+	module.exports = TracksIndex;
+
+/***/ },
+/* 334 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var Dispatcher = __webpack_require__(260);
+	var Store = __webpack_require__(269).Store;
+	var TrackConstants = __webpack_require__(297);
+	var LikeConstants = __webpack_require__(286);
+	
+	var TrackStore = new Store(Dispatcher);
+	
+	var _tracks = {};
+	
+	TrackStore.allTracks = function () {
+	  var tracksArr = [];
+	  Object.keys(_tracks).forEach(function (key) {
+	    tracksArr.push(_tracks[key]);
+	  });
+	  return tracksArr;
+	};
+	
+	TrackStore.setTracks = function (tracks) {
+	  _tracks = {};
+	  tracks.forEach(function (track) {
+	    _tracks[track.id] = track;
+	  });
+	};
+	
+	TrackStore.setTrack = function (track) {
+	  _tracks[track.id] = track;
+	};
+	
+	TrackStore.find = function (id) {
+	  return _tracks[id];
+	};
+	
+	TrackStore.addLike = function (trackId, userId) {
+	  var track = _tracks[trackId];
+	  track.user_likes.push(parseInt(userId));
+	  track.like_count += 1;
+	};
+	
+	TrackStore.removeLike = function (trackId, userId) {
+	  var track = _tracks[trackId];
+	  var userIdx = track.user_likes.indexOf(parseInt(userId));
+	  track.like_count -= 1;
+	  track.user_likes.splice(userIdx, 1);
+	};
+	
+	TrackStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case TrackConstants.TRACKS_RECEIVED:
+	      this.setTracks(payload.tracks);
+	      this.__emitChange();
+	      break;
+	    case TrackConstants.TRACK_RECEIVED:
+	      this.setTrack(payload.track);
+	      this.__emitChange();
+	      break;
+	    case LikeConstants.LIKE_RECEIVED:
+	      TrackStore.addLike(payload.like.track_id, payload.like.user_id);
+	      this.__emitChange();
+	      break;
+	    case LikeConstants.LIKE_REMOVED:
+	      TrackStore.removeLike(payload.like.track_id, payload.like.user_id);
+	      this.__emitChange();
+	      break;
+	  }
+	};
+	
+	module.exports = TrackStore;
+
+/***/ },
+/* 335 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1);
+	var ReactRouter = __webpack_require__(172);
+	var hashHistory = ReactRouter.hashHistory;
+	var SessionStore = __webpack_require__(268);
+	var LikeActions = __webpack_require__(336);
+	var PlayerActions = __webpack_require__(331);
+	var ReactTooltip = __webpack_require__(349);
+	
+	var TrackIndexItem = React.createClass({
+	  displayName: 'TrackIndexItem',
+	
+	  getInitialState: function getInitialState() {
+	    return {
+	      currentUser: SessionStore.currentUser()
+	    };
+	  },
+	  componentDidMount: function componentDidMount() {
+	    this.userListener = SessionStore.addListener(this._userChanged);
+	  },
+	  _userChanged: function _userChanged() {
+	    // this.setState({currentUser: SessionStore.currentUser});
+	  },
+	
+	  _isLiked: function _isLiked() {
+	    var likeText = "Like";
+	    var currentUser = this.state.currentUser;
+	    if (currentUser.liked_tracks) {
+	      var currentUserLikes = currentUser.liked_tracks;
+	
+	      if (currentUserLikes.indexOf(this.props.track.id) !== -1) {
+	        likeText = "Unlike";
+	      }
+	    }
+	    return likeText;
+	  },
+	
+	  toggleLike: function toggleLike() {
+	    var data = { track_id: this.props.track.id };
+	
+	    if (this._isLiked() === "Like") {
+	      LikeActions.createLike(data);
+	    } else {
+	      LikeActions.deleteLike(data);
+	    }
+	  },
+	  _showTrack: function _showTrack() {
+	    hashHistory.push('/tracks/' + this.props.track.id);
+	  },
+	  render: function render() {
+	    var text = this.props.track.title;
+	    if (this.props.track.artist) {
+	      text += ' - ' + this.props.track.artist;
+	    }
+	
+	    return React.createElement(
+	      'li',
+	      { className: 'track-index-item' },
+	      React.createElement(
+	        'div',
+	        { className: 'track-container' },
+	        React.createElement(
+	          'div',
+	          { className: 'track-image' },
+	          React.createElement('img', { onClick: this._showTrack, src: this.props.track.image_url, width: '225', height: '225' }),
+	          React.createElement('span', { className: 'track-image-overlay', id: 'overlay-' + this.props.track.id })
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'track-item-data' },
+	          React.createElement(
+	            'div',
+	            { className: 'track-item-data-left' },
+	            React.createElement(
+	              'div',
+	              { className: 'like-container' },
+	              React.createElement(
+	                'button',
+	                { className: 'like-button',
+	                  'data-tip': "Likes: " + this.props.track.like_count,
+	                  onClick: this.toggleLike },
+	                this._isLiked() === "Like" ? React.createElement('i', { className: 'fa fa-heart', 'aria-hidden': 'true' }) : React.createElement('i', { className: 'fa fa-heart red', 'aria-hidden': 'true' }),
+	                React.createElement(
+	                  'div',
+	                  { className: 'likes' },
+	                  this.props.track.like_count
+	                )
+	              )
+	            ),
+	            React.createElement(
+	              'div',
+	              { className: 'play-container' },
+	              React.createElement(
+	                'button',
+	                { className: 'play-button', 'data-tip': 'Play song', onClick: this._toggleTrack },
+	                React.createElement('i', { className: 'fa fa-play', 'aria-hidden': 'true' }),
+	                React.createElement(
+	                  'div',
+	                  { className: 'play-count' },
+	                  0
+	                )
+	              )
+	            )
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'comment-container' },
+	            React.createElement(
+	              'div',
+	              { className: 'comment-counter' },
+	              React.createElement('i', { className: 'fa fa-comments', 'aria-hidden': 'true' }),
+	              React.createElement(
+	                'div',
+	                { className: 'comment-count' },
+	                this.props.track.comments.length
+	              )
+	            )
+	          )
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'track-text' },
+	          text
+	        )
+	      ),
+	      React.createElement(ReactTooltip, { type: 'light', effect: 'solid', place: 'bottom' })
+	    );
+	  },
+	  _toggleTrack: function _toggleTrack() {
+	    PlayerActions.toggleTrack(this.props.track);
+	    // if(!this.state.trackPlaying){
+	    //   if(!this.player){
+	    //     this.player = PlayerActions.playTrack(this.props.track);
+	    //   }
+	    //   else{
+	    //     this.player.play();
+	    //   }
+	    //   this.setState({trackPlaying: true});
+	    // }
+	    // else{
+	    //   PlayerActions.pauseTrack(this.player);
+	    //   this.setState({trackPlaying: false});
+	    // }
+	  }
+	});
+	
+	module.exports = TrackIndexItem;
+
+/***/ },
+/* 336 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var LikeApiUtil = __webpack_require__(337);
+	var LikeConstants = __webpack_require__(286);
+	var AppDispatcher = __webpack_require__(260);
+	
+	var LikeActions = {
+	  createLike: function createLike(data) {
+	    LikeApiUtil.createLike(data, this.receiveLike);
+	  },
+	
+	  deleteLike: function deleteLike(data) {
+	    LikeApiUtil.deleteLike(data, this.removeLike);
+	  },
+	
+	  receiveLike: function receiveLike(like) {
+	    AppDispatcher.dispatch({
+	      actionType: LikeConstants.LIKE_RECEIVED,
+	      like: like
+	    });
+	  },
+	  removeLike: function removeLike(like) {
+	    AppDispatcher.dispatch({
+	      actionType: LikeConstants.LIKE_REMOVED,
+	      like: like
+	    });
+	  }
+	};
+	
+	module.exports = LikeActions;
+
+/***/ },
+/* 337 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	var LikeApiUtil = {
+	  createLike: function createLike(data, success) {
+	    $.ajax({
+	      url: 'api/likes',
+	      type: 'POST',
+	      data: { like: data },
+	      success: success
+	    });
+	  },
+	  deleteLike: function deleteLike(data, success) {
+	    $.ajax({
+	      url: 'api/likes/1',
+	      type: 'DELETE',
+	      data: { like: data },
+	      success: success
+	    });
+	  }
+	};
+	
+	module.exports = LikeApiUtil;
+
+/***/ },
+/* 338 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1);
+	var MusicPlayer = __webpack_require__(300);
+	
+	var Index = React.createClass({
+	  displayName: 'Index',
+	
+	
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      { className: 'index' },
+	      React.createElement(
+	        'div',
+	        { className: 'index-photo' },
+	        React.createElement(
+	          'h1',
+	          { className: 'index-header' },
+	          'Cumulonimbus'
+	        ),
+	        React.createElement(
+	          'p',
+	          { className: 'index-desc' },
+	          'Great music. Anywhere. Any time.'
+	        )
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = Index;
+
+/***/ },
 /* 339 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1);
-	var TrackActions = __webpack_require__(291);
-	var TracksStore = __webpack_require__(299);
-	var PlayerStore = __webpack_require__(336);
-	var TrackIndexItem = __webpack_require__(300);
-	var MusicPlayer = __webpack_require__(305);
+	var TrackActions = __webpack_require__(295);
+	var TracksStore = __webpack_require__(334);
+	var PlayerStore = __webpack_require__(298);
+	var TrackIndexItem = __webpack_require__(335);
+	var MusicPlayer = __webpack_require__(300);
 	
 	var TracksFiltered = React.createClass({
 	  displayName: 'TracksFiltered',
@@ -39729,293 +39784,20 @@
 	module.exports = TracksFiltered;
 
 /***/ },
-/* 340 */,
-/* 341 */,
-/* 342 */,
-/* 343 */,
-/* 344 */,
-/* 345 */,
-/* 346 */,
-/* 347 */,
-/* 348 */,
-/* 349 */,
-/* 350 */,
-/* 351 */,
-/* 352 */,
-/* 353 */,
-/* 354 */,
-/* 355 */,
-/* 356 */,
-/* 357 */,
-/* 358 */,
-/* 359 */,
-/* 360 */,
-/* 361 */,
-/* 362 */,
-/* 363 */,
-/* 364 */,
-/* 365 */,
-/* 366 */,
-/* 367 */,
-/* 368 */,
-/* 369 */,
-/* 370 */,
-/* 371 */,
-/* 372 */,
-/* 373 */,
-/* 374 */,
-/* 375 */,
-/* 376 */,
-/* 377 */,
-/* 378 */,
-/* 379 */,
-/* 380 */,
-/* 381 */,
-/* 382 */,
-/* 383 */,
-/* 384 */,
-/* 385 */,
-/* 386 */,
-/* 387 */,
-/* 388 */,
-/* 389 */,
-/* 390 */,
-/* 391 */,
-/* 392 */,
-/* 393 */,
-/* 394 */,
-/* 395 */,
-/* 396 */,
-/* 397 */,
-/* 398 */,
-/* 399 */,
-/* 400 */,
-/* 401 */,
-/* 402 */,
-/* 403 */,
-/* 404 */,
-/* 405 */,
-/* 406 */,
-/* 407 */,
-/* 408 */,
-/* 409 */,
-/* 410 */,
-/* 411 */,
-/* 412 */,
-/* 413 */,
-/* 414 */,
-/* 415 */,
-/* 416 */,
-/* 417 */,
-/* 418 */,
-/* 419 */,
-/* 420 */,
-/* 421 */,
-/* 422 */,
-/* 423 */,
-/* 424 */,
-/* 425 */,
-/* 426 */,
-/* 427 */,
-/* 428 */,
-/* 429 */,
-/* 430 */,
-/* 431 */,
-/* 432 */,
-/* 433 */,
-/* 434 */,
-/* 435 */,
-/* 436 */,
-/* 437 */,
-/* 438 */,
-/* 439 */,
-/* 440 */,
-/* 441 */,
-/* 442 */,
-/* 443 */,
-/* 444 */,
-/* 445 */,
-/* 446 */,
-/* 447 */,
-/* 448 */,
-/* 449 */,
-/* 450 */,
-/* 451 */,
-/* 452 */,
-/* 453 */,
-/* 454 */,
-/* 455 */,
-/* 456 */,
-/* 457 */,
-/* 458 */,
-/* 459 */,
-/* 460 */,
-/* 461 */,
-/* 462 */,
-/* 463 */,
-/* 464 */,
-/* 465 */,
-/* 466 */,
-/* 467 */,
-/* 468 */,
-/* 469 */,
-/* 470 */,
-/* 471 */,
-/* 472 */,
-/* 473 */,
-/* 474 */,
-/* 475 */,
-/* 476 */,
-/* 477 */,
-/* 478 */,
-/* 479 */,
-/* 480 */,
-/* 481 */,
-/* 482 */,
-/* 483 */,
-/* 484 */,
-/* 485 */,
-/* 486 */,
-/* 487 */,
-/* 488 */,
-/* 489 */,
-/* 490 */,
-/* 491 */,
-/* 492 */,
-/* 493 */,
-/* 494 */,
-/* 495 */,
-/* 496 */,
-/* 497 */,
-/* 498 */,
-/* 499 */,
-/* 500 */,
-/* 501 */,
-/* 502 */,
-/* 503 */,
-/* 504 */,
-/* 505 */,
-/* 506 */,
-/* 507 */,
-/* 508 */,
-/* 509 */,
-/* 510 */,
-/* 511 */,
-/* 512 */,
-/* 513 */,
-/* 514 */,
-/* 515 */,
-/* 516 */,
-/* 517 */,
-/* 518 */,
-/* 519 */,
-/* 520 */,
-/* 521 */,
-/* 522 */,
-/* 523 */,
-/* 524 */,
-/* 525 */,
-/* 526 */,
-/* 527 */,
-/* 528 */,
-/* 529 */,
-/* 530 */,
-/* 531 */,
-/* 532 */,
-/* 533 */,
-/* 534 */,
-/* 535 */,
-/* 536 */,
-/* 537 */,
-/* 538 */,
-/* 539 */,
-/* 540 */,
-/* 541 */,
-/* 542 */,
-/* 543 */,
-/* 544 */,
-/* 545 */,
-/* 546 */,
-/* 547 */,
-/* 548 */,
-/* 549 */,
-/* 550 */,
-/* 551 */,
-/* 552 */,
-/* 553 */,
-/* 554 */,
-/* 555 */,
-/* 556 */,
-/* 557 */,
-/* 558 */,
-/* 559 */,
-/* 560 */,
-/* 561 */,
-/* 562 */,
-/* 563 */,
-/* 564 */,
-/* 565 */,
-/* 566 */,
-/* 567 */,
-/* 568 */,
-/* 569 */,
-/* 570 */,
-/* 571 */,
-/* 572 */,
-/* 573 */,
-/* 574 */,
-/* 575 */,
-/* 576 */,
-/* 577 */,
-/* 578 */,
-/* 579 */,
-/* 580 */,
-/* 581 */,
-/* 582 */,
-/* 583 */,
-/* 584 */,
-/* 585 */,
-/* 586 */,
-/* 587 */,
-/* 588 */,
-/* 589 */,
-/* 590 */,
-/* 591 */,
-/* 592 */,
-/* 593 */,
-/* 594 */,
-/* 595 */,
-/* 596 */,
-/* 597 */,
-/* 598 */,
-/* 599 */,
-/* 600 */,
-/* 601 */,
-/* 602 */,
-/* 603 */,
-/* 604 */,
-/* 605 */,
-/* 606 */,
-/* 607 */,
-/* 608 */,
-/* 609 */,
-/* 610 */,
-/* 611 */,
-/* 612 */,
-/* 613 */
+/* 340 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1);
-	var TrackActions = __webpack_require__(291);
-	var TrackStore = __webpack_require__(299);
-	var Comments = __webpack_require__(614);
-	var CommentForm = __webpack_require__(620);
-	var LikeActions = __webpack_require__(301);
+	var TrackActions = __webpack_require__(295);
+	var TrackStore = __webpack_require__(334);
+	var Comments = __webpack_require__(341);
+	var CommentForm = __webpack_require__(346);
+	var LikeActions = __webpack_require__(336);
 	var SessionStore = __webpack_require__(268);
-	var PlayerActions = __webpack_require__(303);
-	var PlayerStore = __webpack_require__(336);
+	var PlayerActions = __webpack_require__(331);
+	var PlayerStore = __webpack_require__(298);
 	
 	var TrackItemShow = React.createClass({
 	  displayName: 'TrackItemShow',
@@ -40164,17 +39946,17 @@
 	module.exports = TrackItemShow;
 
 /***/ },
-/* 614 */
+/* 341 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1);
-	var CommentStore = __webpack_require__(617);
+	var CommentStore = __webpack_require__(342);
 	var SessionStore = __webpack_require__(268);
-	var CommentActions = __webpack_require__(615);
-	var CommentForm = __webpack_require__(620);
-	var CommentShow = __webpack_require__(618);
+	var CommentActions = __webpack_require__(344);
+	var CommentForm = __webpack_require__(346);
+	var CommentShow = __webpack_require__(347);
 	
 	var TrackComments = React.createClass({
 	  displayName: 'TrackComments',
@@ -40229,81 +40011,14 @@
 	module.exports = TrackComments;
 
 /***/ },
-/* 615 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var CommentApiUtil = __webpack_require__(621);
-	var AppDispatcher = __webpack_require__(260);
-	var ErrorActions = __webpack_require__(266);
-	
-	var CommentConstants = __webpack_require__(616);
-	
-	var CommentActions = {
-	  fetchAllComments: function fetchAllComments() {
-	    CommentApiUtil.fetchAllComments(this.receiveAllComments, ErrorActions.setErrors);
-	  },
-	  fetchTrackComments: function fetchTrackComments(trackId) {
-	    CommentApiUtil.fetchTrackComments(trackId, this.receiveAllComments, ErrorActions.setErrors);
-	  },
-	  fetchComment: function fetchComment(id) {
-	    CommentApiUtil.fetchComment(id, this.receiveComment, ErrorActions.setErrors);
-	  },
-	  createComment: function createComment(comment) {
-	    CommentApiUtil.createComment(comment, this.receiveComment, ErrorActions.setErrors);
-	  },
-	  updateComment: function updateComment(comment) {
-	    CommentApiUtil.updateComment(comment, this.receiveComment, ErrorActions.setErrors);
-	  },
-	  deleteComment: function deleteComment(id) {
-	    CommentApiUtil.deleteComment(id, this.removeComment, ErrorActions.setErrors);
-	  },
-	  receiveAllComments: function receiveAllComments(comments) {
-	    AppDispatcher.dispatch({
-	      actionType: CommentConstants.COMMENTS_RECEIVED,
-	      comments: comments
-	    });
-	  },
-	  receiveComment: function receiveComment(comment) {
-	    AppDispatcher.dispatch({
-	      actionType: CommentConstants.COMMENT_RECEIVED,
-	      comment: comment
-	    });
-	  },
-	  removeComment: function removeComment(comment) {
-	    AppDispatcher.dispatch({
-	      actionType: CommentConstants.COMMENT_REMOVED,
-	      comment: comment
-	    });
-	  }
-	};
-	
-	module.exports = CommentActions;
-
-/***/ },
-/* 616 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	var CommentConstants = {
-	  COMMENTS_RECEIVED: "COMMENTS_RECEIVED",
-	  COMMENT_RECEIVED: "COMMENT_RECEIVED",
-	  COMMENT_REMOVED: "COMMENT_REMOVED"
-	};
-	
-	module.exports = CommentConstants;
-
-/***/ },
-/* 617 */
+/* 342 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var Store = __webpack_require__(269).Store;
 	var AppDispatcher = __webpack_require__(260);
-	var CommentConstants = __webpack_require__(616);
+	var CommentConstants = __webpack_require__(343);
 	
 	var _comments = {};
 	var CommentStore = new Store(AppDispatcher);
@@ -40355,16 +40070,229 @@
 	module.exports = CommentStore;
 
 /***/ },
-/* 618 */
+/* 343 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	var CommentConstants = {
+	  COMMENTS_RECEIVED: "COMMENTS_RECEIVED",
+	  COMMENT_RECEIVED: "COMMENT_RECEIVED",
+	  COMMENT_REMOVED: "COMMENT_REMOVED"
+	};
+	
+	module.exports = CommentConstants;
+
+/***/ },
+/* 344 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var CommentApiUtil = __webpack_require__(345);
+	var AppDispatcher = __webpack_require__(260);
+	var ErrorActions = __webpack_require__(266);
+	
+	var CommentConstants = __webpack_require__(343);
+	
+	var CommentActions = {
+	  fetchAllComments: function fetchAllComments() {
+	    CommentApiUtil.fetchAllComments(this.receiveAllComments, ErrorActions.setErrors);
+	  },
+	  fetchTrackComments: function fetchTrackComments(trackId) {
+	    CommentApiUtil.fetchTrackComments(trackId, this.receiveAllComments, ErrorActions.setErrors);
+	  },
+	  fetchComment: function fetchComment(id) {
+	    CommentApiUtil.fetchComment(id, this.receiveComment, ErrorActions.setErrors);
+	  },
+	  createComment: function createComment(comment) {
+	    CommentApiUtil.createComment(comment, this.receiveComment, ErrorActions.setErrors);
+	  },
+	  updateComment: function updateComment(comment) {
+	    CommentApiUtil.updateComment(comment, this.receiveComment, ErrorActions.setErrors);
+	  },
+	  deleteComment: function deleteComment(id) {
+	    CommentApiUtil.deleteComment(id, this.removeComment, ErrorActions.setErrors);
+	  },
+	  receiveAllComments: function receiveAllComments(comments) {
+	    AppDispatcher.dispatch({
+	      actionType: CommentConstants.COMMENTS_RECEIVED,
+	      comments: comments
+	    });
+	  },
+	  receiveComment: function receiveComment(comment) {
+	    AppDispatcher.dispatch({
+	      actionType: CommentConstants.COMMENT_RECEIVED,
+	      comment: comment
+	    });
+	  },
+	  removeComment: function removeComment(comment) {
+	    AppDispatcher.dispatch({
+	      actionType: CommentConstants.COMMENT_REMOVED,
+	      comment: comment
+	    });
+	  }
+	};
+	
+	module.exports = CommentActions;
+
+/***/ },
+/* 345 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	var CommentApiUtil = {
+	  fetchAllComments: function fetchAllComments(_success, _error) {
+	    $.ajax({
+	      url: 'api/comments',
+	      type: 'GET',
+	      data_type: 'json',
+	      success: function success(resp) {
+	        _success(resp);
+	      },
+	      error: function error(resp) {
+	        _error("fetchAllComments", resp);
+	      }
+	    });
+	  },
+	  fetchTrackComments: function fetchTrackComments(trackId, _success2, _error2) {
+	    if (!trackId) {
+	      trackId = -1;
+	    }
+	    $.ajax({
+	      url: 'api/comments',
+	      type: 'GET',
+	      data_type: 'json',
+	      data: { track_id: trackId },
+	      success: function success(resp) {
+	        _success2(resp);
+	      },
+	      error: function error(resp) {
+	        _error2("fetchAllComments", resp);
+	      }
+	    });
+	  },
+	  fetchComment: function fetchComment(id, _success3, _error3) {
+	    $.ajax({
+	      url: 'api/comments/' + id,
+	      type: 'GET',
+	      data_type: 'json',
+	      success: function success(resp) {
+	        _success3(resp);
+	      },
+	      error: function error(resp) {
+	        _error3("fetchComment", resp);
+	      }
+	    });
+	  },
+	  createComment: function createComment(comment, _success4, _error4) {
+	    $.ajax({
+	      url: 'api/comments',
+	      type: 'POST',
+	      data_type: 'json',
+	      data: { comment: comment },
+	      success: function success(resp) {
+	        _success4(resp);
+	      },
+	      error: function error(resp) {
+	        _error4("createComment", resp);
+	      }
+	    });
+	  },
+	  updateComment: function updateComment(comment, _success5, _error5) {
+	    $.ajax({
+	      url: 'api/comments/' + comment.id,
+	      type: 'PATCH',
+	      data_type: 'json',
+	      data: { comment: comment },
+	      success: function success(resp) {
+	        _success5(resp);
+	      },
+	      error: function error(resp) {
+	        _error5("updateComment", resp);
+	      }
+	    });
+	  },
+	  deleteComment: function deleteComment(id, _success6, _error6) {
+	    $.ajax({
+	      url: 'api/comments/' + id,
+	      type: 'DELETE',
+	      data_type: 'json',
+	      success: function success(resp) {
+	        _success6(resp);
+	      },
+	      error: function error(resp) {
+	        _error6("deleteComment", resp);
+	      }
+	    });
+	  }
+	};
+	
+	module.exports = CommentApiUtil;
+
+/***/ },
+/* 346 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1);
-	var CommentStore = __webpack_require__(617);
+	var ReactDOM = __webpack_require__(33);
+	var CommentStore = __webpack_require__(342);
 	var SessionStore = __webpack_require__(268);
-	var CommentActions = __webpack_require__(615);
-	var EditCommentForm = __webpack_require__(619);
+	var CommentActions = __webpack_require__(344);
+	
+	var CommentForm = React.createClass({
+	  displayName: 'CommentForm',
+	
+	  getInitialState: function getInitialState() {
+	    return {
+	      commentButton: false,
+	      body: ""
+	    };
+	  },
+	  updateBody: function updateBody(e) {
+	    this.setState({ body: e.target.value });
+	  },
+	  createComment: function createComment(e) {
+	    e.preventDefault();
+	    CommentActions.createComment({ body: this.state.body,
+	      user_id: SessionStore.currentUser().id,
+	      track_id: this.props.trackId });
+	    this.setState({ body: "" });
+	    ReactDOM.findDOMNode(this.refs.commentInput).value = "";
+	  },
+	
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      { className: 'comments-form' },
+	      React.createElement(
+	        'form',
+	        { className: 'comment-form-field', onSubmit: this.createComment },
+	        React.createElement('input', { ref: 'commentInput',
+	          onChange: this.updateBody,
+	          placeholder: 'Add a comment' })
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = CommentForm;
+
+/***/ },
+/* 347 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1);
+	var CommentStore = __webpack_require__(342);
+	var SessionStore = __webpack_require__(268);
+	var CommentActions = __webpack_require__(344);
+	var EditCommentForm = __webpack_require__(348);
 	
 	var CommentShow = React.createClass({
 	  displayName: 'CommentShow',
@@ -40460,16 +40388,16 @@
 	module.exports = CommentShow;
 
 /***/ },
-/* 619 */
+/* 348 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1);
 	var ReactDOM = __webpack_require__(33);
-	var CommentStore = __webpack_require__(617);
+	var CommentStore = __webpack_require__(342);
 	var SessionStore = __webpack_require__(268);
-	var CommentActions = __webpack_require__(615);
+	var CommentActions = __webpack_require__(344);
 	
 	var EditCommentForm = React.createClass({
 	  displayName: 'EditCommentForm',
@@ -40511,150 +40439,1106 @@
 	module.exports = EditCommentForm;
 
 /***/ },
-/* 620 */
+/* 349 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var React = __webpack_require__(1);
-	var ReactDOM = __webpack_require__(33);
-	var CommentStore = __webpack_require__(617);
-	var SessionStore = __webpack_require__(268);
-	var CommentActions = __webpack_require__(615);
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var CommentForm = React.createClass({
-	  displayName: 'CommentForm',
+	var _class, _class2, _temp;
 	
-	  getInitialState: function getInitialState() {
-	    return {
-	      commentButton: false,
-	      body: ""
+	/* Decoraters */
+	
+	
+	/* Utils */
+	
+	
+	/* CSS */
+	
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactDom = __webpack_require__(33);
+	
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+	
+	var _classnames = __webpack_require__(350);
+	
+	var _classnames2 = _interopRequireDefault(_classnames);
+	
+	var _staticMethods = __webpack_require__(351);
+	
+	var _staticMethods2 = _interopRequireDefault(_staticMethods);
+	
+	var _windowListener = __webpack_require__(353);
+	
+	var _windowListener2 = _interopRequireDefault(_windowListener);
+	
+	var _customEvent = __webpack_require__(354);
+	
+	var _customEvent2 = _interopRequireDefault(_customEvent);
+	
+	var _isCapture = __webpack_require__(355);
+	
+	var _isCapture2 = _interopRequireDefault(_isCapture);
+	
+	var _getPosition = __webpack_require__(356);
+	
+	var _getPosition2 = _interopRequireDefault(_getPosition);
+	
+	var _getTipContent = __webpack_require__(357);
+	
+	var _getTipContent2 = _interopRequireDefault(_getTipContent);
+	
+	var _style = __webpack_require__(358);
+	
+	var _style2 = _interopRequireDefault(_style);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var ReactTooltip = (0, _staticMethods2.default)(_class = (0, _windowListener2.default)(_class = (0, _customEvent2.default)(_class = (0, _isCapture2.default)(_class = (_temp = _class2 = function (_Component) {
+	  _inherits(ReactTooltip, _Component);
+	
+	  function ReactTooltip(props) {
+	    _classCallCheck(this, ReactTooltip);
+	
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ReactTooltip).call(this, props));
+	
+	    _this.state = {
+	      place: 'top', // Direction of tooltip
+	      type: 'dark', // Color theme of tooltip
+	      effect: 'float', // float or fixed
+	      show: false,
+	      border: false,
+	      placeholder: '',
+	      offset: {},
+	      extraClass: '',
+	      html: false,
+	      delayHide: 0,
+	      delayShow: 0,
+	      event: props.event || null,
+	      eventOff: props.eventOff || null,
+	      currentEvent: null, // Current mouse event
+	      currentTarget: null // Current target of mouse event
 	    };
-	  },
-	  updateBody: function updateBody(e) {
-	    this.setState({ body: e.target.value });
-	  },
-	  createComment: function createComment(e) {
-	    e.preventDefault();
-	    CommentActions.createComment({ body: this.state.body,
-	      user_id: SessionStore.currentUser().id,
-	      track_id: this.props.trackId });
-	    this.setState({ body: "" });
-	    ReactDOM.findDOMNode(this.refs.commentInput).value = "";
-	  },
 	
-	  render: function render() {
-	    return React.createElement(
-	      'div',
-	      { className: 'comments-form' },
-	      React.createElement(
-	        'form',
-	        { className: 'comment-form-field', onSubmit: this.createComment },
-	        React.createElement('input', { ref: 'commentInput',
-	          onChange: this.updateBody,
-	          placeholder: 'Add a comment' })
-	      )
-	    );
+	    _this.mount = true;
+	    _this.delayShowLoop = null;
+	    _this.delayHideLoop = null;
+	    _this.intervalUpdateContent = null;
+	    return _this;
 	  }
 	
-	});
+	  _createClass(ReactTooltip, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      this.setStyleHeader(); // Set the style to the <link>
+	      this.bindListener(); // Bind listener for tooltip
+	      this.bindWindowEvents(); // Bind global event for static method
+	    }
+	  }, {
+	    key: 'componentWillUnmount',
+	    value: function componentWillUnmount() {
+	      this.mount = false;
 	
-	module.exports = CommentForm;
+	      this.clearTimer();
+	
+	      this.unbindListener();
+	      this.removeScrollListener();
+	      this.unbindWindowEvents();
+	    }
+	
+	    /**
+	     * Pick out corresponded target elements
+	     */
+	
+	  }, {
+	    key: 'getTargetArray',
+	    value: function getTargetArray(id) {
+	      var targetArray = void 0;
+	
+	      if (!id) {
+	        targetArray = document.querySelectorAll('[data-tip]:not([data-for])');
+	      } else {
+	        targetArray = document.querySelectorAll('[data-tip][data-for="' + id + '"]');
+	      }
+	
+	      // targetArray is a NodeList, convert it to a real array
+	      // I hope I can use Object.values...
+	      return Object.keys(targetArray).filter(function (key) {
+	        return key !== 'length';
+	      }).map(function (key) {
+	        return targetArray[key];
+	      });
+	    }
+	
+	    /**
+	     * Bind listener to the target elements
+	     * These listeners used to trigger showing or hiding the tooltip
+	     */
+	
+	  }, {
+	    key: 'bindListener',
+	    value: function bindListener() {
+	      var _this2 = this;
+	
+	      var _props = this.props;
+	      var id = _props.id;
+	      var globalEventOff = _props.globalEventOff;
+	
+	      var targetArray = this.getTargetArray(id);
+	
+	      targetArray.forEach(function (target) {
+	        var isCaptureMode = _this2.isCapture(target);
+	        if (target.getAttribute('currentItem') === null) {
+	          target.setAttribute('currentItem', 'false');
+	        }
+	
+	        if (_this2.isCustomEvent(target)) {
+	          _this2.customBindListener(target);
+	          return;
+	        }
+	
+	        target.removeEventListener('mouseenter', _this2.showTooltip);
+	        target.addEventListener('mouseenter', _this2.showTooltip.bind(_this2), isCaptureMode);
+	        if (_this2.state.effect === 'float') {
+	          target.removeEventListener('mousemove', _this2.updateTooltip);
+	          target.addEventListener('mousemove', _this2.updateTooltip.bind(_this2), isCaptureMode);
+	        }
+	
+	        target.removeEventListener('mouseleave', _this2.hideTooltip);
+	        target.addEventListener('mouseleave', _this2.hideTooltip.bind(_this2), isCaptureMode);
+	      });
+	
+	      // Global event to hide tooltip
+	      if (globalEventOff) {
+	        window.removeEventListener(globalEventOff, this.hideTooltip);
+	        window.addEventListener(globalEventOff, this.hideTooltip.bind(this), false);
+	      }
+	    }
+	
+	    /**
+	     * Unbind listeners on target elements
+	     */
+	
+	  }, {
+	    key: 'unbindListener',
+	    value: function unbindListener() {
+	      var _this3 = this;
+	
+	      var _props2 = this.props;
+	      var id = _props2.id;
+	      var globalEventOff = _props2.globalEventOff;
+	
+	      var targetArray = this.getTargetArray(id);
+	
+	      targetArray.forEach(function (target) {
+	        if (_this3.isCustomEvent(target)) {
+	          _this3.customUnbindListener(target);
+	          return;
+	        }
+	
+	        target.removeEventListener('mouseenter', _this3.showTooltip);
+	        target.removeEventListener('mousemove', _this3.updateTooltip);
+	        target.removeEventListener('mouseleave', _this3.hideTooltip);
+	      });
+	
+	      if (globalEventOff) window.removeEventListener(globalEventOff, this.hideTooltip);
+	    }
+	
+	    /**
+	     * When mouse enter, show the tooltip
+	     */
+	
+	  }, {
+	    key: 'showTooltip',
+	    value: function showTooltip(e) {
+	      var _this4 = this;
+	
+	      // Get the tooltip content
+	      // calculate in this phrase so that tip width height can be detected
+	      var _props3 = this.props;
+	      var children = _props3.children;
+	      var multiline = _props3.multiline;
+	      var getContent = _props3.getContent;
+	
+	      var originTooltip = e.currentTarget.getAttribute('data-tip');
+	      var isMultiline = e.currentTarget.getAttribute('data-multiline') || multiline || false;
+	
+	      var content = children;
+	      if (getContent) {
+	        if (Array.isArray(getContent)) {
+	          content = getContent[0] && getContent[0]();
+	        } else {
+	          content = getContent();
+	        }
+	      }
+	
+	      var placeholder = (0, _getTipContent2.default)(originTooltip, content, isMultiline);
+	
+	      this.setState({
+	        placeholder: placeholder,
+	        place: e.currentTarget.getAttribute('data-place') || this.props.place || 'top',
+	        type: e.currentTarget.getAttribute('data-type') || this.props.type || 'dark',
+	        effect: e.currentTarget.getAttribute('data-effect') || this.props.effect || 'float',
+	        offset: e.currentTarget.getAttribute('data-offset') || this.props.offset || {},
+	        html: e.currentTarget.getAttribute('data-html') === 'true' || this.props.html || false,
+	        delayShow: e.currentTarget.getAttribute('data-delay-show') || this.props.delayShow || 0,
+	        delayHide: e.currentTarget.getAttribute('data-delay-hide') || this.props.delayHide || 0,
+	        border: e.currentTarget.getAttribute('data-border') === 'true' || this.props.border || false,
+	        extraClass: e.currentTarget.getAttribute('data-class') || this.props.class || ''
+	      }, function () {
+	        _this4.addScrollListener(e);
+	        _this4.updateTooltip(e);
+	
+	        if (getContent && Array.isArray(getContent)) {
+	          _this4.intervalUpdateContent = setInterval(function () {
+	            var getContent = _this4.props.getContent;
+	
+	            var placeholder = (0, _getTipContent2.default)(originTooltip, getContent[0](), isMultiline);
+	            _this4.setState({
+	              placeholder: placeholder
+	            });
+	          }, getContent[1]);
+	        }
+	      });
+	    }
+	
+	    /**
+	     * When mouse hover, updatetooltip
+	     */
+	
+	  }, {
+	    key: 'updateTooltip',
+	    value: function updateTooltip(e) {
+	      var _this5 = this;
+	
+	      var _state = this.state;
+	      var delayShow = _state.delayShow;
+	      var show = _state.show;
+	      var placeholder = this.state.placeholder;
+	
+	      var delayTime = show ? 0 : parseInt(delayShow, 10);
+	      var eventTarget = e.currentTarget;
+	
+	      clearTimeout(this.delayShowLoop);
+	      this.delayShowLoop = setTimeout(function () {
+	        if (typeof placeholder === 'string') placeholder = placeholder.trim();
+	        if (Array.isArray(placeholder) && placeholder.length > 0 || placeholder) {
+	          _this5.setState({
+	            currentEvent: e,
+	            currentTarget: eventTarget,
+	            show: true
+	          }, function () {
+	            _this5.updatePosition();
+	          });
+	        }
+	      }, delayTime);
+	    }
+	
+	    /**
+	     * When mouse leave, hide tooltip
+	     */
+	
+	  }, {
+	    key: 'hideTooltip',
+	    value: function hideTooltip() {
+	      var _this6 = this;
+	
+	      var delayHide = this.state.delayHide;
+	
+	
+	      if (!this.mount) return;
+	
+	      this.clearTimer();
+	      this.delayHideLoop = setTimeout(function () {
+	        _this6.setState({
+	          show: false
+	        });
+	        _this6.removeScrollListener();
+	      }, parseInt(delayHide, 10));
+	    }
+	
+	    /**
+	     * Add scroll eventlistener when tooltip show
+	     * automatically hide the tooltip when scrolling
+	     */
+	
+	  }, {
+	    key: 'addScrollListener',
+	    value: function addScrollListener(e) {
+	      var isCaptureMode = this.isCapture(e.currentTarget);
+	      window.addEventListener('scroll', this.hideTooltip.bind(this), isCaptureMode);
+	    }
+	  }, {
+	    key: 'removeScrollListener',
+	    value: function removeScrollListener() {
+	      window.removeEventListener('scroll', this.hideTooltip);
+	    }
+	
+	    // Calculation the position
+	
+	  }, {
+	    key: 'updatePosition',
+	    value: function updatePosition() {
+	      var _this7 = this;
+	
+	      var _state2 = this.state;
+	      var currentEvent = _state2.currentEvent;
+	      var currentTarget = _state2.currentTarget;
+	      var place = _state2.place;
+	      var effect = _state2.effect;
+	      var offset = _state2.offset;
+	
+	      var node = _reactDom2.default.findDOMNode(this);
+	
+	      var result = (0, _getPosition2.default)(currentEvent, currentTarget, node, place, effect, offset);
+	
+	      if (result.isNewState) {
+	        // Switch to reverse placement
+	        return this.setState(result.newState, function () {
+	          _this7.updatePosition();
+	        });
+	      }
+	      // Set tooltip position
+	      node.style.left = result.position.left + 'px';
+	      node.style.top = result.position.top + 'px';
+	    }
+	
+	    /**
+	     * Set style tag in header
+	     * in this way we can insert default css
+	     */
+	
+	  }, {
+	    key: 'setStyleHeader',
+	    value: function setStyleHeader() {
+	      if (!document.getElementsByTagName('head')[0].querySelector('style[id="react-tooltip"]')) {
+	        var tag = document.createElement('style');
+	        tag.id = 'react-tooltip';
+	        tag.innerHTML = _style2.default;
+	        document.getElementsByTagName('head')[0].appendChild(tag);
+	      }
+	    }
+	
+	    /**
+	     * CLear all kinds of timeout of interval
+	     */
+	
+	  }, {
+	    key: 'clearTimer',
+	    value: function clearTimer() {
+	      clearTimeout(this.delayShowLoop);
+	      clearTimeout(this.delayHideLoop);
+	      clearInterval(this.intervalUpdateContent);
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _state3 = this.state;
+	      var placeholder = _state3.placeholder;
+	      var extraClass = _state3.extraClass;
+	      var html = _state3.html;
+	
+	      var tooltipClass = (0, _classnames2.default)('__react_component_tooltip', { 'show': this.state.show }, { 'border': this.state.border }, { 'place-top': this.state.place === 'top' }, { 'place-bottom': this.state.place === 'bottom' }, { 'place-left': this.state.place === 'left' }, { 'place-right': this.state.place === 'right' }, { 'type-dark': this.state.type === 'dark' }, { 'type-success': this.state.type === 'success' }, { 'type-warning': this.state.type === 'warning' }, { 'type-error': this.state.type === 'error' }, { 'type-info': this.state.type === 'info' }, { 'type-light': this.state.type === 'light' });
+	
+	      if (html) {
+	        return _react2.default.createElement('div', { className: tooltipClass + ' ' + extraClass,
+	          'data-id': 'tooltip',
+	          dangerouslySetInnerHTML: { __html: placeholder } });
+	      } else {
+	        return _react2.default.createElement(
+	          'div',
+	          { className: tooltipClass + ' ' + extraClass,
+	            'data-id': 'tooltip' },
+	          placeholder
+	        );
+	      }
+	    }
+	  }]);
+	
+	  return ReactTooltip;
+	}(_react.Component), _class2.propTypes = {
+	  children: _react.PropTypes.any,
+	  place: _react.PropTypes.string,
+	  type: _react.PropTypes.string,
+	  effect: _react.PropTypes.string,
+	  offset: _react.PropTypes.object,
+	  multiline: _react.PropTypes.bool,
+	  border: _react.PropTypes.bool,
+	  class: _react.PropTypes.string,
+	  id: _react.PropTypes.string,
+	  html: _react.PropTypes.bool,
+	  delayHide: _react.PropTypes.number,
+	  delayShow: _react.PropTypes.number,
+	  event: _react.PropTypes.string,
+	  eventOff: _react.PropTypes.string,
+	  watchWindow: _react.PropTypes.bool,
+	  isCapture: _react.PropTypes.bool,
+	  globalEventOff: _react.PropTypes.string,
+	  getContent: _react.PropTypes.any
+	}, _temp)) || _class) || _class) || _class) || _class;
+	
+	/* export default not fit for standalone, it will exports {default:...} */
+	
+	
+	module.exports = ReactTooltip;
 
 /***/ },
-/* 621 */
+/* 350 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
+	  Copyright (c) 2016 Jed Watson.
+	  Licensed under the MIT License (MIT), see
+	  http://jedwatson.github.io/classnames
+	*/
+	/* global define */
+	
+	(function () {
+		'use strict';
+	
+		var hasOwn = {}.hasOwnProperty;
+	
+		function classNames () {
+			var classes = [];
+	
+			for (var i = 0; i < arguments.length; i++) {
+				var arg = arguments[i];
+				if (!arg) continue;
+	
+				var argType = typeof arg;
+	
+				if (argType === 'string' || argType === 'number') {
+					classes.push(arg);
+				} else if (Array.isArray(arg)) {
+					classes.push(classNames.apply(null, arg));
+				} else if (argType === 'object') {
+					for (var key in arg) {
+						if (hasOwn.call(arg, key) && arg[key]) {
+							classes.push(key);
+						}
+					}
+				}
+			}
+	
+			return classes.join(' ');
+		}
+	
+		if (typeof module !== 'undefined' && module.exports) {
+			module.exports = classNames;
+		} else if (true) {
+			// register as 'classnames', consistent with npm package name
+			!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
+				return classNames;
+			}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+		} else {
+			window.classNames = classNames;
+		}
+	}());
+
+
+/***/ },
+/* 351 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	exports.default = function (target) {
+	  /**
+	   * Hide all tooltip
+	   * @trigger ReactTooltip.hide()
+	   */
+	  target.hide = function () {
+	    dispatchGlobalEvent(_constant2.default.GLOBAL.HIDE);
+	  };
+	
+	  /**
+	   * Rebuild all tooltip
+	   * @trigger ReactTooltip.rebuild()
+	   */
+	  target.rebuild = function () {
+	    dispatchGlobalEvent(_constant2.default.GLOBAL.REBUILD);
+	  };
+	
+	  target.prototype.globalRebuild = function () {
+	    if (this.mount) {
+	      this.unbindListener();
+	      this.bindListener();
+	    }
+	  };
+	};
+	
+	var _constant = __webpack_require__(352);
+	
+	var _constant2 = _interopRequireDefault(_constant);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var dispatchGlobalEvent = function dispatchGlobalEvent(eventName) {
+	  // Compatibale with IE
+	  // @see http://stackoverflow.com/questions/26596123/internet-explorer-9-10-11-event-constructor-doesnt-work
+	  var event = void 0;
+	
+	  if (typeof window.Event === 'function') {
+	    event = new window.Event(eventName);
+	  } else {
+	    event = document.createEvent('Event');
+	    event.initEvent(eventName, false, true);
+	  }
+	
+	  window.dispatchEvent(event);
+	}; /**
+	    * Static methods for react-tooltip
+	    */
+
+/***/ },
+/* 352 */
 /***/ function(module, exports) {
 
 	'use strict';
 	
-	var CommentApiUtil = {
-	  fetchAllComments: function fetchAllComments(_success, _error) {
-	    $.ajax({
-	      url: 'api/comments',
-	      type: 'GET',
-	      data_type: 'json',
-	      success: function success(resp) {
-	        _success(resp);
-	      },
-	      error: function error(resp) {
-	        _error("fetchAllComments", resp);
-	      }
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = {
+	
+	  GLOBAL: {
+	    HIDE: '__react_tooltip_hide_event',
+	    REBUILD: '__react_tooltip_rebuild_event',
+	    SHOW: '__react_tooltip_show_event'
+	  }
+	};
+
+/***/ },
+/* 353 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	exports.default = function (target) {
+	  target.prototype.bindWindowEvents = function () {
+	    // ReactTooltip.hide
+	    window.removeEventListener(_constant2.default.GLOBAL.HIDE, this.hideTooltip);
+	    window.addEventListener(_constant2.default.GLOBAL.HIDE, this.hideTooltip.bind(this), false);
+	
+	    // ReactTooltip.rebuild
+	    window.removeEventListener(_constant2.default.GLOBAL.REBUILD, this.globalRebuild);
+	    window.addEventListener(_constant2.default.GLOBAL.REBUILD, this.globalRebuild.bind(this), false);
+	
+	    // Resize
+	    window.removeEventListener('resize', this.onWindowResize);
+	    window.addEventListener('resize', this.onWindowResize.bind(this), false);
+	  };
+	
+	  target.prototype.unbindWindowEvents = function () {
+	    window.removeEventListener(_constant2.default.GLOBAL.HIDE, this.hideTooltip);
+	    window.removeEventListener(_constant2.default.GLOBAL.REBUILD, this.globalRebuild);
+	    window.removeEventListener(_constant2.default.GLOBAL.REBUILD, this.globalShow);
+	    window.removeEventListener('resize', this.onWindowResize);
+	  };
+	
+	  /**
+	   * invoked by resize event of window
+	   */
+	  target.prototype.onWindowResize = function () {
+	    if (!this.mount) return;
+	    this.hideTooltip();
+	  };
+	};
+	
+	var _constant = __webpack_require__(352);
+	
+	var _constant2 = _interopRequireDefault(_constant);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/***/ },
+/* 354 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	exports.default = function (target) {
+	  target.prototype.isCustomEvent = function (ele) {
+	    var event = this.state.event;
+	
+	    return event || ele.getAttribute('data-event');
+	  };
+	
+	  /* Bind listener for custom event */
+	  target.prototype.customBindListener = function (ele) {
+	    var _this = this;
+	
+	    var _state = this.state;
+	    var event = _state.event;
+	    var eventOff = _state.eventOff;
+	
+	    var dataEvent = ele.getAttribute('data-event') || event;
+	    var dataEventOff = ele.getAttribute('data-event-off') || eventOff;
+	
+	    dataEvent.split(' ').forEach(function (event) {
+	      ele.removeEventListener(event, checkStatus);
+	      ele.addEventListener(event, checkStatus.bind(_this, dataEventOff), false);
 	    });
-	  },
-	  fetchTrackComments: function fetchTrackComments(trackId, _success2, _error2) {
-	    if (!trackId) {
-	      trackId = -1;
+	    if (dataEventOff) {
+	      dataEventOff.split(' ').forEach(function (event) {
+	        ele.removeEventListener(event, _this.hideTooltip);
+	        ele.addEventListener(event, _this.hideTooltip.bind(_this), false);
+	      });
 	    }
-	    $.ajax({
-	      url: 'api/comments',
-	      type: 'GET',
-	      data_type: 'json',
-	      data: { track_id: trackId },
-	      success: function success(resp) {
-	        _success2(resp);
-	      },
-	      error: function error(resp) {
-	        _error2("fetchAllComments", resp);
-	      }
-	    });
-	  },
-	  fetchComment: function fetchComment(id, _success3, _error3) {
-	    $.ajax({
-	      url: 'api/comments/' + id,
-	      type: 'GET',
-	      data_type: 'json',
-	      success: function success(resp) {
-	        _success3(resp);
-	      },
-	      error: function error(resp) {
-	        _error3("fetchComment", resp);
-	      }
-	    });
-	  },
-	  createComment: function createComment(comment, _success4, _error4) {
-	    $.ajax({
-	      url: 'api/comments',
-	      type: 'POST',
-	      data_type: 'json',
-	      data: { comment: comment },
-	      success: function success(resp) {
-	        _success4(resp);
-	      },
-	      error: function error(resp) {
-	        _error4("createComment", resp);
-	      }
-	    });
-	  },
-	  updateComment: function updateComment(comment, _success5, _error5) {
-	    $.ajax({
-	      url: 'api/comments/' + comment.id,
-	      type: 'PATCH',
-	      data_type: 'json',
-	      data: { comment: comment },
-	      success: function success(resp) {
-	        _success5(resp);
-	      },
-	      error: function error(resp) {
-	        _error5("updateComment", resp);
-	      }
-	    });
-	  },
-	  deleteComment: function deleteComment(id, _success6, _error6) {
-	    $.ajax({
-	      url: 'api/comments/' + id,
-	      type: 'DELETE',
-	      data_type: 'json',
-	      success: function success(resp) {
-	        _success6(resp);
-	      },
-	      error: function error(resp) {
-	        _error6("deleteComment", resp);
-	      }
-	    });
+	  };
+	
+	  /* Unbind listener for custom event */
+	  target.prototype.customUnbindListener = function (ele) {
+	    var _state2 = this.state;
+	    var event = _state2.event;
+	    var eventOff = _state2.eventOff;
+	
+	    var dataEvent = event || ele.getAttribute('data-event');
+	    var dataEventOff = eventOff || ele.getAttribute('data-event-off');
+	
+	    ele.removeEventListener(dataEvent, checkStatus);
+	    if (dataEventOff) ele.removeEventListener(dataEventOff, this.hideTooltip);
+	  };
+	};
+	
+	/**
+	 * Custom events to control showing and hiding of tooltip
+	 *
+	 * @attributes
+	 * - `event` {String}
+	 * - `eventOff` {String}
+	 */
+	
+	var checkStatus = function checkStatus(dataEventOff, e) {
+	  var show = this.state.show;
+	  var id = this.props.id;
+	
+	  var dataIsCapture = e.currentTarget.getAttribute('data-iscapture');
+	  var isCapture = dataIsCapture && dataIsCapture === 'true' || this.props.isCapture;
+	  var currentItem = e.currentTarget.getAttribute('currentItem');
+	
+	  if (!isCapture) e.stopPropagation();
+	  if (show && currentItem === 'true') {
+	    if (!dataEventOff) this.hideTooltip(e);
+	  } else {
+	    e.currentTarget.setAttribute('currentItem', 'true');
+	    setUntargetItems(e.currentTarget, this.getTargetArray(id));
+	    this.showTooltip(e);
 	  }
 	};
 	
-	module.exports = CommentApiUtil;
+	var setUntargetItems = function setUntargetItems(currentTarget, targetArray) {
+	  for (var i = 0; i < targetArray.length; i++) {
+	    if (currentTarget !== targetArray[i]) {
+	      targetArray[i].setAttribute('currentItem', 'false');
+	    } else {
+	      targetArray[i].setAttribute('currentItem', 'true');
+	    }
+	  }
+	};
+
+/***/ },
+/* 355 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	exports.default = function (target) {
+	  target.prototype.isCapture = function (currentTarget) {
+	    var dataIsCapture = currentTarget.getAttribute('data-iscapture');
+	    return dataIsCapture && dataIsCapture === 'true' || this.props.isCapture || false;
+	  };
+	};
+
+/***/ },
+/* 356 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	exports.default = function (e, target, node, place, effect, offset) {
+	  var tipWidth = node.clientWidth;
+	  var tipHeight = node.clientHeight;
+	
+	  var _getCurrentOffset = getCurrentOffset(e, target, effect);
+	
+	  var mouseX = _getCurrentOffset.mouseX;
+	  var mouseY = _getCurrentOffset.mouseY;
+	
+	  var defaultOffset = getDefaultPosition(effect, target.clientWidth, target.clientHeight, tipWidth, tipHeight);
+	
+	  var _calculateOffset = calculateOffset(offset);
+	
+	  var extraOffset_X = _calculateOffset.extraOffset_X;
+	  var extraOffset_Y = _calculateOffset.extraOffset_Y;
+	
+	
+	  var windowWidth = window.innerWidth;
+	  var windowHeight = window.innerHeight;
+	
+	  var _getParent = getParent(target);
+	
+	  var parentTop = _getParent.parentTop;
+	  var parentLeft = _getParent.parentLeft;
+	
+	  // Get the edge offset of the tooltip
+	
+	  var getTipOffsetLeft = function getTipOffsetLeft(place) {
+	    var offset_X = defaultOffset[place].l;
+	    return mouseX + offset_X + extraOffset_X;
+	  };
+	  var getTipOffsetRight = function getTipOffsetRight(place) {
+	    var offset_X = defaultOffset[place].r;
+	    return mouseX + offset_X + extraOffset_X;
+	  };
+	  var getTipOffsetTop = function getTipOffsetTop(place) {
+	    var offset_Y = defaultOffset[place].t;
+	    return mouseY + offset_Y + extraOffset_Y;
+	  };
+	  var getTipOffsetBottom = function getTipOffsetBottom(place) {
+	    var offset_Y = defaultOffset[place].b;
+	    return mouseY + offset_Y + extraOffset_Y;
+	  };
+	
+	  // Judge if the tooltip has over the window(screen)
+	  var outsideVertical = function outsideVertical() {
+	    var result = false;
+	    var newPlace = void 0;
+	    if (getTipOffsetTop('left') < 0 && getTipOffsetBottom('left') <= windowHeight && getTipOffsetBottom('bottom') <= windowHeight) {
+	      result = true;
+	      newPlace = 'bottom';
+	    } else if (getTipOffsetBottom('left') > windowHeight && getTipOffsetTop('left') >= 0 && getTipOffsetTop('top') >= 0) {
+	      result = true;
+	      newPlace = 'top';
+	    }
+	    return { result: result, newPlace: newPlace };
+	  };
+	  var outsideLeft = function outsideLeft() {
+	    var _outsideVertical = outsideVertical();
+	
+	    var result = _outsideVertical.result;
+	    var newPlace = _outsideVertical.newPlace; // Deal with vertical as first priority
+	
+	    if (result && outsideHorizontal().result) {
+	      return { result: false }; // No need to change, if change to vertical will out of space
+	    }
+	    if (!result && getTipOffsetLeft('left') < 0 && getTipOffsetRight('right') <= windowWidth) {
+	      result = true; // If vertical ok, but let out of side and right won't out of side
+	      newPlace = 'right';
+	    }
+	    return { result: result, newPlace: newPlace };
+	  };
+	  var outsideRight = function outsideRight() {
+	    var _outsideVertical2 = outsideVertical();
+	
+	    var result = _outsideVertical2.result;
+	    var newPlace = _outsideVertical2.newPlace;
+	
+	    if (result && outsideHorizontal().result) {
+	      return { result: false }; // No need to change, if change to vertical will out of space
+	    }
+	    if (!result && getTipOffsetRight('right') > windowWidth && getTipOffsetLeft('left') >= 0) {
+	      result = true;
+	      newPlace = 'left';
+	    }
+	    return { result: result, newPlace: newPlace };
+	  };
+	
+	  var outsideHorizontal = function outsideHorizontal() {
+	    var result = false;
+	    var newPlace = void 0;
+	    if (getTipOffsetLeft('top') < 0 && getTipOffsetRight('top') <= windowWidth && getTipOffsetRight('right') <= windowWidth) {
+	      result = true;
+	      newPlace = 'right';
+	    } else if (getTipOffsetRight('top') > windowWidth && getTipOffsetLeft('top') >= 0 && getTipOffsetLeft('left') >= 0) {
+	      result = true;
+	      newPlace = 'left';
+	    }
+	    return { result: result, newPlace: newPlace };
+	  };
+	  var outsideTop = function outsideTop() {
+	    var _outsideHorizontal = outsideHorizontal();
+	
+	    var result = _outsideHorizontal.result;
+	    var newPlace = _outsideHorizontal.newPlace;
+	
+	    if (result && outsideVertical().result) {
+	      return { result: false };
+	    }
+	    if (!result && getTipOffsetTop('top') < 0 && getTipOffsetBottom('bottom') <= windowHeight) {
+	      result = true;
+	      newPlace = 'bottom';
+	    }
+	    return { result: result, newPlace: newPlace };
+	  };
+	  var outsideBottom = function outsideBottom() {
+	    var _outsideHorizontal2 = outsideHorizontal();
+	
+	    var result = _outsideHorizontal2.result;
+	    var newPlace = _outsideHorizontal2.newPlace;
+	
+	    if (result && outsideVertical().result) {
+	      return { result: false };
+	    }
+	    if (!result && getTipOffsetBottom('bottom') > windowHeight && getTipOffsetTop('top') >= 0) {
+	      result = true;
+	      newPlace = 'top';
+	    }
+	    return { result: result, newPlace: newPlace };
+	  };
+	
+	  // Return new state to change the placement to the reverse if possible
+	  var outsideLeftResult = outsideLeft();
+	  var outsideRightResult = outsideRight();
+	  var outsideTopResult = outsideTop();
+	  var outsideBottomResult = outsideBottom();
+	
+	  if (place === 'left' && outsideLeftResult.result) {
+	    return {
+	      isNewState: true,
+	      newState: { place: outsideLeftResult.newPlace }
+	    };
+	  } else if (place === 'right' && outsideRightResult.result) {
+	    return {
+	      isNewState: true,
+	      newState: { place: outsideRightResult.newPlace }
+	    };
+	  } else if (place === 'top' && outsideTopResult.result) {
+	    return {
+	      isNewState: true,
+	      newState: { place: outsideTopResult.newPlace }
+	    };
+	  } else if (place === 'bottom' && outsideBottomResult.result) {
+	    return {
+	      isNewState: true,
+	      newState: { place: outsideBottomResult.newPlace }
+	    };
+	  }
+	
+	  // Return tooltip offset position
+	  return {
+	    isNewState: false,
+	    position: {
+	      left: getTipOffsetLeft(place) - parentLeft,
+	      top: getTipOffsetTop(place) - parentTop
+	    }
+	  };
+	};
+	
+	// Get current mouse offset
+	var getCurrentOffset = function getCurrentOffset(e, currentTarget, effect) {
+	  var boundingClientRect = currentTarget.getBoundingClientRect();
+	  var targetTop = boundingClientRect.top;
+	  var targetLeft = boundingClientRect.left;
+	  var targetWidth = currentTarget.clientWidth;
+	  var targetHeight = currentTarget.clientHeight;
+	
+	  if (effect === 'float') {
+	    return {
+	      mouseX: e.clientX,
+	      mouseY: e.clientY
+	    };
+	  }
+	  return {
+	    mouseX: targetLeft + targetWidth / 2,
+	    mouseY: targetTop + targetHeight / 2
+	  };
+	};
+	
+	// List all possibility of tooltip final offset
+	// This is useful in judging if it is necessary for tooltip to switch position when out of window
+	/**
+	 * Calculate the position of tooltip
+	 *
+	 * @params
+	 * - `e` {Event} the event of current mouse
+	 * - `target` {Element} the currentTarget of the event
+	 * - `node` {DOM} the react-tooltip object
+	 * - `place` {String} top / right / bottom / left
+	 * - `effect` {String} float / solid
+	 * - `offset` {Object} the offset to default position
+	 *
+	 * @return {Object
+	 * - `isNewState` {Bool} required
+	 * - `newState` {Object}
+	 * - `position` {OBject} {left: {Number}, top: {Number}}
+	 */
+	var getDefaultPosition = function getDefaultPosition(effect, targetWidth, targetHeight, tipWidth, tipHeight) {
+	  var top = void 0;
+	  var right = void 0;
+	  var bottom = void 0;
+	  var left = void 0;
+	  var disToMouse = 3;
+	  var triangleHeight = 2;
+	  var cursorHeight = 12; // Optimize for float bottom only, cause the cursor will hide the tooltip
+	
+	  if (effect === 'float') {
+	    top = {
+	      l: -(tipWidth / 2),
+	      r: tipWidth / 2,
+	      t: -(tipHeight + disToMouse + triangleHeight),
+	      b: -disToMouse
+	    };
+	    bottom = {
+	      l: -(tipWidth / 2),
+	      r: tipWidth / 2,
+	      t: disToMouse + cursorHeight,
+	      b: tipHeight + disToMouse + triangleHeight + cursorHeight
+	    };
+	    left = {
+	      l: -(tipWidth + disToMouse + triangleHeight),
+	      r: -disToMouse,
+	      t: -(tipHeight / 2),
+	      b: tipHeight / 2
+	    };
+	    right = {
+	      l: disToMouse,
+	      r: tipWidth + disToMouse + triangleHeight,
+	      t: -(tipHeight / 2),
+	      b: tipHeight / 2
+	    };
+	  } else if (effect === 'solid') {
+	    top = {
+	      l: -(tipWidth / 2),
+	      r: tipWidth / 2,
+	      t: -(targetHeight / 2 + tipHeight + triangleHeight),
+	      b: -(targetHeight / 2)
+	    };
+	    bottom = {
+	      l: -(tipWidth / 2),
+	      r: tipWidth / 2,
+	      t: targetHeight / 2,
+	      b: targetHeight / 2 + tipHeight + triangleHeight
+	    };
+	    left = {
+	      l: -(tipWidth + targetWidth / 2 + triangleHeight),
+	      r: -(targetWidth / 2),
+	      t: -(tipHeight / 2),
+	      b: tipHeight / 2
+	    };
+	    right = {
+	      l: targetWidth / 2,
+	      r: tipWidth + targetWidth / 2 + triangleHeight,
+	      t: -(tipHeight / 2),
+	      b: tipHeight / 2
+	    };
+	  }
+	
+	  return { top: top, bottom: bottom, left: left, right: right };
+	};
+	
+	// Consider additional offset into position calculation
+	var calculateOffset = function calculateOffset(offset) {
+	  var extraOffset_X = 0;
+	  var extraOffset_Y = 0;
+	
+	  if (Object.prototype.toString.apply(offset) === '[object String]') {
+	    offset = JSON.parse(offset.toString().replace(/\'/g, '\"'));
+	  }
+	  for (var key in offset) {
+	    if (key === 'top') {
+	      extraOffset_Y -= parseInt(offset[key], 10);
+	    } else if (key === 'bottom') {
+	      extraOffset_Y += parseInt(offset[key], 10);
+	    } else if (key === 'left') {
+	      extraOffset_X -= parseInt(offset[key], 10);
+	    } else if (key === 'right') {
+	      extraOffset_X += parseInt(offset[key], 10);
+	    }
+	  }
+	
+	  return { extraOffset_X: extraOffset_X, extraOffset_Y: extraOffset_Y };
+	};
+	
+	// Get the offset of the parent elements
+	var getParent = function getParent(currentTarget) {
+	  var currentParent = currentTarget;
+	  while (currentParent) {
+	    if (currentParent.style.transform.length > 0) break;
+	    currentParent = currentParent.parentElement;
+	  }
+	
+	  var parentTop = currentParent && currentParent.getBoundingClientRect().top || 0;
+	  var parentLeft = currentParent && currentParent.getBoundingClientRect().left || 0;
+	
+	  return { parentTop: parentTop, parentLeft: parentLeft };
+	};
+
+/***/ },
+/* 357 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	exports.default = function (tip, children, multiline) {
+	  if (children) return children;
+	
+	  var regexp = /<br\s*\/?>/;
+	  if (!multiline || multiline === 'false' || !regexp.test(tip)) {
+	    return tip;
+	  }
+	
+	  // Multiline tooltip content
+	  return tip.split(regexp).map(function (d, i) {
+	    return _react2.default.createElement(
+	      'span',
+	      { key: i, className: 'multi-line' },
+	      d
+	    );
+	  });
+	};
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/***/ },
+/* 358 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = '.__react_component_tooltip{border-radius:3px;display:inline-block;font-size:13px;left:-999em;opacity:0;padding:8px 21px;position:fixed;pointer-events:none;transition:opacity 0.3s ease-out , margin-top 0.3s ease-out, margin-left 0.3s ease-out;top:-999em;visibility:hidden;z-index:999}.__react_component_tooltip:before,.__react_component_tooltip:after{content:"";width:0;height:0;position:absolute}.__react_component_tooltip.show{opacity:0.9;margin-top:0px;margin-left:0px;visibility:visible}.__react_component_tooltip.type-dark{color:#fff;background-color:#222}.__react_component_tooltip.type-dark.place-top:after{border-top-color:#222;border-top-style:solid;border-top-width:6px}.__react_component_tooltip.type-dark.place-bottom:after{border-bottom-color:#222;border-bottom-style:solid;border-bottom-width:6px}.__react_component_tooltip.type-dark.place-left:after{border-left-color:#222;border-left-style:solid;border-left-width:6px}.__react_component_tooltip.type-dark.place-right:after{border-right-color:#222;border-right-style:solid;border-right-width:6px}.__react_component_tooltip.type-dark.border{border:1px solid #fff}.__react_component_tooltip.type-dark.border.place-top:before{border-top:8px solid #fff}.__react_component_tooltip.type-dark.border.place-bottom:before{border-bottom:8px solid #fff}.__react_component_tooltip.type-dark.border.place-left:before{border-left:8px solid #fff}.__react_component_tooltip.type-dark.border.place-right:before{border-right:8px solid #fff}.__react_component_tooltip.type-success{color:#fff;background-color:#8DC572}.__react_component_tooltip.type-success.place-top:after{border-top-color:#8DC572;border-top-style:solid;border-top-width:6px}.__react_component_tooltip.type-success.place-bottom:after{border-bottom-color:#8DC572;border-bottom-style:solid;border-bottom-width:6px}.__react_component_tooltip.type-success.place-left:after{border-left-color:#8DC572;border-left-style:solid;border-left-width:6px}.__react_component_tooltip.type-success.place-right:after{border-right-color:#8DC572;border-right-style:solid;border-right-width:6px}.__react_component_tooltip.type-success.border{border:1px solid #fff}.__react_component_tooltip.type-success.border.place-top:before{border-top:8px solid #fff}.__react_component_tooltip.type-success.border.place-bottom:before{border-bottom:8px solid #fff}.__react_component_tooltip.type-success.border.place-left:before{border-left:8px solid #fff}.__react_component_tooltip.type-success.border.place-right:before{border-right:8px solid #fff}.__react_component_tooltip.type-warning{color:#fff;background-color:#F0AD4E}.__react_component_tooltip.type-warning.place-top:after{border-top-color:#F0AD4E;border-top-style:solid;border-top-width:6px}.__react_component_tooltip.type-warning.place-bottom:after{border-bottom-color:#F0AD4E;border-bottom-style:solid;border-bottom-width:6px}.__react_component_tooltip.type-warning.place-left:after{border-left-color:#F0AD4E;border-left-style:solid;border-left-width:6px}.__react_component_tooltip.type-warning.place-right:after{border-right-color:#F0AD4E;border-right-style:solid;border-right-width:6px}.__react_component_tooltip.type-warning.border{border:1px solid #fff}.__react_component_tooltip.type-warning.border.place-top:before{border-top:8px solid #fff}.__react_component_tooltip.type-warning.border.place-bottom:before{border-bottom:8px solid #fff}.__react_component_tooltip.type-warning.border.place-left:before{border-left:8px solid #fff}.__react_component_tooltip.type-warning.border.place-right:before{border-right:8px solid #fff}.__react_component_tooltip.type-error{color:#fff;background-color:#BE6464}.__react_component_tooltip.type-error.place-top:after{border-top-color:#BE6464;border-top-style:solid;border-top-width:6px}.__react_component_tooltip.type-error.place-bottom:after{border-bottom-color:#BE6464;border-bottom-style:solid;border-bottom-width:6px}.__react_component_tooltip.type-error.place-left:after{border-left-color:#BE6464;border-left-style:solid;border-left-width:6px}.__react_component_tooltip.type-error.place-right:after{border-right-color:#BE6464;border-right-style:solid;border-right-width:6px}.__react_component_tooltip.type-error.border{border:1px solid #fff}.__react_component_tooltip.type-error.border.place-top:before{border-top:8px solid #fff}.__react_component_tooltip.type-error.border.place-bottom:before{border-bottom:8px solid #fff}.__react_component_tooltip.type-error.border.place-left:before{border-left:8px solid #fff}.__react_component_tooltip.type-error.border.place-right:before{border-right:8px solid #fff}.__react_component_tooltip.type-info{color:#fff;background-color:#337AB7}.__react_component_tooltip.type-info.place-top:after{border-top-color:#337AB7;border-top-style:solid;border-top-width:6px}.__react_component_tooltip.type-info.place-bottom:after{border-bottom-color:#337AB7;border-bottom-style:solid;border-bottom-width:6px}.__react_component_tooltip.type-info.place-left:after{border-left-color:#337AB7;border-left-style:solid;border-left-width:6px}.__react_component_tooltip.type-info.place-right:after{border-right-color:#337AB7;border-right-style:solid;border-right-width:6px}.__react_component_tooltip.type-info.border{border:1px solid #fff}.__react_component_tooltip.type-info.border.place-top:before{border-top:8px solid #fff}.__react_component_tooltip.type-info.border.place-bottom:before{border-bottom:8px solid #fff}.__react_component_tooltip.type-info.border.place-left:before{border-left:8px solid #fff}.__react_component_tooltip.type-info.border.place-right:before{border-right:8px solid #fff}.__react_component_tooltip.type-light{color:#222;background-color:#fff}.__react_component_tooltip.type-light.place-top:after{border-top-color:#fff;border-top-style:solid;border-top-width:6px}.__react_component_tooltip.type-light.place-bottom:after{border-bottom-color:#fff;border-bottom-style:solid;border-bottom-width:6px}.__react_component_tooltip.type-light.place-left:after{border-left-color:#fff;border-left-style:solid;border-left-width:6px}.__react_component_tooltip.type-light.place-right:after{border-right-color:#fff;border-right-style:solid;border-right-width:6px}.__react_component_tooltip.type-light.border{border:1px solid #222}.__react_component_tooltip.type-light.border.place-top:before{border-top:8px solid #222}.__react_component_tooltip.type-light.border.place-bottom:before{border-bottom:8px solid #222}.__react_component_tooltip.type-light.border.place-left:before{border-left:8px solid #222}.__react_component_tooltip.type-light.border.place-right:before{border-right:8px solid #222}.__react_component_tooltip.place-top{margin-top:-10px}.__react_component_tooltip.place-top:before{border-left:10px solid transparent;border-right:10px solid transparent;bottom:-8px;left:50%;margin-left:-10px}.__react_component_tooltip.place-top:after{border-left:8px solid transparent;border-right:8px solid transparent;bottom:-6px;left:50%;margin-left:-8px}.__react_component_tooltip.place-bottom{margin-top:10px}.__react_component_tooltip.place-bottom:before{border-left:10px solid transparent;border-right:10px solid transparent;top:-8px;left:50%;margin-left:-10px}.__react_component_tooltip.place-bottom:after{border-left:8px solid transparent;border-right:8px solid transparent;top:-6px;left:50%;margin-left:-8px}.__react_component_tooltip.place-left{margin-left:-10px}.__react_component_tooltip.place-left:before{border-top:6px solid transparent;border-bottom:6px solid transparent;right:-8px;top:50%;margin-top:-5px}.__react_component_tooltip.place-left:after{border-top:5px solid transparent;border-bottom:5px solid transparent;right:-6px;top:50%;margin-top:-4px}.__react_component_tooltip.place-right{margin-left:10px}.__react_component_tooltip.place-right:before{border-top:6px solid transparent;border-bottom:6px solid transparent;left:-8px;top:50%;margin-top:-5px}.__react_component_tooltip.place-right:after{border-top:5px solid transparent;border-bottom:5px solid transparent;left:-6px;top:50%;margin-top:-4px}.__react_component_tooltip .multi-line{display:block;padding:2px 0px;text-align:center}';
 
 /***/ }
 /******/ ]);

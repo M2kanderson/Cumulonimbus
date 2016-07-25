@@ -91,11 +91,6 @@ const LoginForm = React.createClass({
             <button className="session-button" onClick={this.googleLogin}>Log in Google</button>
           </div>
 
-              <FacebookLogin appId="1790155654560761"
-                             autoLoad={true} fields="name,email,picture"
-                             callback={this.responseFacebook}
-                             cssClass="facebook-button"
-                             icon="fa-facebook"></FacebookLogin>
 
           <br/>
         </form>
@@ -111,7 +106,6 @@ const LoginForm = React.createClass({
   },
 
   handleSubmit(e) {
-    console.log("handling submit");
     e.preventDefault();
     const userData = {
       email: this.state.email,
@@ -167,7 +161,7 @@ const LoginForm = React.createClass({
   marginRight           : '-50%',
   transform             : 'translate(-50%, -50%)'
   },
-  
+
   overlay: {
     zIndex                : 2
   }

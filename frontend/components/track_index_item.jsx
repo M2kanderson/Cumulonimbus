@@ -4,6 +4,7 @@ const hashHistory = ReactRouter.hashHistory;
 const SessionStore = require('../stores/session_store');
 const LikeActions = require('../actions/like_actions');
 const PlayerActions = require('../actions/player_actions');
+var ReactTooltip = require("react-tooltip");
 
 const TrackIndexItem = React.createClass({
   getInitialState: function() {
@@ -59,7 +60,9 @@ const TrackIndexItem = React.createClass({
           <div className="track-item-data">
             <div className="track-item-data-left">
               <div className="like-container">
-                <button className="like-button" onClick={this.toggleLike}>
+                <button className="like-button"
+                        data-tip={"Likes: " +this.props.track.like_count}
+                        onClick={this.toggleLike}>
                   {this._isLiked() === "Like" ?
                     <i className="fa fa-heart" aria-hidden="true"></i> :
                     <i className="fa fa-heart red" aria-hidden="true"></i>}
@@ -69,7 +72,7 @@ const TrackIndexItem = React.createClass({
                 </button>
               </div>
               <div className="play-container">
-                <button className="play-button" onClick={this._toggleTrack}>
+                <button className="play-button" data-tip="Play song" onClick={this._toggleTrack}>
                   <i className="fa fa-play" aria-hidden="true"></i>
                   <div className="play-count">{0}</div>
                 </button>
@@ -89,6 +92,7 @@ const TrackIndexItem = React.createClass({
             {text}
           </div>
         </div>
+        <ReactTooltip type="light" effect="solid" place="bottom"/>
       </li>);
   },
 

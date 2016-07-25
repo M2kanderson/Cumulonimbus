@@ -67,7 +67,7 @@ Devise.setup do |config|
   # config.http_authenticatable = false
 
   # If 401 status code should be returned for AJAX requests. True by default.
-  # config.http_authenticatable_on_xhr = true
+  # config.http_authenticatable_on_xhr = false
 
   # The realm used in Http Basic Authentication. 'Application' by default.
   # config.http_authentication_realm = 'Application'
@@ -240,6 +240,7 @@ Devise.setup do |config|
   #
   # The "*/*" below is required to match Internet Explorer requests.
   # config.navigational_formats = ['*/*', :html]
+  # config.navigational_formats = ['*/*', :html, :json]
 
   # The default HTTP method used to sign out a resource. Default is :delete.
   config.sign_out_via = :delete
@@ -248,8 +249,10 @@ Devise.setup do |config|
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', scope: 'user,public_repo'
-  config.omniauth :facebook, "1790155654560761", "145948dfa9675d0f8cfc882e41539367", provider_ignores_state:true
-  config.omniauth :google_oauth2, "103867363030-iq1ait30ssbtobrqhcmugffnjgvsok9d.apps.googleusercontent.com", "vzjClQvfpNRFwI4to6o6QEId", :provider_ignores_state => true
+  config.omniauth :facebook, ENV['FACEBOOK_APP_ID'], ENV['FACEBOOK_SECRET']
+  config.omniauth :google_oauth2, ENV["GOOGLE_CLIENT_ID"], ENV["GOOGLE_CLIENT_SECRET"]
+  # config.omniauth :facebook, "1790155654560761", "145948dfa9675d0f8cfc882e41539367", provider_ignores_state:true
+  # config.omniauth :google_oauth2, "103867363030-iq1ait30ssbtobrqhcmugffnjgvsok9d.apps.googleusercontent.com", "vzjClQvfpNRFwI4to6o6QEId", :provider_ignores_state => true
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
   # change the failure app, you can configure them inside the config.warden block.

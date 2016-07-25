@@ -17,6 +17,14 @@ const TracksFiltered = require('./components/tracks_filtered');
 const TrackItemShow = require('./components/track_item_show');
 
 const SessionActions = require('./actions/session_actions');
+const SessionStore = require('./stores/session_store');
+
+function _ensureLoggedIn(nextState, replace){
+  if(!SessionStore.isUserLoggedIn())
+  {
+    replace('/');
+  }
+}
 
 const appRouter = (
   <Router history={ hashHistory }>
@@ -24,9 +32,9 @@ const appRouter = (
       <IndexRoute component={Index}></IndexRoute>
       <Route path="/users/signup" component={SignupForm}/>
       <Route path="/users/login" component={LoginForm}/>
-      <Route path="tracks/all" component={TracksIndex}/>
-      <Route path="tracks/filtered" component={TracksFiltered}/>
-      <Route path="tracks/:trackId" component={TrackItemShow}/>
+      <Route path="tracks/all" component={TracksIndex} onEnter={_ensureLoggedIn}/>
+      <Route path="tracks/filtered" component={TracksFiltered} onEnter={_ensureLoggedIn}/>
+      <Route path="tracks/:trackId" component={TrackItemShow} onEnter={_ensureLoggedIn}/>
     </Route>
   </Router>
 );

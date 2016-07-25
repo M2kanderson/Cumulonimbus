@@ -35,6 +35,8 @@ gem 'omniauth-twitter'
 # gem 'omniauth-google'
 gem "omniauth-google-oauth2"
 gem 'uuidtools'
+gem "figaro"
+gem 'rack-cors', :require => 'rack/cors'
 # Use Unicorn as the app server
 # gem 'unicorn'
 
