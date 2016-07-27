@@ -26,14 +26,6 @@ const TracksIndex = React.createClass({
   },
 
   render(){
-    const numTracks = this.state.tracks.length;
-    const numRows = Math.ceil(numTracks / 4);
-    const rows = [];
-    for (let i = 0; i < numRows; i++) { rows.push([]); }
-    for (let i = 0; i < numTracks; i++) {
-      const RowIndex = Math.floor(i / 4);
-      rows[RowIndex].push(this.state.tracks[i]);
-    }
     let url;
     if(this.state.currTrack){
       url = this.state.currTrack.audio_url +".mp3";

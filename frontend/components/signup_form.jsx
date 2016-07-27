@@ -41,7 +41,7 @@ const SignupForm = React.createClass({
         >
         <form className="session-form" onSubmit={this._createUser}>
           <h2 className="form-text">Sign up</h2>
-          <label className="form-text">Enter your <span className="bolded">email</span> and <span className="bolded">password</span>.</label><br/>
+          <label className="form-text">Enter your <span className="bolded">email</span> and <span className="bolded">password</span>.</label>
           <div className="field">
             <input className="session-textbox" placeholder="Your email" type="email" onChange={this._updateEmail}></input>
           </div>
@@ -57,7 +57,7 @@ const SignupForm = React.createClass({
           </div>
 
           <div className="actions">
-            <input className="session-button" type="submit"></input>
+            <button className="session-button" type="submit">Submit</button>
           </div>
         </form>
       </Modal>

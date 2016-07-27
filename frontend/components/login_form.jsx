@@ -11,6 +11,18 @@ import FacebookLogin from 'react-facebook-login';
 // const FacebookLogin = require('react-facebook-login');
 
 const LoginForm = React.createClass({
+  // TODO: get Google/Facebook OAuth buttons working.
+  //
+            //
+            // <div className="actions">
+            //   <button className="session-button" onClick={this.facebookLogin}>Log in facebook</button>
+            // </div>
+            //
+            // <div className="actions">
+            //   <button className="session-button" onClick={this.googleLogin}>Log in Google</button>
+            // </div>
+
+
   getInitialState(){
     return{email: "", password: "", modalIsOpen: false};
   },
@@ -66,7 +78,7 @@ const LoginForm = React.createClass({
         <form className="session-form" onSubmit={this.handleSubmit}>
           <h2 className="form-text">Sign in to Cumulonimbus</h2>
             {this.fieldErrors()}
-          <label className="form-text">Enter your <span className="bolded">email</span> and <span className="bolded">password</span>.</label><br/>
+          <label className="form-text">Enter your <span className="bolded">email</span> and <span className="bolded">password</span>.</label>
           <div className="actions">
             <button type="button" className="session-button" onClick={this.demoLogin} value="Demo Login">Demo Login</button>
           </div>
@@ -80,19 +92,9 @@ const LoginForm = React.createClass({
           </div>
 
           <div className="actions">
-            <input id="login" className="session-button" type="submit" value="Sign In"></input>
+            <button onClick={this.handleSubmit} className="session-button" type="submit">Sign In</button>
           </div>
 
-          <div className="actions">
-            <button className="session-button" onClick={this.facebookLogin}>Log in facebook</button>
-          </div>
-
-          <div className="actions">
-            <button className="session-button" onClick={this.googleLogin}>Log in Google</button>
-          </div>
-
-
-          <br/>
         </form>
       </Modal>
   );},

@@ -10,7 +10,7 @@ var Footer = React.createClass({
         <footer>
           <section className="footer-content">
             <ul className="footer-nav-list">
-              <li><Link to={`/about/`}>About</Link></li>
+              <li><Link id="about" to={`/about/`}>About the Developers</Link></li>
             </ul>
           </section>
 

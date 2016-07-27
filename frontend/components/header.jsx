@@ -6,7 +6,7 @@ const Searchbar = require('./searchbar');
 const hashHistory = require('react-router').hashHistory;
 const SessionStore = require('../stores/session_store');
 
-var Header = React.createClass({
+const Header = React.createClass({
   getInitialState: function() {
     return {
       login:false,

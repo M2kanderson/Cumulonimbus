@@ -107,12 +107,15 @@
 /*footer*/
 
 footer{
-  font-family: 'Lato' sans-serif;
+  font-family: 'Lato', sans-serif;
   font-weight: bold;
   height: 75px;
   background-color: #a4a4a6;
   display: flex;
   align-items: center;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
 }
 
 .footer-content{
@@ -122,11 +125,6 @@ footer{
 .footer-nav-list{
   display: flex;
   margin-left: 100px;
-}
-
-.footer-nav-list a{
-  color: #006dac;
-  text-decoration: none;
 }
 
 /*buttons*/
@@ -187,7 +185,7 @@ footer{
 
 .index-photo{
   display: flex;
-  height: 450px;
+  height: 600px;
   background-image: url('http://res.cloudinary.com/pulsr/image/upload/v1469032074/Cumulonimbus/girl-dancing-in-sky-with-dark-clouds-HD.jpg');
   background-repeat: no-repeat;
   background-size: cover;
@@ -199,12 +197,15 @@ footer{
 .index-header{
   font-size: 36px;
   color: white;
+  text-shadow: 1px 1px 1px #000;
 }
 .index-desc{
   font-family: 'Neuton', serif;
   color: white;
   font-size: 24px;
+  text-shadow: 1px 1px 1px #000;
 }
+
 
 /*searchbar*/
 .search-field input{
@@ -229,7 +230,7 @@ footer{
    background: white;
  }*/
 .searchbar{
-  margin-right: 100px;
+  margin: 8px 50px 0 15px;
   margin-top: 8px;
   display: flex;
   flex-direction: row;
@@ -414,8 +415,14 @@ footer{
   align-items: center;
 }
 
+.session-error-message{
+  color: red;
+  font-family: 'Lato', sans-serif;
+}
+
 .form-text {
   font-family: 'Lato', sans-serif;
+  padding-bottom: 5px;
 }
 
 .session-button{
@@ -445,7 +452,7 @@ footer{
 }
 
 .session-textbox{
-  padding-left: 8px;
+  padding: 0 25px 0 8px;
   font-size: 14px;
   height: 33px;
   width: 200px;
@@ -557,8 +564,23 @@ h2{
   font-size: 24px;
 }
 
-.about-image-container{
-
+#about{
+  font-size: 20px;
+  color: #0000ff;
+  text-decoration: none;
+  -webkit-transition: color 0.10s ease;
+  -moz-transition: color 0.10s ease;
+  -o-transition: color 0.10s ease;
+  -ms-transition: color 0.10s ease;
+  transition: color 0.10s ease;
+}
+#about:hover{
+  color: #006dac;
+  -webkit-transition: color 0.10s ease;
+  -moz-transition: color 0.10s ease;
+  -o-transition: color 0.10s ease;
+  -ms-transition: color 0.10s ease;
+  transition: color 0.10s ease;
 }
 
 

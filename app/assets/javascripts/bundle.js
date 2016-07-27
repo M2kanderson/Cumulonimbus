@@ -71,7 +71,7 @@
 	
 	function _ensureLoggedIn(nextState, replace) {
 	  if (!SessionStore.isUserLoggedIn()) {
-	    Header.openLogin();
+	    // TODO: 
 	  }
 	}
 	
@@ -27005,6 +27005,18 @@
 	
 	var LoginForm = React.createClass({
 	  displayName: 'LoginForm',
+	
+	  // TODO: get Google/Facebook OAuth buttons working.
+	  //
+	  //
+	  // <div className="actions">
+	  //   <button className="session-button" onClick={this.facebookLogin}>Log in facebook</button>
+	  // </div>
+	  //
+	  // <div className="actions">
+	  //   <button className="session-button" onClick={this.googleLogin}>Log in Google</button>
+	  // </div>
+	
 	  getInitialState: function getInitialState() {
 	    return { email: "", password: "", modalIsOpen: false };
 	  },
@@ -27079,7 +27091,6 @@
 	          ),
 	          '.'
 	        ),
-	        React.createElement('br', null),
 	        React.createElement(
 	          'div',
 	          { className: 'actions' },
@@ -27102,27 +27113,12 @@
 	        React.createElement(
 	          'div',
 	          { className: 'actions' },
-	          React.createElement('input', { id: 'login', className: 'session-button', type: 'submit', value: 'Sign In' })
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'actions' },
 	          React.createElement(
 	            'button',
-	            { className: 'session-button', onClick: this.facebookLogin },
-	            'Log in facebook'
+	            { onClick: this.handleSubmit, className: 'session-button', type: 'submit' },
+	            'Sign In'
 	          )
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'actions' },
-	          React.createElement(
-	            'button',
-	            { className: 'session-button', onClick: this.googleLogin },
-	            'Log in Google'
-	          )
-	        ),
-	        React.createElement('br', null)
+	        )
 	      )
 	    );
 	  },
@@ -36390,7 +36386,6 @@
 	          ),
 	          '.'
 	        ),
-	        React.createElement('br', null),
 	        React.createElement(
 	          'div',
 	          { className: 'field' },
@@ -36411,7 +36406,11 @@
 	        React.createElement(
 	          'div',
 	          { className: 'actions' },
-	          React.createElement('input', { className: 'session-button', type: 'submit' })
+	          React.createElement(
+	            'button',
+	            { className: 'session-button', type: 'submit' },
+	            'Submit'
+	          )
 	        )
 	      )
 	    );
@@ -36698,8 +36697,8 @@
 	              null,
 	              React.createElement(
 	                Link,
-	                { to: '/about/' },
-	                'About'
+	                { id: 'about', to: '/about/' },
+	                'About the Developers'
 	              )
 	            )
 	          )
@@ -39382,16 +39381,6 @@
 	    this.setState({ currTrack: PlayerStore.loadedSong() });
 	  },
 	  render: function render() {
-	    var numTracks = this.state.tracks.length;
-	    var numRows = Math.ceil(numTracks / 4);
-	    var rows = [];
-	    for (var i = 0; i < numRows; i++) {
-	      rows.push([]);
-	    }
-	    for (var _i = 0; _i < numTracks; _i++) {
-	      var RowIndex = Math.floor(_i / 4);
-	      rows[RowIndex].push(this.state.tracks[_i]);
-	    }
 	    var url = void 0;
 	    if (this.state.currTrack) {
 	      url = this.state.currTrack.audio_url + ".mp3";
@@ -41712,11 +41701,6 @@
 	                  { href: "https://www.linkedin.com/in/markrmullan" },
 	                  React.createElement("i", { className: "fa fa-linkedin-square fa-2x liicon", "aria-hidden": "true" })
 	                )
-	              ),
-	              React.createElement(
-	                "li",
-	                null,
-	                "Personal Website: "
 	              )
 	            )
 	          )

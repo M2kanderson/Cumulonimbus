@@ -53,7 +53,6 @@ var About = React.createClass({
                   <i className="fa fa-linkedin-square fa-2x liicon" aria-hidden="true"></i>
                   </a>
                 </li>
-                <li>Personal Website: </li>
               </ul>
             </li>
           </ul>

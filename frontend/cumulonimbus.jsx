@@ -22,9 +22,8 @@ const SessionActions = require('./actions/session_actions');
 const SessionStore = require('./stores/session_store');
 
 function _ensureLoggedIn(nextState, replace){
-  if(!SessionStore.isUserLoggedIn())
-  {
-    Header.openLogin();
+  if(!SessionStore.isUserLoggedIn()) {
+    // TODO: 
   }
 }
 
