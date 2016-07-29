@@ -91,14 +91,19 @@
 .body{
   margin-top: 75px;
   display: flex;
-  justify-content: center;
   flex: 1;
+  background: url('http://res.cloudinary.com/pulsr/image/upload/v1469032074/Cumulonimbus/girl-dancing-in-sky-with-dark-clouds-HD.jpg') no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
   /* July 20 I commented these out because centering the flex children of the body */
   /* sent half of the tracks index off the top of the screen -MM */
 
   justify-content: center;
-  align-items: center;*/
+  align-items: center;
   /*height: 700px;*/
+  height: inherit;
   width: 100%;
   background-color: #e2e2e2;
 }
@@ -186,9 +191,7 @@ footer{
 .index-photo{
   display: flex;
   height: 600px;
-  background-image: url('http://res.cloudinary.com/pulsr/image/upload/v1469032074/Cumulonimbus/girl-dancing-in-sky-with-dark-clouds-HD.jpg');
-  background-repeat: no-repeat;
-  background-size: cover;
+  /*background-size: cover;*/
   flex-direction: column;
   justify-content: center;
   align-items: center;
