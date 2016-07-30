@@ -26833,10 +26833,10 @@
 	    return React.createElement(
 	      'div',
 	      { className: 'app' },
-	      React.createElement(Header, null),
 	      React.createElement(
 	        'div',
 	        { className: 'body' },
+	        React.createElement(Header, null),
 	        this.props.children
 	      ),
 	      React.createElement(Footer, null),
@@ -36681,25 +36681,21 @@
 	
 	  render: function render() {
 	    return React.createElement(
-	      'div',
-	      { className: 'footer' },
+	      'footer',
+	      null,
 	      React.createElement(
-	        'footer',
-	        null,
+	        'section',
+	        { className: 'footer-content' },
 	        React.createElement(
-	          'section',
-	          { className: 'footer-content' },
+	          'ul',
+	          { className: 'footer-nav-list' },
 	          React.createElement(
-	            'ul',
-	            { className: 'footer-nav-list' },
+	            'li',
+	            null,
 	            React.createElement(
-	              'li',
-	              null,
-	              React.createElement(
-	                Link,
-	                { id: 'about', to: '/about/' },
-	                'About the Developers'
-	              )
+	              Link,
+	              { id: 'about', to: '/about/' },
+	              'About the Developers'
 	            )
 	          )
 	        )

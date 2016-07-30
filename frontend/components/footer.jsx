@@ -6,17 +6,13 @@ var Footer = React.createClass({
 
   render: function() {
     return (
-      <div className="footer">
         <footer>
           <section className="footer-content">
             <ul className="footer-nav-list">
               <li><Link id="about" to={`/about/`}>About the Developers</Link></li>
             </ul>
           </section>
-
         </footer>
-
-      </div>
     );
   }
 

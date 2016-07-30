@@ -61,8 +61,8 @@ var App = React.createClass({
     }
     return (
       <div className="app">
-        <Header />
         <div className="body">
+          <Header />
           {this.props.children}
         </div>
         <Footer />
