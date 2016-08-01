@@ -93,11 +93,7 @@
   flex: 1;
   justify-content: center;
   flex-direction: column;
-  /* July 20 I commented these out because centering the flex children of the body */
-  /* sent half of the tracks index off the top of the screen -MM */
-
   align-items: center;
-  /*height: 700px;*/
   height: inherit;
   width: 100%;
   background-color: #e2e2e2;
@@ -294,6 +290,7 @@ footer{
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
+  margin: 75px 0 75px 0;
 }
 
 .track-image{
@@ -529,6 +526,7 @@ h2{
 .about{
   font-family: 'Lato', sans-serif;
   width: 100%;
+  margin: 20px 0 50px 0;
 }
 
 .about-section{
